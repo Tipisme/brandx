@@ -1,0 +1,6 @@
+{
+  "name": "Brandix - Sàn Giao Dịch Nhãn Hiệu",
+  "description": "Nền tảng giao dịch, chuyển nhượng và đăng ký bảo hộ nhãn hiệu trực tuyến hàng đầu Việt Nam. Kết nối trực tiếp, giao dịch an toàn, thủ tục nhanh chóng.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
