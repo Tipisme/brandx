@@ -706,14 +706,14 @@ export default function UserDashboard({
       category: 'negotiate',
       messages: [
         { sender: 'user', text: 'Tôi muốn mua nhãn hiệu HDS với giá khoảng 220 triệu, nhờ chuyên viên kết nối với chủ sở hữu thương lượng giúp.', time: '09:12' },
-        { sender: 'expert', text: 'Chào anh Mạnh, BrandHub đã tiếp nhận yêu cầu đàm phán nhãn hiệu HDS. Chúng tôi đang kiểm tra thông tin liên hệ của chủ đơn gốc và sẽ cập nhật tiến độ cho anh sớm nhất.', time: '10:30' }
+        { sender: 'expert', text: 'Chào anh Mạnh, Brandix đã tiếp nhận yêu cầu đàm phán nhãn hiệu HDS. Chúng tôi đang kiểm tra thông tin liên hệ của chủ đơn gốc và sẽ cập nhật tiến độ cho anh sớm nhất.', time: '10:30' }
       ]
     },
     {
       id: 'case-2',
       clientName: 'Manh Nguyen',
       title: 'Ký gửi nhãn hiệu độc quyền HDS',
-      description: 'Đăng ký bán nhãn hiệu HDS lên sàn giao dịch BrandHub.',
+      description: 'Đăng ký bán nhãn hiệu HDS lên sàn giao dịch Brandix.',
       status: 'ACTIVE',
       date: '18.04.2026',
       category: 'sell',
@@ -778,7 +778,7 @@ export default function UserDashboard({
       created_at: '2026-07-20T10:15:00Z',
       updated_at: '2026-07-23T14:00:00Z',
       user_name: 'Phạm Hoàng Anh',
-      user_email: 'hoanganh@brandhub.vn',
+      user_email: 'hoanganh@brandix.vn',
       phone: '0912345678',
       price: 220000000,
       note: 'Chuyên viên HDS Law đang thương thảo điều khoản hợp đồng chuyển nhượng 2 bên.'
@@ -1812,6 +1812,11 @@ export default function UserDashboard({
         <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col justify-between min-h-[580px]">
           <div className="space-y-6">
             
+            {/* Brandix Logo */}
+            <div className="border-b border-slate-100 pb-4">
+              <img src="/brandix-logo.jpg" alt="Brandix Logo" className="h-10 w-auto object-contain" />
+            </div>
+
             {/* Minimal User Block */}
             <div className="border-b border-slate-100 pb-5">
               <div className="flex items-center gap-3.5">
@@ -4026,7 +4031,7 @@ export default function UserDashboard({
                   {language === 'vi' ? 'Hỗ trợ khách hàng & Helpline SHTT' : 'Customer Support Desk'}
                 </h3>
                 <p className="text-slate-500 text-xs mt-1">
-                  Đội ngũ luật sư và chuyên gia SHTT của BrandHub luôn túc trực hỗ trợ bạn.
+                  Đội ngũ luật sư và chuyên gia SHTT của Brandix luôn túc trực hỗ trợ bạn.
                 </p>
               </div>
 
@@ -4036,17 +4041,17 @@ export default function UserDashboard({
                     Hotline Tư Vấn 24/7
                   </span>
                   <h4 className="font-sans font-black text-2xl text-slate-900 mt-3 mb-1">
-                    1900 8899
+                    0901 727 373
                   </h4>
                   <p className="text-xs text-slate-500 leading-relaxed mb-4">
                     Nhánh 1: Tư vấn mua bán thương lượng nhãn hiệu có sẵn.<br />
                     Nhánh 2: Tư vấn hồ sơ nộp đơn đăng ký mới & tranh chấp pháp lý.
                   </p>
                   <a 
-                    href="tel:19008899" 
+                    href="tel:0901727373" 
                     className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-4 py-2 rounded-lg cursor-pointer transition-colors"
                   >
-                    Gọi ngay / Call Now
+                    Gọi ngay: 0901 727 373
                   </a>
                 </div>
 
@@ -4055,13 +4060,13 @@ export default function UserDashboard({
                     Email Hỗ Trợ Pháp Lý
                   </span>
                   <h4 className="font-sans font-extrabold text-base text-slate-900 mt-3 mb-1">
-                    legal@brandhub.vn
+                    legal@brandix.vn
                   </h4>
                   <p className="text-xs text-slate-500 leading-relaxed mb-4">
                     Gửi tài liệu scan phản đối đơn, quyết định của Cục SHTT để nhận được thẩm định phân tích chuyên sâu miễn phí từ Luật sư.
                   </p>
                   <a 
-                    href="mailto:legal@brandhub.vn" 
+                    href="mailto:legal@brandix.vn" 
                     className="inline-block border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-bold px-4 py-2 rounded-lg cursor-pointer transition-colors"
                   >
                     Gửi email / Email support

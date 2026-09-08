@@ -379,7 +379,7 @@ export default function TrademarkDetailPage({
               <p className="text-emerald-700">
                 {isExpiredOrRefusedStatus(statusStr)
                   ? (language === 'vi'
-                      ? 'Chuyên viên sở hữu trí tuệ của BrandHub sẽ liên hệ để tư vấn quy trình và hoàn thiện hồ sơ đăng ký nhãn hiệu độc quyền tốc hành cho bạn.'
+                      ? 'Chuyên viên sở hữu trí tuệ của Brandix sẽ liên hệ để tư vấn quy trình và hoàn thiện hồ sơ đăng ký nhãn hiệu độc quyền tốc hành cho bạn.'
                       : 'Our IP attorney will contact you shortly to guide the registration process and prepare fast-track application files.')
                   : (language === 'vi' 
                       ? 'Đại diện sở hữu trí tuệ của chúng tôi sẽ liên hệ lại với bạn trong vòng 2 giờ làm việc để hoàn tất thỏa thuận bảo mật SHTT.'

@@ -139,7 +139,7 @@ export const translations: Record<Language, TranslationDict> = {
     heroStat3: "100%",
     heroStat3Sub: "Bảo hộ bởi Cục SHTT",
 
-    whyBadge: "TẠI SAO CHỌN BRANDHUB",
+    whyBadge: "TẠI SAO CHỌN BRANDIX",
     whyTitle: "Giải pháp chuyển nhượng nhãn hiệu thông minh nhất",
     whySubtitle: "Chúng tôi số hóa quy trình mua bán nhãn hiệu, mang lại trải nghiệm minh bạch, nhanh gọn và tối ưu chi phí cho doanh nghiệp.",
 
@@ -151,10 +151,10 @@ export const translations: Record<Language, TranslationDict> = {
     faqTitle: "Giải đáp thắc mắc thường gặp",
     faqSubtitle: "Tất cả những gì bạn cần biết về quy trình mua bán, ký gửi nhãn hiệu độc quyền và thủ tục pháp lý liên quan.",
 
-    footerDesc: "BrandHub là nền tảng số hóa chuyển nhượng nhãn hiệu đầu tiên và uy tín nhất tại Việt Nam. Giúp doanh nghiệp sở hữu thương hiệu nhanh chóng, an toàn và đúng pháp luật.",
+    footerDesc: "Brandix là nền tảng số hóa chuyển nhượng nhãn hiệu đầu tiên và uy tín nhất tại Việt Nam. Giúp doanh nghiệp sở hữu thương hiệu nhanh chóng, an toàn và đúng pháp luật.",
     footerContact: "Liên hệ hỗ trợ",
     footerLinks: "Liên kết nhanh",
-    footerRights: "Đã đăng ký bản quyền. Vận hành bởi IP BrandHub Việt Nam.",
+    footerRights: "Đã đăng ký bản quyền. Vận hành bởi Hệ thống Brandix (brandix.vn).",
     footerOffice: "Trụ sở chính: Tầng 12, Tòa nhà Geleximco, 36 Hoàng Cầu, Đống Đa, Hà Nội.",
     footerSecured: "Hệ thống bảo mật giao dịch được chứng nhận an toàn bởi Viện Sở hữu Trí tuệ."
   },
@@ -213,7 +213,7 @@ export const translations: Record<Language, TranslationDict> = {
     heroStat3: "100%",
     heroStat3Sub: "Protected by NOIP",
 
-    whyBadge: "WHY CHOOSE BRANDHUB",
+    whyBadge: "WHY CHOOSE BRANDIX",
     whyTitle: "The Smartest Trademark Transfer Solution",
     whySubtitle: "We digitalize the trademark trading process, providing transparent, quick, and cost-effective experiences for businesses.",
 
@@ -225,10 +225,10 @@ export const translations: Record<Language, TranslationDict> = {
     faqTitle: "Frequently Asked Questions",
     faqSubtitle: "Everything you need to know about purchasing, depositing registered trademarks, and relevant legal procedures.",
 
-    footerDesc: "BrandHub is the first and most prestigious digitalized trademark transfer platform in Vietnam. Helping businesses own brands quickly, safely, and legally.",
+    footerDesc: "Brandix is the first and most prestigious digitalized trademark transfer platform in Vietnam. Helping businesses own brands quickly, safely, and legally.",
     footerContact: "Contact Support",
     footerLinks: "Quick Links",
-    footerRights: "All rights reserved. Operated by IP BrandHub Vietnam.",
+    footerRights: "All rights reserved. Powered by Brandix Platform (brandix.vn).",
     footerOffice: "Headquarters: 12th Floor, Geleximco Building, 36 Hoang Cau, Dong Da, Hanoi.",
     footerSecured: "Transaction security system certified safe by the Institute of Intellectual Property."
   }

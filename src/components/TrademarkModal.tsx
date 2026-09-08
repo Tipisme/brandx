@@ -239,7 +239,7 @@ export default function TrademarkModal({
                       </div>
                       <h4 className="font-sans font-bold text-base text-slate-900">Yêu cầu đặt mua gửi thành công!</h4>
                       <p className="text-slate-500 text-xs leading-relaxed max-w-sm mx-auto">
-                        Chuyên viên sở hữu trí tuệ của BrandHub đã tiếp nhận yêu cầu cho nhãn hiệu <strong>{trademark.name}</strong>. Chúng tôi sẽ liên hệ trong vòng 2 giờ để tiến hành bàn giao hồ sơ pháp lý.
+                        Chuyên viên sở hữu trí tuệ của Brandix đã tiếp nhận yêu cầu cho nhãn hiệu <strong>{trademark.name}</strong>. Chúng tôi sẽ liên hệ trong vòng 2 giờ để tiến hành bàn giao hồ sơ pháp lý.
                       </p>
                       <div className="text-[10px] font-mono text-slate-400 bg-white border border-slate-200/50 rounded-lg p-2 max-w-[200px] mx-auto">
                         Mã giao dịch: BH-{(Math.random() * 100000).toFixed(0)}
@@ -324,7 +324,7 @@ export default function TrademarkModal({
                         <label htmlFor="addon-service" className="cursor-pointer">
                           <strong className="text-slate-800 block">Dịch vụ Chuyển nhượng trọn gói (+12Tr VND)</strong>
                           <span className="text-slate-500 text-[11px] leading-normal block mt-0.5">
-                            BrandHub sẽ thay mặt soạn hồ sơ, đóng nộp lệ phí Cục SHTT, bàn giao văn bằng gốc tại nhà.
+                            Brandix sẽ thay mặt soạn hồ sơ, đóng nộp lệ phí Cục SHTT, bàn giao văn bằng gốc tại nhà.
                           </span>
                         </label>
                       </div>
@@ -412,7 +412,7 @@ export default function TrademarkModal({
                           <span className="text-slate-800 font-bold">{formatVND(estimatedTax)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-slate-500">Dịch vụ trọn gói BrandHub:</span>
+                          <span className="text-slate-500">Dịch vụ trọn gói Brandix:</span>
                           <span className="text-slate-800 font-bold">{includeService ? "12,000,000 VND" : "Miễn phí"}</span>
                         </div>
                         <div className="border-t border-slate-100 pt-2 flex justify-between text-slate-900">

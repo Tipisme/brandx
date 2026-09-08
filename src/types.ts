@@ -33,7 +33,7 @@ export interface Blog {
 
 export interface FAQ {
   id: string;
-  category: 'buy' | 'sell' | 'register';
+  category: 'buy' | 'sell' | 'register' | 'nguoi-mua' | 'nguoi-ban' | 'van-de-dang-ky' | string;
   question: string;
   answer: string;
 }

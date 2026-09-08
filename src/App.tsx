@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import WhyUs from './components/WhyUs';
+import AboutPage from './components/AboutPage';
 import Workflow from './components/Workflow';
 import TrademarkList from './components/TrademarkList';
 import TrademarkModal from './components/TrademarkModal';
@@ -15,7 +15,6 @@ import TrademarkDetailPage from './components/TrademarkDetailPage';
 import NewsSection from './components/NewsSection';
 import HomeNewsSection from './components/HomeNewsSection';
 import ResetPasswordPage from './components/ResetPasswordPage';
-import PolicyModal from './components/PolicyModal';
 import DocxModalViewer from './components/DocxModalViewer';
 import NegotiationModal from './components/NegotiationModal';
 import { MOCK_TRADEMARKS, MOCK_BLOGS, MOCK_REVIEWS } from './data';
@@ -51,9 +50,9 @@ export default function App() {
 
   const [dashboardInitialTab, setDashboardInitialTab] = useState<'profile' | 'trademarks' | 'cases' | 'files' | 'settings' | 'support'>('profile');
   const [policyModalOpen, setPolicyModalOpen] = useState(false);
-  const [selectedPolicyId, setSelectedPolicyId] = useState('dieu-khoan-su-dung');
+  const [selectedPolicyId, setSelectedPolicyId] = useState('chinh-sach-bao-mat');
 
-  const handleOpenPolicy = (docId: string = 'dieu-khoan-su-dung') => {
+  const handleOpenPolicy = (docId: string = 'chinh-sach-bao-mat') => {
     setSelectedPolicyId(docId);
     setPolicyModalOpen(true);
   };
@@ -137,8 +136,18 @@ export default function App() {
 
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash || '#/';
+      const rawHash = window.location.hash || '#/';
+      const [hashBase, hashQuery] = rawHash.split('?');
+      const hash = hashBase;
       const pathname = window.location.pathname;
+
+      if (hashQuery) {
+        const queryParams = new URLSearchParams(hashQuery);
+        const searchQ = queryParams.get('q') || queryParams.get('search');
+        if (searchQ) {
+          setSearchKeyword(searchQ);
+        }
+      }
 
       const pathSegments = pathname.split('/').filter(Boolean);
       const hashSegments = hash.replace(/^#\/?/, '').split('/').filter(Boolean);
@@ -236,9 +245,6 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [currentRoute]);
 
-  // Accordion benefits section state
-  const [activeWaitBenefit, setActiveWaitBenefit] = useState('start');
-
   const [favoriteTrademarks, setFavoriteTrademarks] = useState<any[]>([]);
 
   // Favorites / Interest wishlist actions
@@ -288,8 +294,27 @@ export default function App() {
       
       {/* 1. Header Navigation */}
       <Header
-        onSearchChange={setSearchKeyword}
-        onClassSelect={setSelectedClass}
+        searchKeyword={searchKeyword}
+        onSearchChange={(keyword) => {
+          setSearchKeyword(keyword);
+          if (currentRoute !== 'catalog') {
+            setCurrentRoute('catalog');
+            window.location.hash = '#/catalog';
+          }
+          if (viewMode !== 'marketplace') {
+            setViewMode('marketplace');
+          }
+        }}
+        onClassSelect={(cls) => {
+          setSelectedClass(cls);
+          if (currentRoute !== 'catalog') {
+            setCurrentRoute('catalog');
+            window.location.hash = '#/catalog';
+          }
+          if (viewMode !== 'marketplace') {
+            setViewMode('marketplace');
+          }
+        }}
         onOpenWizard={handleOpenWizard}
         onOpenCart={() => setIsCartOpen(true)}
         cartCount={favorites.length}
@@ -379,10 +404,10 @@ export default function App() {
                   <div className="text-center max-w-3xl mx-auto mb-16">
                     <span className="text-xs font-bold text-orange-400 uppercase tracking-widest block mb-2">Đánh Giá Từ Khách Hàng</span>
                     <h2 className="text-3xl font-sans font-extrabold tracking-tight mb-4">
-                      Hơn 1,100 Doanh Nghiệp Đã Đồng Hành Cùng BrandHub
+                      Hơn 1,100 Doanh Nghiệp Đã Đồng Hành Cùng Brandix
                     </h2>
                     <p className="text-slate-400 text-sm">
-                      Xem nhận định từ những CEO, Quản lý thương hiệu và Nhà sáng lập đã giao dịch thành công tại BrandHub Việt Nam.
+                      Xem nhận định từ những CEO, Quản lý thương hiệu và Nhà sáng lập đã giao dịch thành công tại Brandix Việt Nam.
                     </p>
                   </div>
 
@@ -493,7 +518,7 @@ export default function App() {
                       Bỏ Qua Quy Trình Đăng Ký Chờ Đợi Trùng Lắp Phức Tạp
                     </h2>
                     <p className="text-orange-50 text-sm sm:text-base max-w-2xl leading-relaxed">
-                      Hãy gửi cho chúng tôi tên nhãn hiệu và ý tưởng của bạn. BrandHub sẽ tra cứu chuyên sâu trên hệ thống cơ sở dữ liệu ngầm và nộp đơn bảo hộ độc quyền tốc hành chỉ trong 24 giờ.
+                      Hãy gửi cho chúng tôi tên nhãn hiệu và ý tưởng của bạn. Brandix sẽ tra cứu chuyên sâu trên hệ thống cơ sở dữ liệu ngầm và nộp đơn bảo hộ độc quyền tốc hành chỉ trong 24 giờ.
                     </p>
                   </div>
                   <div className="lg:col-span-4 lg:text-right">
@@ -511,214 +536,10 @@ export default function App() {
           )}
 
           {currentRoute === 'about' && (
-            <>
-              {/* 3. Interactive Benefits: Why Us */}
-              <WhyUs />
-
-              {/* 5. Comparative Grid Section: Days vs Years */}
-              <section className="py-20 bg-slate-50" id="comparison-block">
-                <div className="max-w-7xl mx-auto px-4">
-                  <div className="text-center max-w-3xl mx-auto mb-14">
-                    <span className="text-xs font-bold text-orange-500 uppercase tracking-widest block mb-2">Đặc Quyền Thời Gian</span>
-                    <h2 className="text-3xl font-sans font-extrabold text-slate-900 tracking-tight mb-4">
-                      Sở Hữu Nhãn Hiệu Trong Vài Ngày, Thay Vì Chờ Đợi 2 Năm
-                    </h2>
-                    <p className="text-slate-600 text-sm">
-                      Xem bảng so sánh trực quan về thời gian, chi phí và mức độ rủi ro giữa việc mua lại nhãn hiệu có sẵn và đăng ký mới.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-                    {/* Box 1: Pre-registered Brand */}
-                    <div className="bg-slate-900 text-white rounded-3xl p-8 shadow-xl flex flex-col justify-between border-t-4 border-orange-500 relative overflow-hidden">
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-2xl pointer-events-none" />
-                      <div>
-                        <div className="flex items-center justify-between mb-6">
-                          <span className="text-[10px] font-extrabold bg-orange-500/10 border border-orange-500/20 text-orange-400 px-3 py-1 rounded-full uppercase tracking-wider">
-                            Sở hữu ngay nhãn hiệu đã bảo hộ
-                          </span>
-                          <span className="text-xs text-emerald-400 font-bold">Phương án Tối ưu</span>
-                        </div>
-
-                        <h3 className="text-xl font-bold mb-4">Mua nhãn hiệu có sẵn qua BrandHub</h3>
-                        
-                        <div className="space-y-4 text-xs mt-6">
-                          <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-                            <span className="text-slate-400 uppercase tracking-wider font-semibold">Thời gian cấp bằng:</span>
-                            <strong className="text-emerald-400 text-sm">Sở hữu ngay trong 3 - 5 ngày</strong>
-                          </div>
-                          <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-                            <span className="text-slate-400 uppercase tracking-wider font-semibold">Tỷ lệ thành công pháp lý:</span>
-                            <strong className="text-emerald-400 text-sm">100% (Đã được Cục SHTT cấp bằng)</strong>
-                          </div>
-                          <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-                            <span className="text-slate-400 uppercase tracking-wider font-semibold">Rủi ro bị phản đối đơn:</span>
-                            <strong className="text-emerald-400 text-sm">Không thể xảy ra (0%)</strong>
-                          </div>
-                          <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-                            <span className="text-slate-400 uppercase tracking-wider font-semibold">Hiệu quả khởi nghiệp:</span>
-                            <strong className="text-white text-sm">Bắt đầu sản xuất, chạy Marketing ngay lập tức</strong>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="pt-6 mt-6 border-t border-slate-800">
-                        <button
-                          onClick={() => { window.location.hash = '#/catalog'; }}
-                          className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs uppercase py-3.5 rounded-xl cursor-pointer transition-colors"
-                        >
-                          Tìm mua nhãn hiệu sẵn có ngay
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Box 2: Starting Brand Registration from Scratch */}
-                    <div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-xs flex flex-col justify-between relative">
-                      <div>
-                        <div className="flex items-center justify-between mb-6">
-                          <span className="text-[10px] font-extrabold bg-slate-100 text-slate-500 px-3 py-1 rounded-full uppercase tracking-wider">
-                            Đăng ký nhãn hiệu hoàn toàn mới
-                          </span>
-                          <span className="text-xs text-red-500 font-bold">Rủi ro tiềm ẩn</span>
-                        </div>
-
-                        <h3 className="text-xl font-bold text-slate-800 mb-4">Nộp hồ sơ tự đăng ký mới</h3>
-                        
-                        <div className="space-y-4 text-xs mt-6">
-                          <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-                            <span className="text-slate-400 uppercase tracking-wider font-semibold">Thời gian cấp bằng:</span>
-                            <strong className="text-red-500 text-sm">18 - 24 tháng (Chờ đợi thẩm định)</strong>
-                          </div>
-                          <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-                            <span className="text-slate-400 uppercase tracking-wider font-semibold">Tỷ lệ thành công pháp lý:</span>
-                            <strong className="text-red-500 text-sm">Dưới 50% (Hơn một nửa bị bác bỏ)</strong>
-                          </div>
-                          <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-                            <span className="text-slate-400 uppercase tracking-wider font-semibold">Rủi ro bị phản đối đơn:</span>
-                            <strong className="text-red-500 text-sm">Cực kỳ cao (Đối thủ khiếu nại, phản biện)</strong>
-                          </div>
-                          <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-                            <span className="text-slate-400 uppercase tracking-wider font-semibold">Hiệu quả khởi nghiệp:</span>
-                            <strong className="text-slate-700 text-sm">Dễ phải đổi tên nhãn sau 2 năm nếu đơn bị từ chối</strong>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="pt-6 mt-6 border-t border-slate-100">
-                        <button
-                          onClick={handleOpenWizard}
-                          className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs uppercase py-3.5 rounded-xl cursor-pointer transition-colors"
-                        >
-                          Nộp hồ sơ đăng ký nhãn hiệu mới
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              {/* 9. Benefits Accordion Tab-List ("Không cần chờ đợi...") */}
-              <section className="py-20 bg-white" id="waitless-benefits">
-                <div className="max-w-7xl mx-auto px-4">
-                  <div className="text-center max-w-3xl mx-auto mb-16">
-                    <span className="text-xs font-bold text-orange-500 uppercase tracking-widest block mb-2">Thúc Đẩy Doanh Thu</span>
-                    <h2 className="text-3xl font-sans font-extrabold text-slate-900 tracking-tight mb-4">
-                      Không Cần Chờ Đợi - Sở Hữu Thương Hiệu Độc Quyền Ngay Hôm Nay
-                    </h2>
-                    <p className="text-slate-500 text-sm">
-                      Sở hữu tài sản thương quyền sớm mở ra nhiều cơ hội tăng tốc tăng trưởng quy mô kinh doanh không giới hạn.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
-                    {/* Left side tabs select */}
-                    <div className="lg:col-span-5 flex flex-col justify-center gap-4">
-                      {[
-                        { id: 'start', label: "Khởi đầu vững mạnh", desc: "Được bảo hộ độc quyền giúp tăng tỷ lệ tin cậy của đối tác và quỹ đầu tư." },
-                        { id: 'time', label: "Tiết kiệm thời gian", desc: "Không lo mất 2 năm chờ đợi mòn mỏi phê duyệt hành chính từ cơ quan nhà nước." },
-                        { id: 'skip', label: "Bỏ qua rủi ro trùng lắp", desc: "Hạn chế tuyệt đối nguy cơ bị Cục từ chối đơn sau 2 năm vì tương tự gây nhầm lẫn." },
-                        { id: 'growth', label: "Tăng trưởng nhượng quyền", desc: "Mở rộng chuỗi kinh doanh nhượng quyền (Franchise) hợp pháp, thu dòng tiền bản quyền." }
-                      ].map((item) => (
-                        <button
-                          key={item.id}
-                          onClick={() => setActiveWaitBenefit(item.id)}
-                          className={`text-left p-5 rounded-2xl border transition-all duration-200 cursor-pointer ${
-                            activeWaitBenefit === item.id
-                              ? 'bg-slate-900 border-slate-900 text-white shadow-lg translate-x-2'
-                              : 'bg-slate-50 hover:bg-slate-100 border-slate-100 text-slate-800'
-                          }`}
-                        >
-                          <strong className="text-sm font-bold block mb-1.5">{item.label}</strong>
-                          <p className={`text-xs leading-normal ${activeWaitBenefit === item.id ? 'text-slate-300' : 'text-slate-500'}`}>
-                            {item.desc}
-                          </p>
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Right side display card mockup */}
-                    <div className="lg:col-span-7">
-                      <div className="bg-slate-50 border border-slate-200 rounded-3xl p-8 sm:p-10 flex flex-col justify-between h-full">
-                        <div>
-                          <div className="flex items-center gap-2 mb-6">
-                            <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-ping"></span>
-                            <span className="text-[10px] text-orange-600 font-extrabold uppercase tracking-widest">Lợi thế cạnh tranh vượt trội</span>
-                          </div>
-
-                          {activeWaitBenefit === 'start' && (
-                            <div className="space-y-4 animate-in fade-in duration-200">
-                              <h4 className="text-xl font-bold text-slate-900">Bảo vệ thương quyền tuyệt đối khi ra khơi</h4>
-                              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-                                Sở hữu nhãn hiệu ngay lập tức tạo nên rào cản pháp lý ngăn mọi đối thủ cạnh tranh sao chép ý tưởng, logo hoặc tên gọi sản phẩm của bạn. Giúp xây dựng móng nhà kinh doanh vững vàng, tạo sự an tâm tuyệt đối cho khách hàng và đối tác ký hợp đồng đại lý.
-                              </p>
-                            </div>
-                          )}
-
-                          {activeWaitBenefit === 'time' && (
-                            <div className="space-y-4 animate-in fade-in duration-200">
-                              <h4 className="text-xl font-bold text-slate-900">Tối ưu hàng chục ngàn giờ làm việc</h4>
-                              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-                                Thời gian là tiền bạc. Bỏ qua quy trình nộp đơn ròng rã và giải trình phản đối đơn giúp bạn tung sản phẩm ra thị trường ngay hôm nay, đưa gian hàng lên Mall các sàn Shopee, Lazada, TikTok Shop chỉ trong vài tiếng, chiếm lĩnh thị phần vàng trước đối thủ.
-                              </p>
-                            </div>
-                          )}
-
-                          {activeWaitBenefit === 'skip' && (
-                            <div className="space-y-4 animate-in fade-in duration-200">
-                              <h4 className="text-xl font-bold text-slate-900">Nói không với tổn thất kinh phí Marketing</h4>
-                              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-                                Hơn 50% đơn đăng ký mới bị từ chối cấp văn bằng sau 2 năm thẩm định. Thử tưởng tượng bạn đã đầu tư hàng tỷ đồng làm bảng hiệu, bao bì, chạy quảng cáo để rồi nhận được quyết định từ chối cấp bằng vì nhãn trùng lặp! Mua nhãn hiệu có sẵn triệt tiêu hoàn toàn rủi ro thảm họa này.
-                              </p>
-                            </div>
-                          )}
-
-                          {activeWaitBenefit === 'growth' && (
-                            <div className="space-y-4 animate-in fade-in duration-200">
-                              <h4 className="text-xl font-bold text-slate-900">Khai thác tối đa doanh số bản quyền</h4>
-                              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-                                Chỉ những nhãn hiệu đã được cấp Văn bằng bảo hộ độc quyền mới đủ điều kiện pháp lý để ký kết hợp đồng li-xăng (nhượng quyền thương mại) chính thức. Sở hữu văn bằng giúp bạn hợp pháp hóa việc thu phí nhượng quyền thương hiệu mỗi tháng từ mạng lưới chi nhánh đại lý.
-                              </p>
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="border-t border-slate-200 pt-6 mt-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                          <div className="text-xs text-slate-500">
-                            Sản phẩm độc quyền đại diện bởi <strong className="text-slate-800">BrandHub</strong>.
-                          </div>
-                          <button
-                            onClick={() => { window.location.hash = '#/catalog'; }}
-                            className="text-xs font-bold text-orange-500 hover:text-orange-600 cursor-pointer inline-flex items-center gap-1 hover:translate-x-1 transition-transform"
-                          >
-                            Xem kho nhãn hiệu của chúng tôi &rarr;
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            </>
+            <AboutPage 
+              language={language} 
+              onOpenWizard={handleOpenWizard} 
+            />
           )}
 
           {currentRoute === 'faq' && (
@@ -735,7 +556,7 @@ export default function App() {
             <a
               href="tel:0901727373"
               className="bg-orange-500 hover:bg-orange-600 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center hover:-translate-y-1 transition-all group relative cursor-pointer"
-              title="Gọi Hotline hỗ trợ HDS Law"
+              title="Gọi Hotline hỗ trợ Brandix"
             >
               <Phone className="w-5 h-5 animate-bounce" />
               <span className="absolute left-full ml-3 bg-slate-900 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-md whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">

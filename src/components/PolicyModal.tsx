@@ -19,243 +19,87 @@ import {
 import mammoth from 'mammoth';
 
 export interface PolicyDoc {
+  order: number;
   id: string;
   title: string;
   filename: string;
   icon: React.ElementType;
   description: string;
   lastUpdated: string;
-  content: string;
 }
 
 export const POLICY_DOCUMENTS: PolicyDoc[] = [
   {
-    id: 'dieu-khoan-su-dung',
-    title: 'Điều khoản sử dụng',
-    filename: 'dieu-khoan-su-dung.docx',
-    icon: ShieldCheck,
-    description: 'Quy định và điều khoản chung khi truy cập và sử dụng dịch vụ Brandix - HDS Law.',
-    lastUpdated: '15/01/2026',
-    content: `
-      <h2>ĐIỀU KHOẢN VÀ ĐIỀU KIỆN SỬ DỤNG DỊCH VỤ</h2>
-      <p><strong>CÔNG TY LUẬT TNHH HDS (HDS LAW FIRM)</strong></p>
-      <p><em>MST: 0108553521 | Giấy ĐKHĐ: Số 01021497/TP/ĐKHĐ | Đại diện SHTT: Mã HNi-006 (475)</em></p>
-      <hr/>
-      <h3>1. QUY ĐỊNH CHUNG</h3>
-      <p>Chào mừng Quý khách hàng đến với Nền tảng Giao dịch & Đăng ký Nhãn hiệu Trực tuyến Brandix, được vận hành chính thức bởi Công ty Luật HDS. Khi truy cập và thực hiện bất kỳ giao dịch nào trên nền tảng, Quý khách được coi là đã đọc, hiểu và đồng ý tuân thủ toàn bộ các điều khoản dịch vụ này.</p>
-
-      <h3>2. PHẠM VI DỊCH VỤ DỰ ÁN BRANDIX</h3>
-      <ul>
-        <li><strong>Tra cứu & Đánh giá khả năng bảo hộ nhãn hiệu:</strong> Cung cấp kết quả tra cứu sơ bộ và tra cứu chuyên sâu từ cơ sở dữ liệu quốc gia Cục Sở hữu Trí tuệ.</li>
-        <li><strong>Đăng ký nhãn hiệu trực tuyến:</strong> Tiếp nhận hồ sơ, soạn thảo văn bản pháp lý và đại diện nộp đơn tại Cục SHTT.</li>
-        <li><strong>Sàn giao dịch & Chuyển nhượng nhãn hiệu:</strong> Kết nối bên bán và bên mua nhãn hiệu đã được cấp bằng độc quyền hoặc đang trong quá trình nộp đơn.</li>
-      </ul>
-
-      <h3>3. QUYỀN VÀ TRÁCH NHIỆM CỦA KHÁCH HÀNG</h3>
-      <p>- Cung cấp thông tin nhãn hiệu, giấy tờ pháp lý (ĐKKD, CCCD) chính xác và trung thực.</p>
-      <p>- Thực hiện nghĩa vụ thanh toán chi phí nộp đơn và phí dịch vụ theo đúng hạn cam kết.</p>
-      <p>- Không sử dụng nền tảng cho các mục đích gian lận, vi phạm quyền sở hữu trí tuệ của bên thứ ba.</p>
-
-      <h3>4. CAM KẾT VÀ NGHĨA VỤ CỦA HDS LAW</h3>
-      <p>- Bảo mật tuyệt đối mọi thông tin đề xuất nhãn hiệu và dữ liệu cá nhân của khách hàng.</p>
-      <p>- Đảm bảo toàn bộ quy trình chuyên môn được thực hiện trực tiếp bởi các Luật sư và Chuyên gia đại diện SHTT được cấp phép.</p>
-      <p>- Hoàn tiền hoặc hỗ trợ nộp lại theo chính sách cam kết chất lượng của HDS Law.</p>
-
-      <h3>5. GIẢI QUYẾT TRANH CHẤP</h3>
-      <p>Mọi tranh chấp phát sinh từ việc sử dụng dịch vụ trước hết sẽ được giải quyết thông qua thương lượng, hòa giải. Trường hợp không đạt được thỏa thuận, tranh chấp sẽ được đưa ra Tòa án có thẩm quyền tại Hà Nội để giải quyết theo quy định pháp luật Việt Nam.</p>
-    `
-  },
-  {
+    order: 1,
     id: 'chinh-sach-bao-mat',
     title: 'Chính sách bảo mật',
     filename: 'chinh-sach-bao-mat.docx',
     icon: ShieldCheck,
-    description: 'Cam kết bảo mật thông tin cá nhân và tài sản dữ liệu nhãn hiệu của khách hàng.',
-    lastUpdated: '15/01/2026',
-    content: `
-      <h2>CHÍNH SÁCH BẢO MẬT THÔNG TIN VÀ DỮ LIỆU KHÁCH HÀNG</h2>
-      <p><strong>CÔNG TY LUẬT TNHH HDS</strong></p>
-      <hr/>
-      <h3>1. MỤC ĐÍCH THU THẬP THÔNG TIN</h3>
-      <p>HDS Law thu thập thông tin khách hàng nhằm các mục đích sau:</p>
-      <ul>
-        <li>Xác minh danh tính chủ sở hữu nhãn hiệu và đại diện pháp luật.</li>
-        <li>Lập hồ sơ đăng ký nhãn hiệu chính thức gửi Cục Sở hữu Trí tuệ.</li>
-        <li>Cung cấp mã tra cứu đơn hàng và trạng thái cấp bằng trực tuyến.</li>
-        <li>Gửi thông báo gia hạn, nhắc nhở thời hạn duy trì hiệu lực bằng độc quyền.</li>
-      </ul>
-
-      <h3>2. PHẠM VI THU THẬP DỮ LIỆU</h3>
-      <p>- Thông tin cá nhân/tổ chức: Tên chủ đơn, Mã số thuế/CCCD, Địa chỉ, Số điện thoại, Email.</p>
-      <p>- Thông tin nhãn hiệu: Tên nhãn hiệu đề xuất, tệp ảnh mẫu thiết kế, danh mục nhóm sản phẩm/dịch vụ (Nice classification).</p>
-
-      <h3>3. CAM KẾT AN TOÀN VÀ BẢO MẬT</h3>
-      <p>Chúng tôi cam kết sử dụng các biện pháp mã hóa cao nhất để bảo vệ dữ liệu. HDS Law <strong>KHÔNG</strong> bán, chia sẻ hoặc tiết lộ thông tin nhãn hiệu đề xuất của khách hàng cho bất kỳ bên thứ ba nào khi chưa nộp đơn chính thức tại Cục SHTT.</p>
-
-      <h3>4. QUẢN LÝ THÔNG TIN CÁ NHÂN</h3>
-      <p>Khách hàng có quyền đăng nhập vào tài khoản trên hệ thống Brandix để kiểm tra, cập nhật hoặc yêu cầu xóa bỏ thông tin cá nhân bất kỳ lúc nào.</p>
-    `
+    description: 'Chính sách bảo mật thông tin mua bán, dữ liệu cá nhân và bí mật kinh doanh của khách hàng trên hệ thống.',
+    lastUpdated: '15/01/2026'
   },
   {
+    order: 2,
+    id: 'phuong-thuc-tiep-nhan-va-giai-quyet-phan-anh-yeu-cau-khieu-nai',
+    title: 'Phương thức tiếp nhận và giải quyết phản ánh yêu cầu khiếu nại',
+    filename: 'phuong-thuc-tiep-nhan-va-giai-quyet-phan-anh-yeu-cau-khieu-nai.docx',
+    icon: AlertTriangle,
+    description: 'Quy trình và phương thức tiếp nhận, thẩm tra, giải quyết khiếu nại và phản ánh của khách hàng minh bạch.',
+    lastUpdated: '15/01/2026'
+  },
+  {
+    order: 3,
     id: 'chinh-sach-gia',
     title: 'Chính sách giá',
     filename: 'chinh-sach-gia.docx',
     icon: DollarSign,
-    description: 'Bảng giá dịch vụ tra cứu, đăng ký và chuyển nhượng nhãn hiệu minh bạch.',
-    lastUpdated: '01/02/2026',
-    content: `
-      <h2>CHÍNH SÁCH GIÁ VÀ CHI PHÍ ĐĂNG KÝ NHÃN HIỆU</h2>
-      <p><strong>CÔNG TY LUẬT TNHH HDS</strong></p>
-      <hr/>
-      <h3>1. NGUYÊN TẮC TÍNH PHÍ DỊCH VỤ</h3>
-      <p>Biểu phí đăng ký nhãn hiệu tại HDS Law được xây dựng minh bạch, công khai, bao gồm cả lệ phí nhà nước (Cục Sở hữu Trí tuệ) và phí đại diện sở hữu công nghiệp.</p>
-
-      <h3>2. BIỂU PHÍ THAM KHẢO</h3>
-      <table style="width:100%; border-collapse: collapse; border: 1px solid #e2e8f0; font-size: 13px;">
-        <thead style="background-color: #f8fafc;">
-          <tr>
-            <th style="padding: 10px; border: 1px solid #cbd5e1; text-align: left;">Hạng mục dịch vụ</th>
-            <th style="padding: 10px; border: 1px solid #cbd5e1; text-align: right;">Đơn giá (VND)</th>
-            <th style="padding: 10px; border: 1px solid #cbd5e1; text-align: left;">Ghi chú</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="padding: 10px; border: 1px solid #e2e8f0;">Đăng ký nhãn hiệu (Nhóm 1)</td>
-            <td style="padding: 10px; border: 1px solid #e2e8f0; text-align: right; font-weight: bold; color: #ea580c;">1.500.000 ₫</td>
-            <td style="padding: 10px; border: 1px solid #e2e8f0;">Bao gồm phí nộp đơn & tra cứu sơ bộ</td>
-          </tr>
-          <tr>
-            <td style="padding: 10px; border: 1px solid #e2e8f0;">Nhóm sản phẩm/dịch vụ thứ 2 trở đi</td>
-            <td style="padding: 10px; border: 1px solid #e2e8f0; text-align: right; font-weight: bold; color: #ea580c;">1.000.000 ₫ / nhóm</td>
-            <td style="padding: 10px; border: 1px solid #e2e8f0;">Ưu đãi giảm giá cho nhóm bổ sung</td>
-          </tr>
-          <tr>
-            <td style="padding: 10px; border: 1px solid #e2e8f0;">Tra cứu chuyên sâu Luật sư</td>
-            <td style="padding: 10px; border: 1px solid #e2e8f0; text-align: right; font-weight: bold; color: #16a34a;">Miễn phí</td>
-            <td style="padding: 10px; border: 1px solid #e2e8f0;">Áp dụng khi nộp đơn qua HDS Law</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h3 style="margin-top: 15px;">3. CAM KẾT KHÔNG PHÁT SINH PHÍ ẨN</h3>
-      <p>HDS Law cam kết báo giá trọn gói 100%. Khách hàng không phải trả thêm bất kỳ khoản phụ phí nào trong suốt quá trình thẩm định hình thức và nội dung đơn.</p>
-    `
+    description: 'Quy định rõ nguyên tắc định giá, niêm yết giá chuyển nhượng và cơ chế đàm phán nhãn hiệu.',
+    lastUpdated: '01/02/2026'
   },
   {
+    order: 4,
     id: 'chinh-sach-thanh-toan',
     title: 'Chính sách thanh toán',
     filename: 'chinh-sach-thanh-toan.docx',
     icon: CreditCard,
-    description: 'Các hình thức thanh toán trực tuyến, chuyển khoản ngân hàng và xuất hóa đơn VAT.',
-    lastUpdated: '10/01/2026',
-    content: `
-      <h2>CHÍNH SÁCH VÀ HƯỚNG DẪN THANH TOÁN</h2>
-      <p><strong>CÔNG TY LUẬT TNHH HDS</strong></p>
-      <hr/>
-      <h3>1. PHƯƠNG THỨC THANH TOÁN</h3>
-      <p>Khách hàng có thể lựa chọn thanh toán qua các kênh chính thức sau:</p>
-      <ul>
-        <li><strong>Chuyển khoản Ngân hàng (VietQR):</strong> Nhanh chóng, tự động xác nhận đơn hàng 24/7.</li>
-        <li><strong>Thanh toán trực tiếp:</strong> Tại văn phòng HDS Law - Phòng 401, tầng 4, số 169 Nguyễn Ngọc Vũ, Yên Hòa, Hà Nội.</li>
-      </ul>
-
-      <h3>2. THÔNG TIN TÀI KHOẢN NGÂN HÀNG THỤ HƯỞNG</h3>
-      <div style="background-color: #fff7ed; border: 1px solid #ffedd5; padding: 12px; border-radius: 12px; font-size: 13px;">
-        <p style="margin: 4px 0;"><strong>Tên Tài Khoản:</strong> CÔNG TY LUẬT HDS</p>
-        <p style="margin: 4px 0;"><strong>Số Tài Khoản:</strong> <span style="color: #ea580c; font-weight: bold;">0388299999</span></p>
-        <p style="margin: 4px 0;"><strong>Ngân Hàng:</strong> Ngân hàng TMCP Quân Đội (MBBank)</p>
-        <p style="margin: 4px 0;"><strong>Cú pháp chuyển khoản:</strong> [Mã đơn hàng / Số điện thoại]</p>
-      </div>
-
-      <h3 style="margin-top: 15px;">3. XUẤT HÓA ĐƠN TÀI CHÍNH (VAT)</h3>
-      <p>HDS Law cung cấp hóa đơn điện tử hợp pháp cho doanh nghiệp và cá nhân ngay sau khi hoàn tất giao dịch thanh toán.</p>
-    `
+    description: 'Cơ chế thanh toán bảo chứng an toàn, tài khoản trung gian của HDS Law và các phương thức thanh toán hợp pháp.',
+    lastUpdated: '10/01/2026'
   },
   {
-    id: 'chinh-sach-van-chuyen-giao-hang',
-    title: 'Chính sách vận chuyển & giao nhận',
-    filename: 'chinh-sach-van-chuyen-giao-hang.docx',
-    icon: Truck,
-    description: 'Quy trình bàn giao Tờ khai nộp đơn gốc và Bằng bảo hộ độc quyền tận tay khách hàng.',
-    lastUpdated: '05/01/2026',
-    content: `
-      <h2>CHÍNH SÁCH BÀN GIAO TÀI LIỆU VÀ BẰNG ĐỘC QUYỀN</h2>
-      <p><strong>CÔNG TY LUẬT TNHH HDS</strong></p>
-      <hr/>
-      <h3>1. PHƯƠNG THỨC GIAO NHẬN TÀI LIỆU</h3>
-      <p>Tất cả văn bản pháp lý chính thức từ Cục Sở hữu Trí tuệ (Tờ khai có dấu nhận đơn, Quyết định chấp nhận đơn hợp lệ, Giấy chứng nhận đăng ký nhãn hiệu gốc) sẽ được HDS Law bàn giao như sau:</p>
-      <ul>
-        <li><strong>File điện tử (PDF/Scan):</strong> Gửi trực tiếp qua Email & Zalo của khách hàng ngay trong ngày làm việc.</li>
-        <li><strong>Văn bản gốc bằng giấy:</strong> Chuyển phát nhanh đảm bảo tận nhà/văn phòng khách hàng trên toàn quốc.</li>
-      </ul>
-
-      <h3>2. CHI PHÍ VẬN CHUYỂN</h3>
-      <p>- <strong>Miễn phí 100%:</strong> Giao nhận tài liệu trên toàn quốc đối với tất cả đơn hàng nộp qua nền tảng Brandix.</p>
-      <p>- Thời gian vận chuyển: 1 - 2 ngày làm việc (Nội thành Hà Nội & TP.HCM), 2 - 4 ngày làm việc (các tỉnh thành khác).</p>
-    `
+    order: 5,
+    id: 'cac-dieu-kien-hoac-han-che-trong-viec-cung-cap-dich-vu',
+    title: 'Các điều kiện hoặc hạn chế trong việc cung cấp dịch vụ',
+    filename: 'cac-dieu-kien-hoac-han-che-trong-viec-cung-cap-dich-vu.docx',
+    icon: ShieldCheck,
+    description: 'Điều kiện pháp lý, giới hạn thẩm định và phạm vi cung cấp dịch vụ nhãn hiệu theo pháp luật Việt Nam.',
+    lastUpdated: '01/02/2026'
   },
   {
+    order: 6,
+    id: 'phuong-thuc-cung-cap-dich-vu',
+    title: 'Phương thức cung cấp dịch vụ brandix.vn',
+    filename: 'phuong-thuc-cung-cap-dich-vu.docx',
+    icon: FileText,
+    description: 'Quy trình cung cấp dịch vụ, thời hạn thực hiện, thủ tục chấm dứt dịch vụ và chính sách hoàn tiền chi tiết.',
+    lastUpdated: '01/02/2026'
+  },
+  {
+    order: 7,
     id: 'hinh-thuc-ho-tro-truc-tuyen',
     title: 'Hình thức hỗ trợ trực tuyến',
     filename: 'hinh-thuc-ho-tro-truc-tuyen.docx',
     icon: HelpCircle,
-    description: 'Các kênh tư vấn pháp lý SHTT trực tuyến 24/7 từ đội ngũ Luật sư HDS Law.',
-    lastUpdated: '20/01/2026',
-    content: `
-      <h2>KÊNH TƯ VẤN VÀ HỖ TRỢ TRỰC TUYẾN 24/7</h2>
-      <p><strong>CÔNG TY LUẬT TNHH HDS</strong></p>
-      <hr/>
-      <h3>1. CÁC KÊNH TƯ VẤN CHÍNH THỨC</h3>
-      <ul>
-        <li><strong>Hotline / Zalo tư vấn Luật sư:</strong> <a href="tel:0901727373">0901727373</a></li>
-        <li><strong>Email tiếp nhận yêu cầu:</strong> <a href="mailto:hdslaw.vn@gmail.com">hdslaw.vn@gmail.com</a></li>
-        <li><strong>Trực tiếp tại văn phòng:</strong> Phòng 401, tầng 4, số 169 Nguyễn Ngọc Vũ, Yên Hòa, Hà Nội (Giờ hành chính từ Thứ 2 đến Thứ 6).</li>
-      </ul>
-
-      <h3>2. THỜI GIAN PHẢN HỒI</h3>
-      <p>- Kênh Hotline / Zalo: Phản hồi tức thì (8:00 - 21:00 hàng ngày).</p>
-      <p>- Yêu cầu qua Email / Form tra cứu: Luật sư phản hồi kết quả chuyên sâu trong vòng 2 - 4 giờ làm việc.</p>
-    `
+    description: 'Các kênh hỗ trợ khách hàng 24/7 bao gồm Hotline, Zalo Luật sư và tiếp nhận yêu cầu trực tuyến.',
+    lastUpdated: '20/01/2026'
   },
   {
-    id: 'quy-trinh-giai-quyet-khieu-nai',
-    title: 'Quy trình giải quyết khiếu nại',
-    filename: 'quy-trinh-giai-quyet-khieu-nai.docx',
-    icon: AlertTriangle,
-    description: 'Quy trình tiếp nhận, xử lý và hỗ trợ giải quyết phản ánh của khách hàng.',
-    lastUpdated: '12/01/2026',
-    content: `
-      <h2>QUY TRÌNH TIẾP NHẬN VÀ GIẢI QUYẾT KHIẾU NẠI</h2>
-      <p><strong>CÔNG TY LUẬT TNHH HDS</strong></p>
-      <hr/>
-      <h3>1. NGUYÊN TẮC GIẢI QUYẾT</h3>
-      <p>HDS Law luôn coi trọng sự hài lòng của khách hàng. Mọi khiếu nại, phản ánh về chất lượng tư vấn hay tiến độ xử lý đơn đều được tiếp nhận công bằng, minh bạch và giải quyết thỏa đáng.</p>
-
-      <h3>2. CÁC BƯỚC XỬ LÝ KHIẾU NẠI</h3>
-      <ol>
-        <li><strong>Bước 1 - Tiếp nhận thông tin:</strong> Khách hàng gửi phản ánh qua email hdslaw.vn@gmail.com hoặc hotline 0901727373.</li>
-        <li><strong>Bước 2 - Xác minh & Thẩm tra:</strong> Trưởng bộ phận SHTT thẩm tra hồ sơ và trao đổi trực tiếp với Luật sư phụ trách trong vòng 24h.</li>
-        <li><strong>Bước 3 - Phản hồi phương án:</strong> Đưa ra giải pháp khắc phục, đền bù hoặc hỗ trợ miễn phí dịch vụ phát sinh cho khách hàng.</li>
-      </ol>
-    `
-  },
-  {
-    id: 'huong_dan_tai_file',
-    title: 'Hướng dẫn tải file & tra cứu',
-    filename: 'huong_dan_tai_file.txt',
-    icon: FileText,
-    description: 'Hướng dẫn chi tiết cách tải về và mở các tài liệu pháp lý định dạng .docx / .txt.',
-    lastUpdated: '01/02/2026',
-    content: `
-      <h2>HƯỚNG DẪN TẢI VÀ TRA CỨU TÀI LIỆU PHÁP LÝ HDS LAW</h2>
-      <p><strong>CÔNG TY LUẬT TNHH HDS</strong></p>
-      <hr/>
-      <p><strong>1. Quyền truy cập:</strong> Tất cả tài liệu chính sách, điều khoản và quy trình của HDS Law được công khai minh bạch.</p>
-      <p><strong>2. Tải về:</strong> Nhấp vào nút "Tải về (.docx / .txt)" ở thanh công cụ phía trên của trình xem trước để lưu file về máy tính hoặc điện thoại.</p>
-      <p><strong>3. Đọc file:</strong> Quý khách có thể xem trực tiếp nội dung trên trình duyệt hoặc mở bằng Microsoft Word, Google Docs hay ứng dụng đọc văn bản bất kỳ.</p>
-      <p><strong>4. Hỗ trợ kỹ thuật:</strong> Liên hệ Tổng đài 0901727373 nếu gặp trục trặc khi tải văn bản.</p>
-    `
+    order: 8,
+    id: 'quyen-va-nghia-vu-cac-ben',
+    title: 'Quyền và nghĩa vụ các bên',
+    filename: 'quyen-va-nghia-vu-cac-ben.docx',
+    icon: Building2,
+    description: 'Quyền và nghĩa vụ pháp lý của bên mua, bên bán và đơn vị vận hành sàn giao dịch nhãn hiệu Brandix.',
+    lastUpdated: '01/02/2026'
   }
 ];
 
@@ -265,7 +109,7 @@ interface PolicyModalProps {
   initialDocId?: string;
 }
 
-export default function PolicyModal({ isOpen, onClose, initialDocId = 'dieu-khoan-su-dung' }: PolicyModalProps) {
+export default function PolicyModal({ isOpen, onClose, initialDocId = 'chinh-sach-bao-mat' }: PolicyModalProps) {
   const [activeDocId, setActiveDocId] = useState<string>(initialDocId);
   const [fetchedHtml, setFetchedHtml] = useState<string | null>(null);
   const [loadingFile, setLoadingFile] = useState<boolean>(false);
@@ -483,10 +327,11 @@ export default function PolicyModal({ isOpen, onClose, initialDocId = 'dieu-khoa
                     dangerouslySetInnerHTML={{ __html: fetchedHtml }}
                   />
                 ) : (
-                  <div 
-                    className="prose prose-slate max-w-none text-xs sm:text-sm leading-relaxed space-y-4"
-                    dangerouslySetInnerHTML={{ __html: activeDoc.content }}
-                  />
+                  <div className="prose prose-slate max-w-none text-xs sm:text-sm leading-relaxed space-y-4">
+                    <h3>{activeDoc.order}. {activeDoc.title}</h3>
+                    <p>{activeDoc.description}</p>
+                    <p>Quý khách có thể tải trực tiếp văn bản Word chính thức bằng cách nhấp vào nút &quot;Tải về&quot; phía trên.</p>
+                  </div>
                 )}
 
                 {/* Document Footer Notice */}

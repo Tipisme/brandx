@@ -127,7 +127,7 @@ export default function NewsSection({
     if (currentPostId && singlePost) {
       const originalTitle = document.title;
       // Set SEO Title
-      document.title = `${singlePost.meta_title || singlePost.title} | Cập nhật Pháp Luật BrandHub`;
+      document.title = `${singlePost.meta_title || singlePost.title} | Cập nhật Pháp Luật Brandix`;
       
       // Update SEO Meta Description
       const metaDesc = document.querySelector('meta[name="description"]');
@@ -161,10 +161,10 @@ export default function NewsSection({
         },
         "publisher": {
           "@type": "Organization",
-          "name": "BrandHub Việt Nam",
+          "name": "Brandix Việt Nam",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://file.smemoney.vn/fleet/trademarks/logo.jpg"
+            "url": "/brandix-logo.jpg"
           }
         },
         "description": summaryText

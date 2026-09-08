@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Award, Mail, Phone, MapPin, Send, CheckCircle2, FileText, ShieldCheck } from 'lucide-react';
+import { Award, Mail, Phone, MapPin, Send, CheckCircle2, FileText, ShieldCheck, RefreshCw, ChevronRight } from 'lucide-react';
 import BrandixLogo from './BrandixLogo';
+import { forceClearCacheAndReload, APP_VERSION } from '../utils/cacheManager';
+import { POLICY_DOCUMENTS } from '../policyData';
 
 interface FooterProps {
   onOpenPolicy?: (docId: string) => void;
@@ -51,7 +53,7 @@ export default function Footer({ onOpenPolicy }: FooterProps) {
             </div>
 
             <div className="pt-2 border-t border-slate-900/80 space-y-1 text-[10px] text-gray-400">
-              <p><strong className="text-gray-300">Giám đốc:</strong> ĐOÀN MINH ĐỨC</p>
+              <p className="font-bold text-gray-200 uppercase tracking-wide">CÔNG TY LUẬT TNHH HDS</p>
               <p><strong className="text-gray-300">MST:</strong> 0108553521</p>
               <p><strong className="text-gray-300">Giấy ĐKHĐ:</strong> Số 01021497/TP/ĐKHĐ cấp ngày 13/12/2018 tại Sở Tư pháp</p>
               <p><strong className="text-gray-300">Đại diện SHTT:</strong> Mã HNi-006 (475) cấp ngày 19/11/2025 tại Sở KH&CN</p>
@@ -65,11 +67,13 @@ export default function Footer({ onOpenPolicy }: FooterProps) {
             Giải pháp
           </h4>
           <ul className="space-y-2.5 text-[11px]">
+            <li><a href="#/about" className="hover:text-white transition-colors">Về chúng tôi</a></li>
             <li><a href="#catalog" className="hover:text-white transition-colors">Mua nhãn hiệu</a></li>
             <li><a href="#home" className="hover:text-white transition-colors">Ký gửi bán</a></li>
             <li><a href="#workflow" className="hover:text-white transition-colors">Đăng ký mới</a></li>
             <li><a href="#workflow" className="hover:text-white transition-colors">Gia hạn bằng</a></li>
-            <li><a href="#why-brandhub" className="hover:text-white transition-colors">Tra cứu bảo hộ</a></li>
+            <li><a href="#/faq" className="hover:text-white transition-colors">Hỏi đáp pháp lý</a></li>
+            <li><a href="#/about" className="hover:text-white transition-colors">Tra cứu bảo hộ</a></li>
           </ul>
         </div>
 
@@ -79,54 +83,21 @@ export default function Footer({ onOpenPolicy }: FooterProps) {
             Chính sách
           </h4>
           <ul className="space-y-2 text-[11px]">
-            <li>
-              <button onClick={(e) => handleDocClick(e, 'dieu-khoan-su-dung')} className="hover:text-white transition-colors text-left flex items-center gap-1.5 cursor-pointer">
-                <ShieldCheck className="w-3.5 h-3.5 text-orange-500 shrink-0" />
-                <span>Điều khoản sử dụng</span>
-              </button>
-            </li>
-            <li>
-              <button onClick={(e) => handleDocClick(e, 'chinh-sach-bao-mat')} className="hover:text-white transition-colors text-left flex items-center gap-1.5 cursor-pointer">
-                <ShieldCheck className="w-3.5 h-3.5 text-orange-500 shrink-0" />
-                <span>Chính sách bảo mật</span>
-              </button>
-            </li>
-            <li>
-              <button onClick={(e) => handleDocClick(e, 'chinh-sach-gia')} className="hover:text-white transition-colors text-left flex items-center gap-1.5 cursor-pointer">
-                <FileText className="w-3.5 h-3.5 text-orange-500 shrink-0" />
-                <span>Chính sách giá</span>
-              </button>
-            </li>
-            <li>
-              <button onClick={(e) => handleDocClick(e, 'chinh-sach-thanh-toan')} className="hover:text-white transition-colors text-left flex items-center gap-1.5 cursor-pointer">
-                <FileText className="w-3.5 h-3.5 text-orange-500 shrink-0" />
-                <span>Chính sách thanh toán</span>
-              </button>
-            </li>
-            <li>
-              <button onClick={(e) => handleDocClick(e, 'chinh-sach-van-chuyen-giao-hang')} className="hover:text-white transition-colors text-left flex items-center gap-1.5 cursor-pointer">
-                <FileText className="w-3.5 h-3.5 text-orange-500 shrink-0" />
-                <span>Chính sách vận chuyển & giao hàng</span>
-              </button>
-            </li>
-            <li>
-              <button onClick={(e) => handleDocClick(e, 'hinh-thuc-ho-tro-truc-tuyen')} className="hover:text-white transition-colors text-left flex items-center gap-1.5 cursor-pointer">
-                <FileText className="w-3.5 h-3.5 text-orange-500 shrink-0" />
-                <span>Hình thức hỗ trợ trực tuyến</span>
-              </button>
-            </li>
-            <li>
-              <button onClick={(e) => handleDocClick(e, 'quy-trinh-giai-quyet-khieu-nai')} className="hover:text-white transition-colors text-left flex items-center gap-1.5 cursor-pointer">
-                <FileText className="w-3.5 h-3.5 text-orange-500 shrink-0" />
-                <span>Quy trình giải quyết khiếu nại</span>
-              </button>
-            </li>
-            <li>
-              <button onClick={(e) => handleDocClick(e, 'huong_dan_tai_file')} className="hover:text-white transition-colors text-left flex items-center gap-1.5 cursor-pointer">
-                <FileText className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                <span>Hướng dẫn tải file</span>
-              </button>
-            </li>
+            {POLICY_DOCUMENTS.map((doc) => (
+              <li key={doc.id}>
+                <button
+                  id={`footer-policy-link-${doc.id}`}
+                  onClick={(e) => handleDocClick(e, doc.id)}
+                  className="hover:text-white text-gray-300 transition-all text-left flex items-center gap-2 cursor-pointer group py-0.5 w-full"
+                  title={`Xem văn bản: ${doc.title}`}
+                >
+                  <FileText className="w-3.5 h-3.5 text-orange-500 shrink-0 group-hover:text-orange-400 transition-colors" />
+                  <span className="group-hover:text-orange-400 group-hover:translate-x-0.5 transition-all leading-snug">
+                    {doc.title}
+                  </span>
+                </button>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -165,14 +136,29 @@ export default function Footer({ onOpenPolicy }: FooterProps) {
           )}
 
           <div className="text-[10px] text-gray-500 leading-normal">
-            Bảo mật thông tin tuyệt đối. Bằng việc đăng ký, bạn đồng ý với các chính sách của HDS Law.
+            Bảo mật thông tin tuyệt đối. Bằng việc đăng ký, bạn đồng ý với các chính sách của Brandix.
           </div>
         </div>
       </div>
 
-      {/* Centered Copyright Line */}
-      <div className="max-w-7xl mx-auto border-t border-slate-900 mt-12 pt-8 text-center text-gray-500 text-[11px]">
-        <p>© 2026 Brandix Việt Nam. All rights reserved. Vận hành bởi Công ty Luật HDS.</p>
+      {/* Centered Copyright Line & Cache Refresh */}
+      <div className="max-w-7xl mx-auto border-t border-slate-900 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-gray-500 text-[11px]">
+        <p>© 2026 Brandix Việt Nam (brandix.vn). All rights reserved.</p>
+        <div className="flex items-center gap-3">
+          <span className="text-[10px] text-slate-600">Bản dựng: {APP_VERSION}</span>
+          <button
+            onClick={() => {
+              if (confirm("Làm mới giao diện và xóa bộ nhớ đệm (cache) để cập nhật phiên bản mới nhất?")) {
+                forceClearCacheAndReload();
+              }
+            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-orange-400 border border-slate-800 transition-colors cursor-pointer text-[10px]"
+            title="Nhấn để tải lại toàn bộ giao diện mới nhất và xóa cache"
+          >
+            <RefreshCw className="w-3 h-3" />
+            <span>Làm mới giao diện (Xóa Cache)</span>
+          </button>
+        </div>
       </div>
     </footer>
   );

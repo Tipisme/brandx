@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Phone, Mail, Award, ShoppingCart, User, Menu, X, Sparkles } from 'lucide-react';
 import { translations, Language } from '../localization';
 import BrandixLogo from './BrandixLogo';
 
 interface HeaderProps {
+  searchKeyword?: string;
   onSearchChange: (keyword: string) => void;
   onClassSelect: (cls: number | null) => void;
   onOpenWizard: () => void;
@@ -21,6 +22,7 @@ interface HeaderProps {
 }
 
 export default function Header({
+  searchKeyword = "",
   onSearchChange,
   onClassSelect,
   onOpenWizard,
@@ -37,9 +39,16 @@ export default function Header({
   currentRoute
 }: HeaderProps) {
   const t = translations[language];
-  const [searchVal, setSearchVal] = useState("");
+  const [searchVal, setSearchVal] = useState(searchKeyword);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+
+  // Sync internal search input value when searchKeyword changes from outside
+  useEffect(() => {
+    if (searchKeyword !== undefined) {
+      setSearchVal(searchKeyword);
+    }
+  }, [searchKeyword]);
 
   const categories = [
     { id: null, label: language === 'vi' ? "Tất cả danh mục" : "All Categories" },
@@ -55,7 +64,20 @@ export default function Header({
     { id: 44, label: language === 'vi' ? "Y tế & Làm đẹp (Nhóm 44)" : "Medical & Beauty (Class 44)" }
   ];
 
-  const handleSearchSubmit = (e: React.FormEvent) => { e.preventDefault(); onSearchChange(searchVal); };
+  // Simply update local input text while typing - do NOT jump page while typing
+  const handleInputChange = (newVal: string) => {
+    setSearchVal(newVal);
+  };
+
+  // Only jump page and trigger search query when user clicks "Tra Cứu" button or presses Enter
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (currentRoute !== 'catalog' || viewMode === 'dashboard') {
+      onViewModeChange?.('marketplace');
+      window.location.hash = '#/catalog';
+    }
+    onSearchChange(searchVal.trim());
+  };
 
   const currentCategoryLabel = categories.find(c => c.id === selectedClass)?.label || (language === 'vi' ? "Chọn Nhóm hàng..." : "Select Class...");
 
@@ -65,21 +87,21 @@ export default function Header({
       <div className="w-full bg-slate-900 text-white text-[11px] py-2 px-4 border-b border-slate-800">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
           <div className="flex items-center gap-6">
-            <span className="flex items-center gap-1.5 text-gray-300 hover:text-white transition-colors">
+            <a href="tel:0901727373" className="flex items-center gap-1.5 text-gray-300 hover:text-white transition-colors">
               <Phone className="w-3.5 h-3.5 text-orange-500" />
-              {t.hotline}: <strong className="text-orange-400">1900 8899</strong> (8:00 - 18:00)
-            </span>
-            <span className="flex items-center gap-1.5 text-gray-300 hover:text-white transition-colors">
+              <span>{language === 'vi' ? 'Điện thoại' : 'Phone'}: <strong className="text-orange-400">0901727373</strong></span>
+            </a>
+            <a href="mailto:hdslaw.vn@gmail.com" className="flex items-center gap-1.5 text-gray-300 hover:text-white transition-colors">
               <Mail className="w-3.5 h-3.5 text-orange-500" />
-              Email: <span className="text-gray-300">support@brandhub.vn</span>
-            </span>
+              <span>Email: <span className="text-gray-300 hover:text-orange-400 transition-colors">hdslaw.vn@gmail.com</span></span>
+            </a>
           </div>
           <div className="flex items-center gap-4 text-gray-400">
-            <a href="#about" className="hover:text-white transition-colors">{language === 'vi' ? 'Giới thiệu' : 'About'}</a>
+            <a href="#/about" className="hover:text-white transition-colors">{t.whyUs}</a>
             <span className="text-slate-700">|</span>
             <a href="#news" className="hover:text-white transition-colors">{language === 'vi' ? 'Tin tức SHTT' : 'IP News'}</a>
             <span className="text-slate-700">|</span>
-            <a href="#faq" className="hover:text-white transition-colors">{t.faq}</a>
+            <a href="#/faq" onClick={() => { if(viewMode === 'dashboard') { onViewModeChange?.('marketplace'); } }} className="hover:text-white transition-colors">{t.faq}</a>
             <span className="text-slate-700">|</span>
             
             {/* Language Selector Pill */}
@@ -119,7 +141,7 @@ export default function Header({
             type="text"
             placeholder={t.searchPlaceholder}
             value={searchVal}
-            onChange={(e) => setSearchVal(e.target.value)}
+            onChange={(e) => handleInputChange(e.target.value)}
             className="bg-transparent flex-1 outline-none text-sm text-slate-800 placeholder:text-slate-400"
           />
           
@@ -142,6 +164,10 @@ export default function Header({
                     onClick={() => {
                       onClassSelect(cat.id);
                       setShowCategoryDropdown(false);
+                      if (currentRoute !== 'catalog' || viewMode === 'dashboard') {
+                        onViewModeChange?.('marketplace');
+                        window.location.hash = '#/catalog';
+                      }
                     }}
                     className={`w-full text-left px-4 py-2 hover:bg-slate-50 text-xs transition-colors flex justify-between items-center ${selectedClass === cat.id ? 'text-orange-500 font-semibold bg-orange-50/50' : 'text-slate-700'}`}
                   >
@@ -292,7 +318,7 @@ export default function Header({
               type="text"
               placeholder={t.searchPlaceholder}
               value={searchVal}
-              onChange={(e) => setSearchVal(e.target.value)}
+              onChange={(e) => handleInputChange(e.target.value)}
               className="bg-transparent flex-1 outline-none text-xs text-slate-800 px-2"
             />
             <button

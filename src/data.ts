@@ -112,7 +112,7 @@ export const MOCK_TRADEMARKS: Trademark[] = [
     filingDate: "2020-04-18",
     price: 3800000000, // 3.8 billion
     isFeatured: true,
-    description: "Nhãn hiệu bia vua đầy mạnh mẽ. Đã hoàn tất chuyển nhượng thành công cho một tập đoàn đồ uống lớn tại Việt Nam thông qua BrandHub.",
+    description: "Nhãn hiệu bia vua đầy mạnh mẽ. Đã hoàn tất chuyển nhượng thành công cho một tập đoàn đồ uống lớn tại Việt Nam thông qua Brandix.",
     ownerType: "Tổ chức",
     views: 1890,
     likes: 410
@@ -222,7 +222,7 @@ export const MOCK_FAQS: FAQ[] = [
     id: "faq-1",
     category: "buy",
     question: "Các nhãn hiệu hoặc tên miền có được xác minh về quyền sở hữu, tình trạng đăng ký và tính hợp lệ không?",
-    answer: "Tất cả các nhãn hiệu niêm yết trên BrandHub đều trải qua quy trình thẩm định 3 lớp nghiêm ngặt bởi đội ngũ chuyên gia pháp lý và luật sư SHTT của chúng tôi. Chúng tôi đối chiếu trực tiếp dữ liệu với Cục Sở hữu Trí tuệ Việt Nam (WIPO / CSDL quốc gia), kiểm tra tình trạng hiệu lực, tranh chấp, khiếu nại hoặc cầm cố trước khi cho phép hiển thị lên sàn. Người mua được đảm bảo 100% về tính sạch sẽ pháp lý."
+    answer: "Tất cả các nhãn hiệu niêm yết trên Brandix đều trải qua quy trình thẩm định 3 lớp nghiêm ngặt bởi đội ngũ chuyên gia pháp lý và luật sư SHTT của chúng tôi. Chúng tôi đối chiếu trực tiếp dữ liệu với Cục Sở hữu Trí tuệ Việt Nam (WIPO / CSDL quốc gia), kiểm tra tình trạng hiệu lực, tranh chấp, khiếu nại hoặc cầm cố trước khi cho phép hiển thị lên sàn. Người mua được đảm bảo 100% về tính sạch sẽ pháp lý."
   },
   {
     id: "faq-2",
@@ -234,19 +234,19 @@ export const MOCK_FAQS: FAQ[] = [
     id: "faq-3",
     category: "buy",
     question: "Giá niêm yết có thể thương lượng không? Có phát sinh chi phí giao dịch hoặc dịch vụ bổ sung nào không?",
-    answer: "Giá niêm yết trên hệ thống là giá đề xuất từ chủ sở hữu nhãn hiệu. Người mua hoàn toàn có thể sử dụng tính năng 'Thương lượng giá' trên BrandHub để đưa ra mức giá mong muốn. Chi phí giao dịch bao gồm phí môi giới sàn (đã tính vào giá bán) và lệ phí nhà nước về ghi nhận chuyển nhượng. BrandHub cam kết công khai, minh bạch, không phát sinh bất kỳ khoản phí ẩn nào."
+    answer: "Giá niêm yết trên hệ thống là giá đề xuất từ chủ sở hữu nhãn hiệu. Người mua hoàn toàn có thể sử dụng tính năng 'Thương lượng giá' trên Brandix để đưa ra mức giá mong muốn. Chi phí giao dịch bao gồm phí môi giới sàn (đã tính vào giá bán) và lệ phí nhà nước về ghi nhận chuyển nhượng. Brandix cam kết công khai, minh bạch, không phát sinh bất kỳ khoản phí ẩn nào."
   },
   {
     id: "faq-4",
     category: "sell",
-    question: "Làm thế nào để tôi có thể ký gửi nhãn hiệu của mình lên sàn BrandHub?",
+    question: "Làm thế nào để tôi có thể ký gửi nhãn hiệu của mình lên sàn Brandix?",
     answer: "Bạn chỉ cần nhấn nút 'Bán ngay' hoặc 'Ký gửi nhãn hiệu' trên thanh menu. Điền thông tin nhãn hiệu bao gồm: số đơn/số bằng bảo hộ, nhóm sản phẩm, giá bán mong muốn và thông tin liên hệ. Chuyên gia của chúng tôi sẽ liên hệ trong vòng 2 giờ làm việc để thẩm định hồ sơ gốc, ký hợp đồng ký gửi và đưa nhãn hiệu của bạn tiếp cận hơn 5,000+ nhà đầu tư tiềm năng."
   },
   {
     id: "faq-5",
     category: "sell",
     question: "Thanh toán giao dịch được thực hiện như thế nào để đảm bảo an toàn cho cả hai bên?",
-    answer: "BrandHub áp dụng cơ chế tài khoản Escrow (Ký quỹ an toàn). Khi người mua thanh toán, tiền sẽ được giữ tại tài khoản ký quỹ của Ngân hàng đối tác liên kết với BrandHub. Tiền chỉ được giải ngân cho người bán sau khi hồ sơ chuyển nhượng hợp lệ được nộp và có dấu nhận đơn của Cục Sở hữu Trí tuệ Việt Nam, hoặc khi hợp đồng công chứng chuyển nhượng đã hoàn tất tùy thỏa thuận đặt cọc."
+    answer: "Brandix áp dụng cơ chế tài khoản Escrow (Ký quỹ an toàn). Khi người mua thanh toán, tiền sẽ được giữ tại tài khoản ký quỹ của Ngân hàng đối tác liên kết với Brandix. Tiền chỉ được giải ngân cho người bán sau khi hồ sơ chuyển nhượng hợp lệ được nộp và có dấu nhận đơn của Cục Sở hữu Trí tuệ Việt Nam, hoặc khi hợp đồng công chứng chuyển nhượng đã hoàn tất tùy thỏa thuận đặt cọc."
   },
   {
     id: "faq-6",
@@ -263,7 +263,7 @@ export const MOCK_REVIEWS: Review[] = [
     role: "Quản lý chuỗi ẩm thực Trí Việt",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150",
     rating: 5,
-    content: "Tôi đã tìm kiếm một thương hiệu về mảng thực phẩm và ăn uống rất khó khăn trong suốt thời gian qua vì hầu hết các tên đẹp đều bị đăng ký hết. Thật tuyệt vời khi tìm được BrandHub! Quy trình chuyển nhượng cực kỳ nhanh gọn, giúp chúng tôi sở hữu nhãn hiệu độc quyền chỉ trong vài ngày thay vì chờ đợi 2 năm."
+    content: "Tôi đã tìm kiếm một thương hiệu về mảng thực phẩm và ăn uống rất khó khăn trong suốt thời gian qua vì hầu hết các tên đẹp đều bị đăng ký hết. Thật tuyệt vời khi tìm được Brandix! Quy trình chuyển nhượng cực kỳ nhanh gọn, giúp chúng tôi sở hữu nhãn hiệu độc quyền chỉ trong vài ngày thay vì chờ đợi 2 năm."
   },
   {
     id: "rev-2",
@@ -271,7 +271,7 @@ export const MOCK_REVIEWS: Review[] = [
     role: "CEO EcoGlow Cosmetics",
     avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150",
     rating: 5,
-    content: "Nhờ BrandHub, tôi đã thanh lý được 2 nhãn hiệu mỹ phẩm chưa dùng tới với giá rất tốt. Đội ngũ tư vấn pháp lý hỗ trợ tận tình từ khâu soạn hợp đồng đến khâu nộp hồ sơ lên Cục SHTT. Dịch vụ tuyệt vời và uy tín!"
+    content: "Nhờ Brandix, tôi đã thanh lý được 2 nhãn hiệu mỹ phẩm chưa dùng tới với giá rất tốt. Đội ngũ tư vấn pháp lý hỗ trợ tận tình từ khâu soạn hợp đồng đến khâu nộp hồ sơ lên Cục SHTT. Dịch vụ tuyệt vời và uy tín!"
   },
   {
     id: "rev-3",

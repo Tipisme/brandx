@@ -641,7 +641,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                           className="mt-0.5 rounded border-slate-300 text-orange-500 focus:ring-orange-500 cursor-pointer shrink-0"
                         />
                         <label htmlFor="agree-terms" className="cursor-pointer select-none leading-relaxed">
-                          Tôi đồng ý với các <a href="#terms" className="text-orange-500 hover:underline">Điều khoản dịch vụ</a> và <a href="#privacy" className="text-orange-500 hover:underline">Chính sách bảo mật thông tin</a> của BrandHub.
+                          Tôi đồng ý với các <a href="#terms" className="text-orange-500 hover:underline">Điều khoản dịch vụ</a> và <a href="#privacy" className="text-orange-500 hover:underline">Chính sách bảo mật thông tin</a> của Brandix.
                         </label>
                       </div>
 
@@ -664,8 +664,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
 
                   {/* Back to Home guide */}
                   <div className="border-t border-slate-100 pt-4 mt-4 text-center text-[10px] text-slate-400 flex justify-center items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-ping"></span>
-                    Vận hành an toàn bới <strong>IP BrandHub Việt Nam</strong>
+                    <img src="/brandix-logo.jpg" alt="Brandix" className="h-4 w-auto object-contain inline-block" />
+                    <span>Vận hành an toàn bởi <strong className="text-slate-700">Brandix Việt Nam</strong></span>
                   </div>
                 </div>
               )}
