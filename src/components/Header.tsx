@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Phone, Mail, Award, ShoppingCart, User, Menu, X, Sparkles } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Search, Phone, Mail, Award, ShoppingCart, User, Menu, X, Sparkles, ChevronDown, Briefcase, Folder, Settings, HelpCircle, ShieldCheck } from 'lucide-react';
 import { translations, Language } from '../localization';
 import BrandixLogo from './BrandixLogo';
+import { AdminTab, getAdminTabPath, ADMIN_TAB_LABELS } from '../utils/routes';
 
 interface HeaderProps {
   searchKeyword?: string;
@@ -11,7 +12,7 @@ interface HeaderProps {
   onOpenCart: () => void;
   cartCount: number;
   selectedClass: number | null;
-  onOpenLogin: () => void;
+  onOpenLogin: (redirectTarget?: { path: string; tab?: AdminTab; label?: string }) => void;
   user: { name: string; email: string } | null;
   onLogout: () => void;
   language: Language;
@@ -19,6 +20,8 @@ interface HeaderProps {
   viewMode?: 'marketplace' | 'dashboard';
   onViewModeChange?: (mode: 'marketplace' | 'dashboard') => void;
   currentRoute: string;
+  adminTab?: AdminTab;
+  onNavigate?: (path: string) => void;
 }
 
 export default function Header({
@@ -36,12 +39,26 @@ export default function Header({
   onLanguageChange,
   viewMode = 'marketplace',
   onViewModeChange,
-  currentRoute
+  currentRoute,
+  adminTab = 'profile',
+  onNavigate
 }: HeaderProps) {
   const t = translations[language];
   const [searchVal, setSearchVal] = useState(searchKeyword);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const [showAdminDropdown, setShowAdminDropdown] = useState(false);
+  const adminDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (adminDropdownRef.current && !adminDropdownRef.current.contains(event.target as Node)) {
+        setShowAdminDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Sync internal search input value when searchKeyword changes from outside
   useEffect(() => {
@@ -251,60 +268,251 @@ export default function Header({
 
       {/* Navigation Menu (Desktop) */}
       <nav className="w-full border-t border-slate-100 bg-slate-50/50 hidden md:block">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-8 text-[11px] font-extrabold uppercase tracking-wider text-slate-600">
+        <div className="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between">
+          <div className="flex items-center gap-7 text-[11px] font-extrabold uppercase tracking-wider text-slate-600">
             <a 
-              href="#/home" 
-              onClick={() => { if(viewMode === 'dashboard') { onViewModeChange?.('marketplace'); } }}
+              href="/" 
+              onClick={(e) => {
+                e.preventDefault();
+                if (viewMode === 'dashboard') onViewModeChange?.('marketplace');
+                onNavigate ? onNavigate('/') : (window.location.hash = '#/');
+              }}
               className={`hover:text-orange-500 transition-colors py-1 border-b-2 hover:border-orange-500 ${currentRoute === 'home' && viewMode !== 'dashboard' ? 'border-orange-500 text-orange-500' : 'border-transparent text-slate-600'}`}
             >
               {t.home}
             </a>
             <a 
-              href="#/catalog" 
-              onClick={() => { if(viewMode === 'dashboard') { onViewModeChange?.('marketplace'); } }}
+              href="/catalog" 
+              onClick={(e) => {
+                e.preventDefault();
+                if (viewMode === 'dashboard') onViewModeChange?.('marketplace');
+                onNavigate ? onNavigate('/catalog') : (window.location.hash = '#/catalog');
+              }}
               className={`hover:text-orange-500 transition-colors py-1 border-b-2 hover:border-orange-500 ${currentRoute === 'catalog' && viewMode !== 'dashboard' ? 'border-orange-500 text-orange-500' : 'border-transparent text-slate-600'}`}
             >
               {t.catalog}
             </a>
             <a 
-              href="#/workflow" 
-              onClick={() => { if(viewMode === 'dashboard') { onViewModeChange?.('marketplace'); } }}
+              href="/workflow" 
+              onClick={(e) => {
+                e.preventDefault();
+                if (viewMode === 'dashboard') onViewModeChange?.('marketplace');
+                onNavigate ? onNavigate('/workflow') : (window.location.hash = '#/workflow');
+              }}
               className={`hover:text-orange-500 transition-colors py-1 border-b-2 hover:border-orange-500 ${currentRoute === 'workflow' && viewMode !== 'dashboard' ? 'border-orange-500 text-orange-500' : 'border-transparent text-slate-600'}`}
             >
               {t.workflow}
             </a>
             <a 
-              href="#/about" 
-              onClick={() => { if(viewMode === 'dashboard') { onViewModeChange?.('marketplace'); } }}
+              href="/about" 
+              onClick={(e) => {
+                e.preventDefault();
+                if (viewMode === 'dashboard') onViewModeChange?.('marketplace');
+                onNavigate ? onNavigate('/about') : (window.location.hash = '#/about');
+              }}
               className={`hover:text-orange-500 transition-colors py-1 border-b-2 hover:border-orange-500 ${currentRoute === 'about' && viewMode !== 'dashboard' ? 'border-orange-500 text-orange-500' : 'border-transparent text-slate-600'}`}
             >
               {t.whyUs}
             </a>
             <a 
-              href="#/faq" 
-              onClick={() => { if(viewMode === 'dashboard') { onViewModeChange?.('marketplace'); } }}
+              href="/faq" 
+              onClick={(e) => {
+                e.preventDefault();
+                if (viewMode === 'dashboard') onViewModeChange?.('marketplace');
+                onNavigate ? onNavigate('/faq') : (window.location.hash = '#/faq');
+              }}
               className={`hover:text-orange-500 transition-colors py-1 border-b-2 hover:border-orange-500 ${currentRoute === 'faq' && viewMode !== 'dashboard' ? 'border-orange-500 text-orange-500' : 'border-transparent text-slate-600'}`}
             >
               {t.faq}
             </a>
             <a 
-              href="#/news" 
-              onClick={() => { if(viewMode === 'dashboard') { onViewModeChange?.('marketplace'); } }}
+              href="/news" 
+              onClick={(e) => {
+                e.preventDefault();
+                if (viewMode === 'dashboard') onViewModeChange?.('marketplace');
+                onNavigate ? onNavigate('/news') : (window.location.hash = '#/news');
+              }}
               className={`hover:text-orange-500 transition-colors py-1 border-b-2 hover:border-orange-500 ${(currentRoute === 'news' || currentRoute === 'news-detail') && viewMode !== 'dashboard' ? 'border-orange-500 text-orange-500' : 'border-transparent text-slate-600'}`}
             >
               {t.news}
             </a>
-            {user && (
-              <button
-                onClick={() => onViewModeChange?.(viewMode === 'dashboard' ? 'marketplace' : 'dashboard')}
-                className={`hover:text-orange-500 transition-colors py-1 border-b-2 font-extrabold uppercase tracking-wider text-[11px] cursor-pointer ${
-                  viewMode === 'dashboard' ? 'border-orange-500 text-orange-500' : 'border-transparent text-slate-600'
-                }`}
-              >
-                💼 {language === 'vi' ? 'Trang quản trị' : 'Workspace'}
-              </button>
-            )}
+
+            {/* Trang Quản Trị with sub-menus dropdown */}
+            <div className="relative" ref={adminDropdownRef}>
+              <div className="flex items-center">
+                <a
+                  href="/quan-tri"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (!user) {
+                      onOpenLogin({ path: '/quan-tri/ca-nhan-to-chuc', tab: 'profile', label: 'Trang quản trị' });
+                    } else {
+                      onViewModeChange?.('dashboard');
+                      onNavigate?.(getAdminTabPath(adminTab || 'profile'));
+                    }
+                  }}
+                  className={`hover:text-orange-500 transition-colors py-1 border-b-2 font-extrabold uppercase tracking-wider text-[11px] cursor-pointer flex items-center gap-1.5 ${
+                    viewMode === 'dashboard' ? 'border-orange-500 text-orange-500' : 'border-transparent text-slate-600'
+                  }`}
+                >
+                  <Briefcase className="w-3.5 h-3.5 text-orange-500" />
+                  <span>{language === 'vi' ? 'Trang quản trị' : 'Workspace'}</span>
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setShowAdminDropdown(!showAdminDropdown)}
+                  className={`p-1 hover:text-orange-500 transition-colors cursor-pointer ${
+                    viewMode === 'dashboard' ? 'text-orange-500' : 'text-slate-400'
+                  }`}
+                  title={language === 'vi' ? 'Xem các mục quản trị' : 'Workspace menus'}
+                >
+                  <ChevronDown className={`w-3 h-3 transition-transform duration-150 ${showAdminDropdown ? 'rotate-180 text-orange-500' : ''}`} />
+                </button>
+              </div>
+
+              {/* Dropdown Menu for Admin Tabs */}
+              {showAdminDropdown && (
+                <div className="absolute left-0 mt-2 w-64 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 py-2 text-xs normal-case animate-in fade-in slide-in-from-top-2 duration-150">
+                  <div className="px-3 py-1.5 border-b border-slate-100 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    {language === 'vi' ? 'Mục quản trị tài khoản' : 'Workspace Submenus'}
+                  </div>
+
+                  <a
+                    href="/quan-tri/ca-nhan-to-chuc"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowAdminDropdown(false);
+                      if (!user) {
+                        onOpenLogin({ path: '/quan-tri/ca-nhan-to-chuc', tab: 'profile', label: 'Cá nhân và tổ chức' });
+                      } else {
+                        onViewModeChange?.('dashboard');
+                        onNavigate?.('/quan-tri/ca-nhan-to-chuc');
+                      }
+                    }}
+                    className={`flex items-center gap-2.5 px-3.5 py-2.5 hover:bg-orange-50 hover:text-orange-600 transition-colors ${
+                      viewMode === 'dashboard' && adminTab === 'profile' ? 'bg-orange-50/80 text-orange-600 font-bold' : 'text-slate-700'
+                    }`}
+                  >
+                    <User className="w-4 h-4 text-orange-500 shrink-0" />
+                    <div>
+                      <div className="font-bold text-xs">{language === 'vi' ? 'Cá nhân và tổ chức' : 'Personal & Org'}</div>
+                      <div className="text-[10px] text-slate-400">/quan-tri/ca-nhan-to-chuc</div>
+                    </div>
+                  </a>
+
+                  <a
+                    href="/quan-tri/quan-ly-tai-san"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowAdminDropdown(false);
+                      if (!user) {
+                        onOpenLogin({ path: '/quan-tri/quan-ly-tai-san', tab: 'trademarks', label: 'Quản lý tài sản' });
+                      } else {
+                        onViewModeChange?.('dashboard');
+                        onNavigate?.('/quan-tri/quan-ly-tai-san');
+                      }
+                    }}
+                    className={`flex items-center gap-2.5 px-3.5 py-2.5 hover:bg-orange-50 hover:text-orange-600 transition-colors ${
+                      viewMode === 'dashboard' && adminTab === 'trademarks' ? 'bg-orange-50/80 text-orange-600 font-bold' : 'text-slate-700'
+                    }`}
+                  >
+                    <Award className="w-4 h-4 text-orange-500 shrink-0" />
+                    <div>
+                      <div className="font-bold text-xs">{language === 'vi' ? 'Quản lý tài sản' : 'Asset Management'}</div>
+                      <div className="text-[10px] text-slate-400">/quan-tri/quan-ly-tai-san</div>
+                    </div>
+                  </a>
+
+                  <a
+                    href="/quan-tri/quan-ly-yeu-cau"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowAdminDropdown(false);
+                      if (!user) {
+                        onOpenLogin({ path: '/quan-tri/quan-ly-yeu-cau', tab: 'cases', label: 'Quản lý yêu cầu' });
+                      } else {
+                        onViewModeChange?.('dashboard');
+                        onNavigate?.('/quan-tri/quan-ly-yeu-cau');
+                      }
+                    }}
+                    className={`flex items-center gap-2.5 px-3.5 py-2.5 hover:bg-orange-50 hover:text-orange-600 transition-colors ${
+                      viewMode === 'dashboard' && adminTab === 'cases' ? 'bg-orange-50/80 text-orange-600 font-bold' : 'text-slate-700'
+                    }`}
+                  >
+                    <Briefcase className="w-4 h-4 text-orange-500 shrink-0" />
+                    <div>
+                      <div className="font-bold text-xs">{language === 'vi' ? 'Quản lý yêu cầu' : 'Request Management'}</div>
+                      <div className="text-[10px] text-slate-400">/quan-tri/quan-ly-yeu-cau</div>
+                    </div>
+                  </a>
+
+                  <a
+                    href="/quan-tri/quan-ly-file"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowAdminDropdown(false);
+                      if (!user) {
+                        onOpenLogin({ path: '/quan-tri/quan-ly-file', tab: 'files', label: 'Quản lý file' });
+                      } else {
+                        onViewModeChange?.('dashboard');
+                        onNavigate?.('/quan-tri/quan-ly-file');
+                      }
+                    }}
+                    className={`flex items-center gap-2.5 px-3.5 py-2.5 hover:bg-orange-50 hover:text-orange-600 transition-colors ${
+                      viewMode === 'dashboard' && adminTab === 'files' ? 'bg-orange-50/80 text-orange-600 font-bold' : 'text-slate-700'
+                    }`}
+                  >
+                    <Folder className="w-4 h-4 text-orange-500 shrink-0" />
+                    <div>
+                      <div className="font-bold text-xs">{language === 'vi' ? 'Quản lý file' : 'File Manager'}</div>
+                      <div className="text-[10px] text-slate-400">/quan-tri/quan-ly-file</div>
+                    </div>
+                  </a>
+
+                  <div className="border-t border-slate-100 my-1"></div>
+
+                  <a
+                    href="/quan-tri/cai-dat"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowAdminDropdown(false);
+                      if (!user) {
+                        onOpenLogin({ path: '/quan-tri/cai-dat', tab: 'settings', label: 'Cài đặt' });
+                      } else {
+                        onViewModeChange?.('dashboard');
+                        onNavigate?.('/quan-tri/cai-dat');
+                      }
+                    }}
+                    className={`flex items-center gap-2.5 px-3.5 py-2 hover:bg-slate-50 transition-colors ${
+                      viewMode === 'dashboard' && adminTab === 'settings' ? 'text-orange-600 font-bold' : 'text-slate-600'
+                    }`}
+                  >
+                    <Settings className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <span className="font-medium text-xs">{language === 'vi' ? 'Cài đặt' : 'Settings'}</span>
+                  </a>
+
+                  <a
+                    href="/quan-tri/ho-tro"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowAdminDropdown(false);
+                      if (!user) {
+                        onOpenLogin({ path: '/quan-tri/ho-tro', tab: 'support', label: 'Hỗ trợ' });
+                      } else {
+                        onViewModeChange?.('dashboard');
+                        onNavigate?.('/quan-tri/ho-tro');
+                      }
+                    }}
+                    className={`flex items-center gap-2.5 px-3.5 py-2 hover:bg-slate-50 transition-colors ${
+                      viewMode === 'dashboard' && adminTab === 'support' ? 'text-orange-600 font-bold' : 'text-slate-600'
+                    }`}
+                  >
+                    <HelpCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <span className="font-medium text-xs">{language === 'vi' ? 'Hỗ trợ' : 'Help & Support'}</span>
+                  </a>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </nav>
@@ -331,20 +539,151 @@ export default function Header({
 
           {/* Links */}
           <div className="flex flex-col gap-3 text-xs font-bold uppercase tracking-wide text-slate-700">
-            <a href="#/home" onClick={() => { setShowMobileMenu(false); onViewModeChange?.('marketplace'); }} className={`hover:text-orange-500 transition-colors py-1 ${currentRoute === 'home' && viewMode !== 'dashboard' ? 'text-orange-500 border-l-2 border-orange-500 pl-2' : ''}`}>{t.home}</a>
-            <a href="#/catalog" onClick={() => { setShowMobileMenu(false); onViewModeChange?.('marketplace'); }} className={`hover:text-orange-500 transition-colors py-1 ${currentRoute === 'catalog' && viewMode !== 'dashboard' ? 'text-orange-500 border-l-2 border-orange-500 pl-2' : ''}`}>{t.catalog}</a>
-            <a href="#/workflow" onClick={() => { setShowMobileMenu(false); onViewModeChange?.('marketplace'); }} className={`hover:text-orange-500 transition-colors py-1 ${currentRoute === 'workflow' && viewMode !== 'dashboard' ? 'text-orange-500 border-l-2 border-orange-500 pl-2' : ''}`}>{t.workflow}</a>
-            <a href="#/about" onClick={() => { setShowMobileMenu(false); onViewModeChange?.('marketplace'); }} className={`hover:text-orange-500 transition-colors py-1 ${currentRoute === 'about' && viewMode !== 'dashboard' ? 'text-orange-500 border-l-2 border-orange-500 pl-2' : ''}`}>{t.whyUs}</a>
-            <a href="#/faq" onClick={() => { setShowMobileMenu(false); onViewModeChange?.('marketplace'); }} className={`hover:text-orange-500 transition-colors py-1 ${currentRoute === 'faq' && viewMode !== 'dashboard' ? 'text-orange-500 border-l-2 border-orange-500 pl-2' : ''}`}>{t.faq}</a>
-            <a href="#/news" onClick={() => { setShowMobileMenu(false); onViewModeChange?.('marketplace'); }} className={`hover:text-orange-500 transition-colors py-1 ${(currentRoute === 'news' || currentRoute === 'news-detail') && viewMode !== 'dashboard' ? 'text-orange-500 border-l-2 border-orange-500 pl-2' : ''}`}>{t.news}</a>
-            {user && (
-              <button
-                onClick={() => { setShowMobileMenu(false); onViewModeChange?.(viewMode === 'dashboard' ? 'marketplace' : 'dashboard'); }}
-                className="hover:text-orange-500 transition-colors py-1 text-left font-bold uppercase tracking-wide text-xs cursor-pointer flex items-center gap-1"
-              >
-                💼 {language === 'vi' ? 'Trang quản trị' : 'Workspace'}
-              </button>
-            )}
+            <a 
+              href="/" 
+              onClick={(e) => { 
+                e.preventDefault(); 
+                setShowMobileMenu(false); 
+                if (viewMode === 'dashboard') onViewModeChange?.('marketplace'); 
+                onNavigate ? onNavigate('/') : (window.location.hash = '#/');
+              }} 
+              className={`hover:text-orange-500 transition-colors py-1 ${currentRoute === 'home' && viewMode !== 'dashboard' ? 'text-orange-500 border-l-2 border-orange-500 pl-2' : ''}`}
+            >
+              {t.home}
+            </a>
+            <a 
+              href="/catalog" 
+              onClick={(e) => { 
+                e.preventDefault(); 
+                setShowMobileMenu(false); 
+                if (viewMode === 'dashboard') onViewModeChange?.('marketplace'); 
+                onNavigate ? onNavigate('/catalog') : (window.location.hash = '#/catalog');
+              }} 
+              className={`hover:text-orange-500 transition-colors py-1 ${currentRoute === 'catalog' && viewMode !== 'dashboard' ? 'text-orange-500 border-l-2 border-orange-500 pl-2' : ''}`}
+            >
+              {t.catalog}
+            </a>
+            <a 
+              href="/workflow" 
+              onClick={(e) => { 
+                e.preventDefault(); 
+                setShowMobileMenu(false); 
+                if (viewMode === 'dashboard') onViewModeChange?.('marketplace'); 
+                onNavigate ? onNavigate('/workflow') : (window.location.hash = '#/workflow');
+              }} 
+              className={`hover:text-orange-500 transition-colors py-1 ${currentRoute === 'workflow' && viewMode !== 'dashboard' ? 'text-orange-500 border-l-2 border-orange-500 pl-2' : ''}`}
+            >
+              {t.workflow}
+            </a>
+            <a 
+              href="/about" 
+              onClick={(e) => { 
+                e.preventDefault(); 
+                setShowMobileMenu(false); 
+                if (viewMode === 'dashboard') onViewModeChange?.('marketplace'); 
+                onNavigate ? onNavigate('/about') : (window.location.hash = '#/about');
+              }} 
+              className={`hover:text-orange-500 transition-colors py-1 ${currentRoute === 'about' && viewMode !== 'dashboard' ? 'text-orange-500 border-l-2 border-orange-500 pl-2' : ''}`}
+            >
+              {t.whyUs}
+            </a>
+            <a 
+              href="/faq" 
+              onClick={(e) => { 
+                e.preventDefault(); 
+                setShowMobileMenu(false); 
+                if (viewMode === 'dashboard') onViewModeChange?.('marketplace'); 
+                onNavigate ? onNavigate('/faq') : (window.location.hash = '#/faq');
+              }} 
+              className={`hover:text-orange-500 transition-colors py-1 ${currentRoute === 'faq' && viewMode !== 'dashboard' ? 'text-orange-500 border-l-2 border-orange-500 pl-2' : ''}`}
+            >
+              {t.faq}
+            </a>
+            <a 
+              href="/news" 
+              onClick={(e) => { 
+                e.preventDefault(); 
+                setShowMobileMenu(false); 
+                if (viewMode === 'dashboard') onViewModeChange?.('marketplace'); 
+                onNavigate ? onNavigate('/news') : (window.location.hash = '#/news');
+              }} 
+              className={`hover:text-orange-500 transition-colors py-1 ${(currentRoute === 'news' || currentRoute === 'news-detail') && viewMode !== 'dashboard' ? 'text-orange-500 border-l-2 border-orange-500 pl-2' : ''}`}
+            >
+              {t.news}
+            </a>
+
+            {/* Mobile Admin Section with deep-links */}
+            <div className="border-t border-slate-100 pt-2">
+              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                💼 {language === 'vi' ? 'Trang quản trị (URLs riêng)' : 'Workspace Submenus'}
+              </div>
+              <div className="pl-2 space-y-2 text-xs normal-case font-medium">
+                <a
+                  href="/quan-tri/ca-nhan-to-chuc"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowMobileMenu(false);
+                    if (!user) {
+                      onOpenLogin({ path: '/quan-tri/ca-nhan-to-chuc', tab: 'profile', label: 'Cá nhân và tổ chức' });
+                    } else {
+                      onViewModeChange?.('dashboard');
+                      onNavigate?.('/quan-tri/ca-nhan-to-chuc');
+                    }
+                  }}
+                  className={`block py-1 hover:text-orange-500 ${viewMode === 'dashboard' && adminTab === 'profile' ? 'text-orange-600 font-bold' : 'text-slate-600'}`}
+                >
+                  • {language === 'vi' ? 'Cá nhân và tổ chức' : 'Personal & Org'}
+                </a>
+                <a
+                  href="/quan-tri/quan-ly-tai-san"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowMobileMenu(false);
+                    if (!user) {
+                      onOpenLogin({ path: '/quan-tri/quan-ly-tai-san', tab: 'trademarks', label: 'Quản lý tài sản' });
+                    } else {
+                      onViewModeChange?.('dashboard');
+                      onNavigate?.('/quan-tri/quan-ly-tai-san');
+                    }
+                  }}
+                  className={`block py-1 hover:text-orange-500 ${viewMode === 'dashboard' && adminTab === 'trademarks' ? 'text-orange-600 font-bold' : 'text-slate-600'}`}
+                >
+                  • {language === 'vi' ? 'Quản lý tài sản' : 'Asset Management'}
+                </a>
+                <a
+                  href="/quan-tri/quan-ly-yeu-cau"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowMobileMenu(false);
+                    if (!user) {
+                      onOpenLogin({ path: '/quan-tri/quan-ly-yeu-cau', tab: 'cases', label: 'Quản lý yêu cầu' });
+                    } else {
+                      onViewModeChange?.('dashboard');
+                      onNavigate?.('/quan-tri/quan-ly-yeu-cau');
+                    }
+                  }}
+                  className={`block py-1 hover:text-orange-500 ${viewMode === 'dashboard' && adminTab === 'cases' ? 'text-orange-600 font-bold' : 'text-slate-600'}`}
+                >
+                  • {language === 'vi' ? 'Quản lý yêu cầu' : 'Request Management'}
+                </a>
+                <a
+                  href="/quan-tri/quan-ly-file"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowMobileMenu(false);
+                    if (!user) {
+                      onOpenLogin({ path: '/quan-tri/quan-ly-file', tab: 'files', label: 'Quản lý file' });
+                    } else {
+                      onViewModeChange?.('dashboard');
+                      onNavigate?.('/quan-tri/quan-ly-file');
+                    }
+                  }}
+                  className={`block py-1 hover:text-orange-500 ${viewMode === 'dashboard' && adminTab === 'files' ? 'text-orange-600 font-bold' : 'text-slate-600'}`}
+                >
+                  • {language === 'vi' ? 'Quản lý file' : 'File Manager'}
+                </a>
+              </div>
+            </div>
           </div>
 
           <div className="border-t border-slate-100 pt-3 flex flex-col gap-2">

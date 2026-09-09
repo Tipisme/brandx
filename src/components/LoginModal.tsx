@@ -6,9 +6,10 @@ interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
   onLoginSuccess: (user: { name: string; email: string; token?: string; [key: string]: any }) => void;
+  redirectNotice?: string;
 }
 
-export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginModalProps) {
+export default function LoginModal({ isOpen, onClose, onLoginSuccess, redirectNotice }: LoginModalProps) {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const [showPassword, setShowPassword] = useState(false);
   const [userRole, setUserRole] = useState<'buyer' | 'seller'>('buyer');
@@ -451,6 +452,13 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                 </div>
               ) : (
                 <div className="space-y-4">
+                  {redirectNotice && (
+                    <div className="bg-amber-50 border border-amber-200 text-amber-900 px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse shrink-0" />
+                      <span className="font-semibold">{redirectNotice}</span>
+                    </div>
+                  )}
+
                   {errorMsg && (
                     <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-xs font-medium">
                       {errorMsg}

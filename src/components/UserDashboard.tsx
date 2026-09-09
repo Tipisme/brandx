@@ -42,6 +42,7 @@ import {
 } from 'lucide-react';
 import { Language, translations } from '../localization';
 import { Trademark } from '../types';
+import { AdminTab, ADMIN_TAB_SLUGS, getAdminTabPath } from '../utils/routes';
 
 interface UserDashboardProps {
   user: { name: string; email: string; token?: string; first_name?: string; last_name?: string; [key: string]: any } | null;
@@ -49,7 +50,9 @@ interface UserDashboardProps {
   onLogout: () => void;
   onCloseDashboard: () => void;
   onUserUpdate?: (updatedUser: any) => void;
-  initialTab?: 'profile' | 'trademarks' | 'cases' | 'files' | 'settings' | 'support';
+  initialTab?: AdminTab;
+  activeTab?: AdminTab;
+  onTabChange?: (tab: AdminTab) => void;
 }
 
 // Interface for User Personal & Organization Info
@@ -138,19 +141,28 @@ export default function UserDashboard({
   onLogout,
   onCloseDashboard,
   onUserUpdate,
-  initialTab = 'profile'
+  initialTab = 'profile',
+  activeTab: propActiveTab,
+  onTabChange
 }: UserDashboardProps) {
   const t = translations[language];
 
   // Current active sidebar menu option
-  // Options: 'profile', 'trademarks', 'cases', 'files', 'settings', 'support'
-  const [activeTab, setActiveTab] = useState<'profile' | 'trademarks' | 'cases' | 'files' | 'settings' | 'support'>(initialTab);
+  const [activeTab, setActiveTab] = useState<AdminTab>(propActiveTab || initialTab);
 
   useEffect(() => {
-    if (initialTab) {
+    if (propActiveTab) {
+      setActiveTab(propActiveTab);
+    } else if (initialTab) {
       setActiveTab(initialTab);
     }
-  }, [initialTab]);
+  }, [propActiveTab, initialTab]);
+
+  const handleSelectTab = (tab: AdminTab) => {
+    setActiveTab(tab);
+    setSelectedCase(null);
+    onTabChange?.(tab);
+  };
 
   // Helper to parse files from login payload (company.files)
   const parseCompanyFiles = (u: any) => {
@@ -1836,69 +1848,75 @@ export default function UserDashboard({
 
             {/* Sidebar main items */}
             <div className="space-y-1">
-              <button
-                onClick={() => { setActiveTab('profile'); setSelectedCase(null); }}
+              <a
+                href={getAdminTabPath('profile')}
+                onClick={(e) => { e.preventDefault(); handleSelectTab('profile'); }}
                 className={`w-full text-left px-4 py-3 rounded-2xl text-xs font-bold transition-all flex items-center gap-3 cursor-pointer ${
                   activeTab === 'profile' ? 'bg-orange-50 text-orange-600 shadow-xs' : 'text-slate-600 hover:bg-slate-50'
                 }`}
               >
                 <User className="w-4 h-4" />
                 {language === 'vi' ? 'Cá nhân và tổ chức' : 'Personal & Org'}
-              </button>
+              </a>
 
-              <button
-                onClick={() => { setActiveTab('trademarks'); setSelectedCase(null); }}
+              <a
+                href={getAdminTabPath('trademarks')}
+                onClick={(e) => { e.preventDefault(); handleSelectTab('trademarks'); }}
                 className={`w-full text-left px-4 py-3 rounded-2xl text-xs font-bold transition-all flex items-center gap-3 cursor-pointer ${
                   activeTab === 'trademarks' ? 'bg-orange-50 text-orange-600 shadow-xs' : 'text-slate-600 hover:bg-slate-50'
                 }`}
               >
                 <Award className="w-4 h-4" />
                 {language === 'vi' ? 'Quản lý tài sản' : 'Asset Management'}
-              </button>
+              </a>
 
-              <button
-                onClick={() => { setActiveTab('cases'); }}
+              <a
+                href={getAdminTabPath('cases')}
+                onClick={(e) => { e.preventDefault(); handleSelectTab('cases'); }}
                 className={`w-full text-left px-4 py-3 rounded-2xl text-xs font-bold transition-all flex items-center gap-3 cursor-pointer ${
                   activeTab === 'cases' ? 'bg-orange-50 text-orange-600 shadow-xs' : 'text-slate-600 hover:bg-slate-50'
                 }`}
               >
                 <Briefcase className="w-4 h-4" />
                 {language === 'vi' ? 'Quản lý yêu cầu' : 'Request Management'}
-              </button>
+              </a>
 
-              <button
-                onClick={() => { setActiveTab('files'); setSelectedCase(null); }}
+              <a
+                href={getAdminTabPath('files')}
+                onClick={(e) => { e.preventDefault(); handleSelectTab('files'); }}
                 className={`w-full text-left px-4 py-3 rounded-2xl text-xs font-bold transition-all flex items-center gap-3 cursor-pointer ${
                   activeTab === 'files' ? 'bg-orange-50 text-orange-600 shadow-xs' : 'text-slate-600 hover:bg-slate-50'
                 }`}
               >
                 <Folder className="w-4 h-4" />
                 {language === 'vi' ? 'Quản lý file' : 'File Manager'}
-              </button>
+              </a>
             </div>
           </div>
 
           {/* Footer menu buttons */}
           <div className="border-t border-slate-100 pt-5 mt-6 space-y-1">
-            <button
-              onClick={() => { setActiveTab('settings'); setSelectedCase(null); }}
+            <a
+              href={getAdminTabPath('settings')}
+              onClick={(e) => { e.preventDefault(); handleSelectTab('settings'); }}
               className={`w-full text-left px-4 py-2.5 rounded-xl text-[11px] font-bold transition-all flex items-center gap-2.5 cursor-pointer ${
                 activeTab === 'settings' ? 'text-orange-500 font-extrabold' : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               <Settings className="w-4 h-4" />
               {language === 'vi' ? 'Cài đặt' : 'Settings'}
-            </button>
+            </a>
 
-            <button
-              onClick={() => { setActiveTab('support'); setSelectedCase(null); }}
+            <a
+              href={getAdminTabPath('support')}
+              onClick={(e) => { e.preventDefault(); handleSelectTab('support'); }}
               className={`w-full text-left px-4 py-2.5 rounded-xl text-[11px] font-bold transition-all flex items-center gap-2.5 cursor-pointer ${
                 activeTab === 'support' ? 'text-orange-500 font-extrabold' : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               <HelpCircle className="w-4 h-4" />
               {language === 'vi' ? 'Hỗ trợ' : 'Support Help'}
-            </button>
+            </a>
 
             <button
               onClick={onLogout}
@@ -2713,15 +2731,9 @@ export default function UserDashboard({
             <div className="space-y-6 animate-in fade-in duration-200" id="cases-tab-panel">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-5">
                 <div>
-                  <h3 className="text-xl font-sans font-extrabold text-slate-900 flex items-center gap-2">
+                  <h3 className="text-xl font-sans font-extrabold text-slate-900">
                     {language === 'vi' ? 'Quản lý yêu cầu' : 'Request Management'}
-                    <span className="text-xs font-mono font-normal bg-orange-100 text-orange-700 px-2.5 py-0.5 rounded-full border border-orange-200">
-                      /api/requests
-                    </span>
                   </h3>
-                  <p className="text-slate-500 text-xs mt-1">
-                    {language === 'vi' ? 'Hiển thị dữ liệu thực tế từ API /api/requests, phân loại màu sắc theo trạng thái pending, doing, approved, rejected.' : 'Real-time requests fetched from /api/requests with color coded status classification.'}
-                  </p>
                 </div>
 
                 <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -2964,7 +2976,9 @@ export default function UserDashboard({
                   {requestsLoading ? (
                     <div className="text-center py-16 bg-white rounded-3xl border border-slate-100 shadow-xs space-y-3">
                       <RefreshCw className="w-8 h-8 text-orange-500 animate-spin mx-auto" />
-                      <p className="text-xs font-bold text-slate-600">Đang tải dữ liệu thực tế từ /api/requests...</p>
+                      <p className="text-xs font-bold text-slate-600">
+                        {language === 'vi' ? 'Đang tải danh sách yêu cầu...' : 'Loading requests...'}
+                      </p>
                     </div>
                   ) : (
                     <>

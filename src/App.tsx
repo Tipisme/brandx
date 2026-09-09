@@ -19,9 +19,19 @@ import DocxModalViewer from './components/DocxModalViewer';
 import NegotiationModal from './components/NegotiationModal';
 import { MOCK_TRADEMARKS, MOCK_BLOGS, MOCK_REVIEWS } from './data';
 import { Trademark } from './types';
-import { ShieldCheck, Zap, Handshake, Star, ArrowUpRight, HelpCircle, Phone, Sparkles } from 'lucide-react';
+import { ShieldCheck, Zap, Handshake, Star, ArrowUpRight, HelpCircle, Phone, Sparkles, Lock, ArrowLeft, ArrowRight } from 'lucide-react';
 import { Language } from './localization';
 import { fetchNiceClasses } from './services/niceClasses';
+import {
+  parseCurrentLocation,
+  navigateTo,
+  saveLoginRedirect,
+  getSavedLoginRedirect,
+  clearSavedLoginRedirect,
+  AdminTab,
+  getAdminTabPath,
+  getAdminTabLabel
+} from './utils/routes';
 
 export default function App() {
   // Application State managers
@@ -48,7 +58,8 @@ export default function App() {
     return null;
   });
 
-  const [dashboardInitialTab, setDashboardInitialTab] = useState<'profile' | 'trademarks' | 'cases' | 'files' | 'settings' | 'support'>('profile');
+  const [dashboardInitialTab, setDashboardInitialTab] = useState<AdminTab>('profile');
+  const [loginRedirectNotice, setLoginRedirectNotice] = useState<string>('');
   const [policyModalOpen, setPolicyModalOpen] = useState(false);
   const [selectedPolicyId, setSelectedPolicyId] = useState('chinh-sach-bao-mat');
 
@@ -82,6 +93,7 @@ export default function App() {
     setIsNegotiationOpen(false);
     setDashboardInitialTab('cases');
     setViewMode('dashboard');
+    navigateTo('/quan-tri/quan-ly-yeu-cau');
   };
 
   const handleRegistrationSuccess = (orderData: any) => {
@@ -106,6 +118,17 @@ export default function App() {
     setIsWizardOpen(false);
     setDashboardInitialTab('cases');
     setViewMode('dashboard');
+    navigateTo('/quan-tri/quan-ly-yeu-cau');
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('brandhub_user');
+    localStorage.removeItem('brandhub_token');
+    clearSavedLoginRedirect();
+    setLoginRedirectNotice('');
+    setViewMode('marketplace');
+    navigateTo('/');
   };
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedClass, setSelectedClass] = useState<number | null>(null);
@@ -135,109 +158,54 @@ export default function App() {
   const [resetToken, setResetToken] = useState<string>('');
 
   useEffect(() => {
-    const handleHashChange = () => {
-      const rawHash = window.location.hash || '#/';
-      const [hashBase, hashQuery] = rawHash.split('?');
-      const hash = hashBase;
-      const pathname = window.location.pathname;
+    const syncRouteFromUrl = () => {
+      const parsed = parseCurrentLocation();
 
-      if (hashQuery) {
-        const queryParams = new URLSearchParams(hashQuery);
-        const searchQ = queryParams.get('q') || queryParams.get('search');
-        if (searchQ) {
-          setSearchKeyword(searchQ);
-        }
+      if (parsed.searchQuery) {
+        setSearchKeyword(parsed.searchQuery);
       }
 
-      const pathSegments = pathname.split('/').filter(Boolean);
-      const hashSegments = hash.replace(/^#\/?/, '').split('/').filter(Boolean);
-
-      const findParams = (segments: string[]) => {
-        // Check for 'reset-password' in the URL segments followed by email and token
-        const resetIdx = segments.indexOf('reset-password');
-        if (resetIdx !== -1 && segments.length > resetIdx + 2) {
-          const email = decodeURIComponent(segments[resetIdx + 1]);
-          const token = segments[resetIdx + 2];
-          if (email.includes('@') && token && token.length >= 10) {
-            return { email, token };
-          }
-        }
-
-        // Fallback search for any segment containing '@' followed by a token
-        for (let i = 0; i < segments.length - 1; i++) {
-          const seg = segments[i];
-          if (seg.includes('@')) {
-            const email = decodeURIComponent(seg);
-            const token = segments[i + 1];
-            if (token && token.length >= 10) {
-              return { email, token };
-            }
-          }
-        }
-        return null;
-      };
-
-      const resetParams = findParams(pathSegments) || findParams(hashSegments);
-
-      if (resetParams) {
+      if (parsed.route === 'reset-password' && parsed.resetEmail && parsed.resetToken) {
         setCurrentRoute('reset-password');
-        setResetEmail(resetParams.email);
-        setResetToken(resetParams.token);
+        setResetEmail(parsed.resetEmail);
+        setResetToken(parsed.resetToken);
         setActiveSlug(null);
         setActivePostId(null);
+        setViewMode('marketplace');
         return;
       }
 
-      if (hash === '#/' || hash === '#/home' || hash === '#home') {
-        setCurrentRoute('home');
+      if (parsed.route === 'dashboard') {
+        const tab = parsed.adminTab || 'profile';
+        setDashboardInitialTab(tab);
+        setViewMode('dashboard');
+        setCurrentRoute('dashboard');
         setActiveSlug(null);
         setActivePostId(null);
-      } else if (hash === '#/catalog' || hash === '#catalog') {
-        setCurrentRoute('catalog');
-        setActiveSlug(null);
-        setActivePostId(null);
-      } else if (hash.startsWith('#/catalog/') || hash.startsWith('#catalog/')) {
-        setCurrentRoute('catalog-detail');
-        const parts = hash.split('/');
-        const slug = parts[parts.length - 1];
-        setActiveSlug(slug);
-        setActivePostId(null);
-      } else if (hash === '#/news' || hash === '#news') {
-        setCurrentRoute('news');
-        setActiveSlug(null);
-        setActivePostId(null);
-      } else if (hash.startsWith('#/news/') || hash.startsWith('#news/')) {
-        setCurrentRoute('news-detail');
-        const parts = hash.split('/');
-        const postId = parts[parts.length - 1];
-        setActivePostId(postId);
-        setActiveSlug(null);
-      } else if (hash === '#/workflow' || hash === '#workflow') {
-        setCurrentRoute('workflow');
-        setActiveSlug(null);
-        setActivePostId(null);
-      } else if (hash === '#/about' || hash === '#/why-brandhub' || hash === '#why-brandhub' || hash === '#about' || hash === '#/ve-chung-toi' || hash === '#ve-chung-toi') {
-        setCurrentRoute('about');
-        setActiveSlug(null);
-        setActivePostId(null);
-      } else if (hash === '#/faq' || hash === '#faq' || hash === '#/hoi-dap' || hash === '#hoi-dap') {
-        setCurrentRoute('faq');
-        setActiveSlug(null);
-        setActivePostId(null);
-      } else {
-        setCurrentRoute('home');
-        setActiveSlug(null);
-        setActivePostId(null);
+
+        // Check if user is logged in
+        const storedUser = localStorage.getItem('brandhub_user');
+        if (!storedUser) {
+          const tabLabel = getAdminTabLabel(tab, language);
+          saveLoginRedirect(parsed.path, tab, tabLabel);
+          setLoginRedirectNotice(`Vui lòng đăng nhập để truy cập: ${tabLabel}`);
+          setIsLoginOpen(true);
+        }
+        return;
       }
+
+      setViewMode('marketplace');
+      setCurrentRoute(parsed.route);
+      setActiveSlug(parsed.slug || null);
+      setActivePostId(parsed.postId || null);
     };
 
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
-    // Also listen to popstate changes (back/forward or pushState changes)
-    window.addEventListener('popstate', handleHashChange);
+    syncRouteFromUrl();
+    window.addEventListener('hashchange', syncRouteFromUrl);
+    window.addEventListener('popstate', syncRouteFromUrl);
     return () => {
-      window.removeEventListener('hashchange', handleHashChange);
-      window.removeEventListener('popstate', handleHashChange);
+      window.removeEventListener('hashchange', syncRouteFromUrl);
+      window.removeEventListener('popstate', syncRouteFromUrl);
     };
   }, []);
 
@@ -299,7 +267,7 @@ export default function App() {
           setSearchKeyword(keyword);
           if (currentRoute !== 'catalog') {
             setCurrentRoute('catalog');
-            window.location.hash = '#/catalog';
+            navigateTo('/catalog');
           }
           if (viewMode !== 'marketplace') {
             setViewMode('marketplace');
@@ -309,7 +277,7 @@ export default function App() {
           setSelectedClass(cls);
           if (currentRoute !== 'catalog') {
             setCurrentRoute('catalog');
-            window.location.hash = '#/catalog';
+            navigateTo('/catalog');
           }
           if (viewMode !== 'marketplace') {
             setViewMode('marketplace');
@@ -319,44 +287,110 @@ export default function App() {
         onOpenCart={() => setIsCartOpen(true)}
         cartCount={favorites.length}
         selectedClass={selectedClass}
-        onOpenLogin={() => setIsLoginOpen(true)}
-        user={user}
-        onLogout={() => {
-          setUser(null);
-          localStorage.removeItem('brandhub_user');
-          localStorage.removeItem('brandhub_token');
-          setViewMode('marketplace');
+        onOpenLogin={(redirectTarget) => {
+          if (redirectTarget) {
+            saveLoginRedirect(redirectTarget.path, redirectTarget.tab, redirectTarget.label);
+            if (redirectTarget.label) {
+              setLoginRedirectNotice(`Vui lòng đăng nhập để truy cập: ${redirectTarget.label}`);
+            }
+          } else {
+            setLoginRedirectNotice('');
+          }
+          setIsLoginOpen(true);
         }}
+        user={user}
+        onLogout={handleLogout}
         language={language}
         onLanguageChange={setLanguage}
         viewMode={viewMode}
+        adminTab={dashboardInitialTab}
+        onNavigate={(path) => {
+          navigateTo(path);
+        }}
         onViewModeChange={(mode) => {
-          if (!user && mode === 'dashboard') {
-            setIsLoginOpen(true);
+          if (mode === 'dashboard') {
+            if (!user) {
+              const tab = dashboardInitialTab || 'profile';
+              const tabLabel = getAdminTabLabel(tab, language);
+              saveLoginRedirect(getAdminTabPath(tab), tab, tabLabel);
+              setLoginRedirectNotice(`Vui lòng đăng nhập để truy cập: ${tabLabel}`);
+              setIsLoginOpen(true);
+            } else {
+              setViewMode('dashboard');
+              navigateTo(getAdminTabPath(dashboardInitialTab || 'profile'));
+            }
           } else {
-            setViewMode(mode);
+            setViewMode('marketplace');
+            navigateTo('/');
           }
         }}
         currentRoute={currentRoute}
       />
 
-      {viewMode === 'dashboard' && user ? (
-        <UserDashboard
-          user={user}
-          language={language}
-          initialTab={dashboardInitialTab}
-          onLogout={() => {
-            setUser(null);
-            localStorage.removeItem('brandhub_user');
-            localStorage.removeItem('brandhub_token');
-            setViewMode('marketplace');
-          }}
-          onCloseDashboard={() => setViewMode('marketplace')}
-          onUserUpdate={(updatedUser) => {
-            setUser(updatedUser);
-            localStorage.setItem('brandhub_user', JSON.stringify(updatedUser));
-          }}
-        />
+      {viewMode === 'dashboard' ? (
+        user ? (
+          <UserDashboard
+            user={user}
+            language={language}
+            initialTab={dashboardInitialTab}
+            activeTab={dashboardInitialTab}
+            onTabChange={(tab) => {
+              setDashboardInitialTab(tab);
+              navigateTo(getAdminTabPath(tab));
+            }}
+            onLogout={handleLogout}
+            onCloseDashboard={() => {
+              setViewMode('marketplace');
+              navigateTo('/');
+            }}
+            onUserUpdate={(updatedUser) => {
+              setUser(updatedUser);
+              localStorage.setItem('brandhub_user', JSON.stringify(updatedUser));
+            }}
+          />
+        ) : (
+          <div className="min-h-[60vh] flex items-center justify-center py-16 px-4 bg-slate-50/50">
+            <div className="max-w-md w-full bg-white border border-slate-200 rounded-3xl p-8 shadow-xs text-center space-y-6">
+              <div className="w-16 h-16 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center mx-auto shadow-inner">
+                <Lock className="w-8 h-8" />
+              </div>
+              <div className="space-y-2">
+                <h2 className="text-xl font-black text-slate-900">
+                  {language === 'vi' ? 'Yêu cầu đăng nhập quản trị' : 'Workspace Login Required'}
+                </h2>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  {language === 'vi'
+                    ? `Bạn đang truy cập mục "${getAdminTabLabel(dashboardInitialTab, 'vi')}". Vui lòng đăng nhập tài khoản để xem và quản lý dữ liệu.`
+                    : `You are accessing "${getAdminTabLabel(dashboardInitialTab, 'en')}". Please log in to view and manage your data.`}
+                </p>
+              </div>
+              <div className="space-y-2 pt-2">
+                <button
+                  onClick={() => {
+                    const tabLabel = getAdminTabLabel(dashboardInitialTab, language);
+                    saveLoginRedirect(getAdminTabPath(dashboardInitialTab), dashboardInitialTab, tabLabel);
+                    setLoginRedirectNotice(`Vui lòng đăng nhập để truy cập: ${tabLabel}`);
+                    setIsLoginOpen(true);
+                  }}
+                  className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs py-3.5 px-4 rounded-xl shadow-xs transition-all cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <span>{language === 'vi' ? 'Đăng nhập ngay' : 'Log In Now'}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => {
+                    setViewMode('marketplace');
+                    navigateTo('/');
+                  }}
+                  className="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs py-3 px-4 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>{language === 'vi' ? 'Về trang chủ' : 'Back to Home'}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )
       ) : (
         <>
           {currentRoute === 'reset-password' && (
@@ -365,8 +399,7 @@ export default function App() {
               token={resetToken}
               language={language}
               onBackToLogin={() => {
-                window.history.pushState({}, '', '/');
-                window.location.hash = '#/home';
+                navigateTo('/');
                 setIsLoginOpen(true);
               }}
             />
@@ -376,7 +409,7 @@ export default function App() {
             <>
               {/* 2. Hero Section */}
               <Hero
-                onScrollToCatalog={() => { window.location.hash = '#/catalog'; }}
+                onScrollToCatalog={() => { navigateTo('/catalog'); }}
                 onOpenSellRequest={handleOpenWizard}
               />
 
@@ -601,8 +634,10 @@ export default function App() {
 
       <LoginModal
         isOpen={isLoginOpen}
+        redirectNotice={loginRedirectNotice}
         onClose={() => {
           setIsLoginOpen(false);
+          setLoginRedirectNotice('');
           setPendingOpenWizard(false);
           setPendingOpenNegotiation(false);
         }}
@@ -612,6 +647,7 @@ export default function App() {
           if (userData.token) {
             localStorage.setItem('brandhub_token', userData.token);
           }
+          setLoginRedirectNotice('');
           if (pendingOpenWizard) {
             setPendingOpenWizard(false);
             setIsWizardOpen(true);
@@ -619,7 +655,19 @@ export default function App() {
             setPendingOpenNegotiation(false);
             setIsNegotiationOpen(true);
           } else {
-            setViewMode('dashboard');
+            const savedRedirect = getSavedLoginRedirect();
+            if (savedRedirect && savedRedirect.path) {
+              clearSavedLoginRedirect();
+              setViewMode('dashboard');
+              if (savedRedirect.tab) {
+                setDashboardInitialTab(savedRedirect.tab);
+              }
+              navigateTo(savedRedirect.path);
+            } else {
+              setViewMode('dashboard');
+              setDashboardInitialTab('profile');
+              navigateTo('/quan-tri/ca-nhan-to-chuc');
+            }
           }
         }}
       />
