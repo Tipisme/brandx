@@ -6,21 +6,20 @@ import { defineConfig } from 'vite';
 export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss()],
+
     envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
+
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
       },
     },
+
     server: {
-      host: '0.0.0.0',
-      port: 3000,
-      allowedHosts: true as const,
-      // HMR is disabled in AI Studio via DISABLE_HMR env var.
       hmr: process.env.DISABLE_HMR !== 'true',
-      // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
     },
+
     build: {
       rollupOptions: {
         output: {
@@ -29,6 +28,15 @@ export default defineConfig(() => {
           assetFileNames: 'assets/[name]-[hash].[ext]',
         },
       },
+    },
+
+    preview: {
+      host: '0.0.0.0',
+      port: 3000,
+      allowedHosts: [
+        'brandix.vn',
+        'www.brandix.vn',
+      ],
     },
   };
 });
