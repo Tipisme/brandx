@@ -8,11 +8,8 @@ import {
   Award, 
   Search, 
   Upload, 
-  Copy, 
   CheckCircle2, 
   QrCode, 
-  Building2, 
-  CreditCard, 
   ShieldCheck, 
   AlertCircle,
   RefreshCw,
@@ -85,8 +82,41 @@ export default function RegistrationWizard({
   // Order result from API call
   const [orderResult, setOrderResult] = useState<OrderDataResponse | null>(null);
 
-  // Copy indicator for bank info
-  const [copiedField, setCopiedField] = useState<string | null>(null);
+  // Fee to display: calculated from response total.amount / 2
+  const displayedFeeAmount = useMemo(() => {
+    if (orderResult?.total?.amount != null) {
+      const parsed = Number(orderResult.total.amount);
+      if (!isNaN(parsed) && parsed > 0) {
+        return parsed / 2;
+      }
+    }
+    // Fallback: 1.500.000 ₫ per selected class
+    return (selectedClasses.length || 1) * 1500000;
+  }, [orderResult, selectedClasses.length]);
+
+  const displayedFeeFormatted = useMemo(() => {
+    return `${displayedFeeAmount.toLocaleString('vi-VN')} ₫`;
+  }, [displayedFeeAmount]);
+
+  // Transfer QR code image: retrieved from response image.path
+  const transferImageUrl = useMemo(() => {
+    const rawPath = orderResult?.image?.path 
+      || (orderResult as any)?.image_path 
+      || (typeof orderResult?.image === 'string' ? orderResult?.image : '');
+
+    if (rawPath && typeof rawPath === 'string') {
+      if (rawPath.startsWith('http://') || rawPath.startsWith('https://')) {
+        return rawPath;
+      }
+      const cleanPath = rawPath.startsWith('/') ? rawPath : `/${rawPath}`;
+      return `https://admin.hdslaw.vn${cleanPath}`;
+    }
+
+    // Fallback VietQR image using displayedFeeAmount if image.path is missing
+    const amount = displayedFeeAmount;
+    const slug = orderResult?.slug || '';
+    return `https://img.vietqr.io/image/MB-0388299999-compact2.png?amount=${amount}&addInfo=${encodeURIComponent(slug)}&accountName=CONG%20TY%20LUAT%20HDS`;
+  }, [orderResult, displayedFeeAmount]);
 
   // Fetch groups list from API: https://admin.hdslaw.vn/vi/api/attributes/nhom-san-pham-code
   useEffect(() => {
@@ -271,15 +301,35 @@ export default function RegistrationWizard({
 
       const resData = await response.json().catch(() => null);
 
-      if (response.ok && resData?.data?.order) {
-        setOrderResult(resData.data.order);
+      let extractedOrder: OrderDataResponse | null = null;
+      if (resData) {
+        const candidate = resData?.data?.order || resData?.order || resData?.data;
+        if (candidate && (candidate.slug || candidate.id || candidate.total)) {
+          extractedOrder = { ...candidate };
+          if (!extractedOrder.image && (resData.data?.image || resData.image)) {
+            extractedOrder.image = resData.data?.image || resData.image;
+          }
+        } else if (resData.slug || resData.id || resData.total) {
+          extractedOrder = { ...resData };
+        }
+      }
+
+      if (extractedOrder) {
+        const foundImage = extractedOrder.image || resData?.image || resData?.data?.image || (extractedOrder as any).image_path;
+        if (foundImage) {
+          extractedOrder.image = typeof foundImage === 'string' ? { path: foundImage, filename: '' } : foundImage;
+        }
+      }
+
+      if (response.ok && extractedOrder) {
+        setOrderResult(extractedOrder);
         setStep(2);
       } else {
         // Build robust fallback order data if API returned non-standard format or error
-        const totalAmt = selectedClasses.length * 1500000;
-        const generatedSlug = resData?.data?.order?.slug || `202608${Math.floor(100000000000 + Math.random() * 900000000000)}GIMJ`;
+        const totalAmt = (selectedClasses.length || 1) * 3000000;
+        const generatedSlug = resData?.data?.order?.slug || resData?.slug || `202608${Math.floor(100000000000 + Math.random() * 900000000000)}GIMJ`;
         const fallbackOrder: OrderDataResponse = {
-          id: resData?.data?.order?.id || Math.floor(Math.random() * 1000) + 10,
+          id: resData?.data?.order?.id || resData?.id || Math.floor(Math.random() * 1000) + 10,
           slug: generatedSlug,
           name: user?.name || "Khách hàng",
           email: user?.email || "khachhang@hdslaw.vn",
@@ -295,7 +345,7 @@ export default function RegistrationWizard({
     } catch (err) {
       console.error("Error submitting order to API:", err);
       // Fallback order generation for preview continuity
-      const totalAmt = selectedClasses.length * 1500000;
+      const totalAmt = (selectedClasses.length || 1) * 3000000;
       const generatedSlug = `202608${Math.floor(100000000000 + Math.random() * 900000000000)}GIMJ`;
       const fallbackOrder: OrderDataResponse = {
         id: Math.floor(Math.random() * 1000) + 10,
@@ -315,13 +365,6 @@ export default function RegistrationWizard({
     }
   };
 
-  // Copy helper
-  const handleCopyText = (text: string, fieldName: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedField(fieldName);
-    setTimeout(() => setCopiedField(null), 2000);
-  };
-
   // Complete process and go to Dashboard
   const handleFinishAndRedirect = () => {
     if (onSuccess && orderResult) {
@@ -329,7 +372,12 @@ export default function RegistrationWizard({
         ...orderResult,
         brandName: brandName,
         selectedClasses: selectedClasses,
-        logoPreview: logoPreview
+        logoPreview: logoPreview,
+        total: {
+          ...orderResult.total,
+          amount: displayedFeeAmount,
+          formatted: displayedFeeFormatted
+        }
       });
     }
     onClose();
@@ -661,7 +709,7 @@ export default function RegistrationWizard({
                     <div className="border-t border-slate-200 pt-3 flex justify-between items-center text-sm">
                       <span className="font-extrabold text-slate-900">Tổng phí nộp đơn:</span>
                       <span className="text-orange-600 font-black text-lg">
-                        {orderResult?.total?.formatted || `${(selectedClasses.length * 1500000).toLocaleString('vi-VN')} ₫`}
+                        {displayedFeeFormatted}
                       </span>
                     </div>
                   </div>
@@ -678,11 +726,11 @@ export default function RegistrationWizard({
                   </div>
                 </div>
 
-                {/* QR Code & Banking Transfer Details Column */}
-                <div className="lg:col-span-7 bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 space-y-5 shadow-xs">
+                {/* QR Code Column: ONLY the QR code image from response image.path */}
+                <div className="lg:col-span-7 bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 space-y-4 shadow-xs flex flex-col items-center justify-center">
                   
-                  <div className="text-center sm:text-left border-b border-slate-100 pb-3">
-                    <h4 className="font-sans font-extrabold text-slate-900 text-base flex items-center justify-center sm:justify-start gap-2">
+                  <div className="w-full text-center border-b border-slate-100 pb-3">
+                    <h4 className="font-sans font-extrabold text-slate-900 text-base flex items-center justify-center gap-2">
                       <QrCode className="w-5 h-5 text-orange-500" />
                       Mã QR Chuyển Khoản Ngân Hàng
                     </h4>
@@ -691,90 +739,21 @@ export default function RegistrationWizard({
                     </p>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row items-center gap-6">
-                    {/* VietQR Image Container */}
-                    <div className="bg-white p-3 border-2 border-orange-500/20 rounded-2xl shadow-sm text-center shrink-0">
+                  <div className="w-full flex-1 flex flex-col items-center justify-center py-2">
+                    <div className="bg-white p-3 sm:p-4 border-2 border-orange-500/20 rounded-2xl shadow-sm text-center max-w-sm w-full flex items-center justify-center">
                       <img 
-                        src={`https://img.vietqr.io/image/MB-0388299999-compact2.png?amount=${orderResult?.total?.amount || (selectedClasses.length * 1500000)}&addInfo=${encodeURIComponent(orderResult?.slug || '')}&accountName=CONG%20TY%20LUAT%20HDS`} 
-                        alt="QR Chuyển khoản HDS Law" 
-                        className="w-44 h-44 object-contain rounded-lg"
+                        src={transferImageUrl} 
+                        alt="Mã QR Chuyển Khoản Ngân Hàng" 
+                        className="max-w-full w-auto max-h-[380px] object-contain rounded-xl mx-auto"
                         onError={(e) => {
-                          // Fallback QR API if VietQR CDN has issue
-                          (e.target as HTMLImageElement).src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`MBBank STK: 0388299999 | HDS LAW | Order: ${orderResult?.slug}`)}`;
+                          // Fallback QR if image fails to load
+                          const target = e.target as HTMLImageElement;
+                          const fallbackUrl = `https://img.vietqr.io/image/MB-0388299999-compact2.png?amount=${displayedFeeAmount}&addInfo=${encodeURIComponent(orderResult?.slug || '')}&accountName=CONG%20TY%20LUAT%20HDS`;
+                          if (target.src !== fallbackUrl) {
+                            target.src = fallbackUrl;
+                          }
                         }}
                       />
-                      <span className="text-[10px] text-slate-400 font-mono mt-1 block">Quét mã bằng App Ngân Hàng</span>
-                    </div>
-
-                    {/* Bank Details Fields */}
-                    <div className="flex-1 space-y-3 w-full text-xs">
-                      
-                      {/* Ngân hàng */}
-                      <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 flex justify-between items-center">
-                        <div>
-                          <span className="text-[10px] text-slate-400 font-bold uppercase block">Ngân hàng</span>
-                          <strong className="text-slate-900 font-bold">MBBank (NH TMCP Quân Đội)</strong>
-                        </div>
-                      </div>
-
-                      {/* Số tài khoản */}
-                      <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 flex justify-between items-center">
-                        <div>
-                          <span className="text-[10px] text-slate-400 font-bold uppercase block">Số tài khoản</span>
-                          <strong className="text-orange-600 font-mono font-extrabold text-sm">0388299999</strong>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => handleCopyText('0388299999', 'stk')}
-                          className="bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 px-2.5 py-1.5 rounded-lg font-bold text-[11px] flex items-center gap-1 cursor-pointer transition-colors"
-                        >
-                          {copiedField === 'stk' ? (
-                            <>
-                              <Check className="w-3 h-3 text-emerald-600" />
-                              <span className="text-emerald-600">Đã chép</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-3 h-3 text-slate-400" />
-                              <span>Sao chép</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
-
-                      {/* Chủ tài khoản */}
-                      <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 flex justify-between items-center">
-                        <div>
-                          <span className="text-[10px] text-slate-400 font-bold uppercase block">Chủ tài khoản</span>
-                          <strong className="text-slate-900 font-extrabold uppercase">CÔNG TY LUẬT HDS</strong>
-                        </div>
-                      </div>
-
-                      {/* Nội dung chuyển khoản */}
-                      <div className="bg-orange-50/60 p-2.5 rounded-xl border border-orange-200/60 flex justify-between items-center">
-                        <div>
-                          <span className="text-[10px] text-orange-700 font-bold uppercase block">Nội dung chuyển khoản (bắt buộc)</span>
-                          <strong className="text-orange-700 font-mono font-black text-sm">{orderResult?.slug}</strong>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => handleCopyText(orderResult?.slug || '', 'slug')}
-                          className="bg-orange-500 hover:bg-orange-600 text-white px-2.5 py-1.5 rounded-lg font-bold text-[11px] flex items-center gap-1 cursor-pointer transition-colors shadow-xs"
-                        >
-                          {copiedField === 'slug' ? (
-                            <>
-                              <Check className="w-3 h-3" />
-                              <span>Đã chép</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-3 h-3" />
-                              <span>Sao chép</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
-
                     </div>
                   </div>
                 </div>
