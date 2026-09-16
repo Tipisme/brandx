@@ -49,7 +49,7 @@ export default function Footer({ onOpenPolicy }: FooterProps) {
             </div>
             <div className="flex items-center gap-2 hover:text-white transition-colors">
               <Mail className="w-4 h-4 text-orange-500 shrink-0" />
-              <span>Email: <a href="mailto:hdslaw.vn@gmail.com" className="text-white hover:text-orange-400">hdslaw.vn@gmail.com</a></span>
+              <span>Email: <a href="mailto:ipagent@hdslaw.vn" className="text-white hover:text-orange-400">ipagent@hdslaw.vn</a></span>
             </div>
 
             <div className="pt-2 border-t border-slate-900/80 space-y-1 text-[10px] text-gray-400">

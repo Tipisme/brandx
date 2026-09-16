@@ -94,7 +94,7 @@ export default function TrademarkList({
     let isMounted = true;
     const loadAttributeGroups = async () => {
       try {
-        let url = `https://admin.hdslaw.vn/${language}/api/attributes/nhom-san-pham-code`;
+        let url = `https://admin.hdslaw.vn/vi/api/attributes/nhom-san-pham-code`;
         let res = await fetch(url, { headers: { 'Accept': 'application/json' } });
         if (!res.ok) {
           url = `https://admin.hdslaw.vn/api/attributes/nhom-san-pham-code`;
@@ -158,13 +158,13 @@ export default function TrademarkList({
     }
   }, [selectedClass]);
 
-  // Main Effect to fetch from the LIVE NOIP Cục SHTT Vietnam API
+  // Main Effect to fetch from the live Trademark API
   useEffect(() => {
     const fetchTrademarks = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const url = `https://admin.hdslaw.vn/${language}/api/products?page=${currentPage}`;
+        const url = `https://admin.hdslaw.vn/vi/api/products?page=${currentPage}`;
         
         const response = await fetch(url, {
           method: 'POST',
@@ -448,8 +448,8 @@ export default function TrademarkList({
             </h2>
             <p className="text-slate-500 text-xs sm:text-sm mt-1 max-w-2xl">
               {language === 'vi' 
-                ? 'Tìm kiếm và giao dịch văn bằng nhãn hiệu độc quyền liên kết cơ sở dữ liệu thời gian thực từ Cục Sở hữu Trí tuệ Việt Nam.' 
-                : 'Search and acquire registered exclusive trademarks linked directly with NOIP databases.'}
+                ? 'Tìm kiếm, tra cứu và giao dịch văn bằng bảo hộ nhãn hiệu.' 
+                : 'Search, lookup and acquire registered trademark certificates.'}
             </p>
           </div>
         </div>
@@ -612,12 +612,10 @@ export default function TrademarkList({
               ) : (
                 displayGroups.map((grp) => {
                   const isChecked = selectedAdvGroups.includes(grp.id);
-                  const fullText = getFullGroupLabel(grp.id, grp.name);
                   return (
                     <button
                       key={grp.id}
                       type="button"
-                      title={fullText}
                       onClick={() => toggleAdvGroup(grp.id)}
                       className={`group/btn relative flex items-start gap-2.5 p-2.5 rounded-xl text-xs transition-all cursor-pointer text-left select-none ${
                         isChecked
@@ -630,7 +628,7 @@ export default function TrademarkList({
                       }`}>
                         {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
                       </span>
-                      <span className="leading-snug" title={fullText}>
+                      <span className="leading-snug">
                         {formatGroupPillLabel(grp.id, grp.name)}
                       </span>
                     </button>
@@ -982,7 +980,7 @@ export default function TrademarkList({
           <div className="flex flex-col items-center justify-center py-20 min-h-[40vh]">
             <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-4"></div>
             <p className="text-slate-500 text-xs font-medium">
-              {language === 'vi' ? 'Đang truy vấn thời gian thực từ CSDL Cục SHTT...' : 'Calling NOIP live databases...'}
+              {language === 'vi' ? 'Đang truy vấn dữ liệu nhãn hiệu...' : 'Querying trademark data...'}
             </p>
           </div>
         ) : error ? (

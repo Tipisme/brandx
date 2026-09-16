@@ -450,8 +450,8 @@ export default function NewsSection({
         </h1>
         <p className="text-slate-500 text-xs sm:text-sm">
           {language === 'vi' 
-            ? 'Cập nhật nhanh nhất các thay đổi quy chế pháp luật, thông tư hướng dẫn của Cục SHTT Việt Nam cùng cẩm nang bảo hộ nhãn hiệu kinh doanh an toàn.'
-            : 'Get the latest regulatory amendments, guides from the National Office of Intellectual Property of Vietnam, and guides on safe trademark usage.'}
+            ? 'Cập nhật nhanh nhất các thay đổi quy chế pháp luật, thông tư hướng dẫn cùng cẩm nang bảo hộ nhãn hiệu kinh doanh an toàn.'
+            : 'Get the latest regulatory amendments, practical guidelines, and guides on safe trademark usage.'}
         </p>
       </div>
 

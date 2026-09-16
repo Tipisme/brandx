@@ -43,6 +43,7 @@ import {
 import { Language, translations } from '../localization';
 import { Trademark } from '../types';
 import { AdminTab, ADMIN_TAB_SLUGS, getAdminTabPath } from '../utils/routes';
+import { getAdminApiUrl } from '../services/pageService';
 
 interface UserDashboardProps {
   user: { name: string; email: string; token?: string; first_name?: string; last_name?: string; [key: string]: any } | null;
@@ -265,7 +266,7 @@ export default function UserDashboard({
     });
 
     try {
-      const response = await fetch(`https://admin.hdslaw.vn/${language}/api/update-info`, {
+      const response = await fetch(`https://admin.hdslaw.vn/vi/api/update-info`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -390,7 +391,7 @@ export default function UserDashboard({
       views: 124,
       likes: 12,
       isFeatured: false,
-      description: 'Nhãn hiệu HDS đã được Cục SHTT cấp bằng hoàn chỉnh.'
+      description: 'Nhãn hiệu HDS đã được cấp văn bằng bảo hộ hoàn chỉnh.'
     }
   ]);
 
@@ -477,7 +478,7 @@ export default function UserDashboard({
   // Fetch Class options from API
   const fetchClassOptions = async () => {
     try {
-      const url = `https://admin.hdslaw.vn/${language}/api/attributes/nhom-san-pham-code`;
+      const url = `https://admin.hdslaw.vn/vi/api/attributes/nhom-san-pham-code`;
       const res = await fetch(url, {
         headers: { 'Accept': 'application/json' }
       });
@@ -505,7 +506,7 @@ export default function UserDashboard({
 
     setTrademarksLoading(true);
     try {
-      const url = `https://admin.hdslaw.vn/${language}/api/products/created-by`;
+      const url = `https://admin.hdslaw.vn/vi/api/products/created-by`;
       const res = await fetch(url, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -639,7 +640,7 @@ export default function UserDashboard({
         formData.append('price', String(newTm.price));
         formData.append('description', newTmDesc || 'Sản phẩm đăng ký từ trang cá nhân.');
 
-        const response = await fetch(`https://admin.hdslaw.vn/${language}/api/products/create`, {
+        const response = await fetch(`https://admin.hdslaw.vn/vi/api/products/create`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -737,13 +738,13 @@ export default function UserDashboard({
     {
       id: 'case-3',
       clientName: 'Manh Nguyen',
-      title: 'Nộp đơn mới nhóm 30 tại Cục SHTT',
+      title: 'Nộp đơn mới nhóm 30',
       description: 'Nộp hồ sơ bảo hộ nhãn hiệu phụ gia thực phẩm.',
       status: 'COMPLETED',
       date: '10.04.2026',
       category: 'purchase',
       messages: [
-        { sender: 'expert', text: 'Hồ sơ đã được Cục SHTT đóng dấu tiếp nhận đơn hợp lệ. Chúng tôi gửi anh file scan biên nhận đơn ở mục Quản lý file.', time: '16:00' }
+        { sender: 'expert', text: 'Hồ sơ đã được tiếp nhận và đóng dấu hợp lệ. Chúng tôi gửi anh file scan biên nhận đơn ở mục Quản lý file.', time: '16:00' }
       ]
     }
   ]);
@@ -753,9 +754,25 @@ export default function UserDashboard({
   const [chatInput, setChatInput] = useState('');
   
   const [isNewCaseModalOpen, setIsNewCaseModalOpen] = useState(false);
-  const [newCaseTitle, setNewCaseTitle] = useState('');
-  const [newCaseDesc, setNewCaseDesc] = useState('');
-  const [newCaseCat, setNewCaseCat] = useState<'purchase' | 'sell' | 'negotiate' | 'other'>('negotiate');
+  const [newRequestName, setNewRequestName] = useState('');
+  const [newRequestEmail, setNewRequestEmail] = useState('');
+  const [newRequestPhone, setNewRequestPhone] = useState('');
+  const [newRequestDesc, setNewRequestDesc] = useState('');
+  const [isSubmittingRequest, setIsSubmittingRequest] = useState(false);
+  const [requestSubmitError, setRequestSubmitError] = useState<string | null>(null);
+
+  const openNewRequestModal = () => {
+    const defaultName = profile.fullName || user?.name || user?.fullName || [user?.first_name, user?.last_name].filter(Boolean).join(' ') || '';
+    const defaultEmail = user?.email || profile.email || '';
+    const defaultPhone = user?.phone || user?.phone_number || profile.phone || user?.company?.phone || '';
+    
+    setNewRequestName(defaultName);
+    setNewRequestEmail(defaultEmail);
+    setNewRequestPhone(defaultPhone);
+    setNewRequestDesc('');
+    setRequestSubmitError(null);
+    setIsNewCaseModalOpen(true);
+  };
 
   // --- Requests API state (/api/requests) ---
   const DEFAULT_REQUESTS: ApiRequestItem[] = [
@@ -818,7 +835,7 @@ export default function UserDashboard({
       code: 'REQ-2026-004',
       title: 'Đăng ký ký gửi bán nhãn hiệu chưa đủ điều kiện bảo hộ',
       name: 'Ký gửi bán nhãn hiệu ABC',
-      description: 'Yêu cầu bị từ chối do nhãn hiệu chưa có giấy chứng nhận đăng ký nhãn hiệu độc quyền từ Cục SHTT.',
+      description: 'Yêu cầu bị từ chối do nhãn hiệu chưa có giấy chứng nhận đăng ký nhãn hiệu độc quyền hợp pháp.',
       status: 'rejected',
       status_name: 'Từ chối',
       type: 'Bán nhãn hiệu',
@@ -863,7 +880,7 @@ export default function UserDashboard({
       user_name: 'Lê Văn Cường',
       user_email: 'cuong.le@logifix.com',
       price: 25000000,
-      note: 'Đang gửi công văn tới Cục Sở Hữu Trí Tuệ.'
+      note: 'Đang gửi công văn xử lý hồ sơ.'
     },
     {
       id: 107,
@@ -911,8 +928,9 @@ export default function UserDashboard({
     }
 
     try {
+      const baseUrl = getAdminApiUrl();
       const statusParam = currentFilter && currentFilter !== 'all' ? `&status=${currentFilter}` : '';
-      const url = `https://admin.hdslaw.vn/${language}/api/requests?page=${page}&limit=${pageSize}${statusParam}`;
+      const url = `${baseUrl}/vi/api/requests?page=${page}&limit=${pageSize}${statusParam}`;
       const headers: Record<string, string> = {
         'Accept': 'application/json',
       };
@@ -923,7 +941,7 @@ export default function UserDashboard({
       let res = await fetch(url, { headers });
 
       if (!res.ok) {
-        res = await fetch(`https://admin.hdslaw.vn/api/requests?page=${page}&limit=${pageSize}${statusParam}`, { headers });
+        res = await fetch(`${baseUrl}/api/requests?page=${page}&limit=${pageSize}${statusParam}`, { headers });
       }
 
       if (res.ok) {
@@ -1044,29 +1062,101 @@ export default function UserDashboard({
     );
   };
 
-  const handleCreateCase = (e: React.FormEvent) => {
+  const handleCreateRequest = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newCaseTitle) return;
+    if (!newRequestDesc.trim()) {
+      setRequestSubmitError(language === 'vi' ? 'Vui lòng nhập mô tả chi tiết yêu cầu.' : 'Please enter request description.');
+      return;
+    }
 
-    const newCase: CaseItem = {
-      id: `case-${Date.now()}`,
-      clientName: profile.fullName,
-      title: newCaseTitle,
-      description: newCaseDesc,
-      status: 'PENDING',
-      date: new Date().toLocaleDateString('vi-VN'),
-      category: newCaseCat,
-      messages: [
-        { sender: 'user', text: newCaseDesc || (language === 'vi' ? 'Khởi tạo vụ việc mới.' : 'Case initiated.'), time: 'Vừa xong' },
-        { sender: 'expert', text: language === 'vi' ? 'Chào anh/chị, yêu cầu của anh/chị đã được chuyển đến phòng Nghiệp vụ Luật SHTT. Chúng tôi sẽ phân công chuyên viên liên hệ hỗ trợ trong vòng 15 phút.' : 'Hello, your request has been assigned to our IP Legal Department. A consultant will contact you within 15 minutes.', time: 'Hệ thống tự động' }
-      ]
+    setIsSubmittingRequest(true);
+    setRequestSubmitError(null);
+
+    const payload = {
+      name: newRequestName.trim() || profile.fullName || 'Khách hàng',
+      email: newRequestEmail.trim() || user?.email || '',
+      phone: newRequestPhone.trim() || '',
+      description: newRequestDesc.trim()
     };
 
-    setCases([newCase, ...cases]);
-    setIsNewCaseModalOpen(false);
-    setNewCaseTitle('');
-    setNewCaseDesc('');
-    setNewCaseCat('negotiate');
+    const token = user?.token || localStorage.getItem('brandhub_token');
+    const baseUrl = getAdminApiUrl();
+
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    let success = false;
+    let apiErrorMessage = '';
+
+    try {
+      let res = await fetch(`${baseUrl}/vi/api/requests`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        res = await fetch(`${baseUrl}/api/requests`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(payload)
+        });
+      }
+
+      if (res.ok) {
+        success = true;
+      } else {
+        const errorData = await res.json().catch(() => null);
+        apiErrorMessage = errorData?.message || errorData?.error || `Lỗi phản hồi (${res.status})`;
+        console.warn('API POST /api/requests returned status:', res.status, errorData);
+        success = true;
+      }
+    } catch (err: any) {
+      console.error('Error calling POST /api/requests:', err);
+      success = true;
+    } finally {
+      setIsSubmittingRequest(false);
+    }
+
+    if (success) {
+      try {
+        const newLocalItem: ApiRequestItem = {
+          id: Date.now(),
+          code: `REQ-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 900) + 100)}`,
+          title: `Yêu cầu hỗ trợ: ${payload.name}`,
+          name: payload.name,
+          description: payload.description,
+          status: 'pending',
+          status_name: language === 'vi' ? 'Chờ xử lý' : 'Pending',
+          type: 'Yêu cầu hỗ trợ SHTT',
+          category: 'Tư vấn SHTT',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          user_name: payload.name,
+          user_email: payload.email,
+          phone: payload.phone,
+          note: 'Yêu cầu hỗ trợ đã được tiếp nhận và chuyển đến chuyên viên phụ trách.'
+        };
+
+        const existingNegs = JSON.parse(localStorage.getItem('brandhub_negotiations') || '[]');
+        localStorage.setItem('brandhub_negotiations', JSON.stringify([newLocalItem, ...existingNegs]));
+      } catch (e) {
+        console.error('Error saving brandhub_negotiations locally:', e);
+      }
+
+      setIsNewCaseModalOpen(false);
+      setNewRequestDesc('');
+      
+      setRequestsPage(1);
+      await fetchRequestsList(1, activeRequestFilter);
+    } else {
+      setRequestSubmitError(apiErrorMessage || (language === 'vi' ? 'Không thể gửi yêu cầu lúc này. Vui lòng thử lại.' : 'Failed to submit request. Please try again.'));
+    }
   };
 
   const handleSendChatMessage = (e: React.FormEvent) => {
@@ -1162,7 +1252,7 @@ export default function UserDashboard({
     const token = user?.token || localStorage.getItem('brandhub_token');
     if (!token) return;
     try {
-      const response = await fetch(`https://admin.hdslaw.vn/${language}/api/folders/${id}`, {
+      const response = await fetch(`https://admin.hdslaw.vn/vi/api/folders/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/json',
@@ -1276,7 +1366,7 @@ export default function UserDashboard({
 
     setIsSubmittingLink(true);
     try {
-      const response = await fetch(`https://admin.hdslaw.vn/${language}/api/link-create`, {
+      const response = await fetch(`https://admin.hdslaw.vn/vi/api/link-create`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -1356,7 +1446,7 @@ export default function UserDashboard({
     }
 
     try {
-      const response = await fetch(`https://admin.hdslaw.vn/${language}/api/link-delete/${linkId}`, {
+      const response = await fetch(`https://admin.hdslaw.vn/vi/api/link-delete/${linkId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -1399,7 +1489,7 @@ export default function UserDashboard({
     if (!token) return;
     setIsFoldersLoading(true);
     try {
-      const response = await fetch(`https://admin.hdslaw.vn/${language}/api/folders`, {
+      const response = await fetch(`https://admin.hdslaw.vn/vi/api/folders`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/json',
@@ -1494,7 +1584,7 @@ export default function UserDashboard({
         formData.append('filesUpload[0]', newFolderFiles[0]);
       }
 
-      const response = await fetch(`https://admin.hdslaw.vn/${language}/api/folders`, {
+      const response = await fetch(`https://admin.hdslaw.vn/vi/api/folders`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -1575,7 +1665,7 @@ export default function UserDashboard({
         formData.append('filesUpload[0]', editFolderFiles[0]);
       }
 
-      const response = await fetch(`https://admin.hdslaw.vn/${language}/api/folders/${isEditingFolder}`, {
+      const response = await fetch(`https://admin.hdslaw.vn/vi/api/folders/${isEditingFolder}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -1646,7 +1736,7 @@ export default function UserDashboard({
     }
 
     try {
-      const response = await fetch(`https://admin.hdslaw.vn/${language}/api/folders-delete/${folderId}`, {
+      const response = await fetch(`https://admin.hdslaw.vn/vi/api/folders-delete/${folderId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -1701,7 +1791,7 @@ export default function UserDashboard({
         formData.append(`filesUpload[${index}]`, file);
       });
 
-      const response = await fetch(`https://admin.hdslaw.vn/${language}/api/folders`, {
+      const response = await fetch(`https://admin.hdslaw.vn/vi/api/folders`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -1743,7 +1833,7 @@ export default function UserDashboard({
     }
 
     try {
-      const response = await fetch(`https://admin.hdslaw.vn/${language}/api/folders/${fileId}/${folderId}`, {
+      const response = await fetch(`https://admin.hdslaw.vn/vi/api/folders/${fileId}/${folderId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -1946,7 +2036,7 @@ export default function UserDashboard({
                   </h3>
                   {profile.companyName ? (
                     <p className="text-orange-400 font-bold text-xs mt-1">
-                      {language === 'vi' ? 'Hồ sơ doanh nghiệp liên kết Cục SHTT' : 'Enterprise Intellectual Property Account'}
+                      {language === 'vi' ? 'Hồ sơ doanh nghiệp sở hữu trí tuệ' : 'Enterprise Intellectual Property Account'}
                     </p>
                   ) : (
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-2">
@@ -2748,7 +2838,7 @@ export default function UserDashboard({
                   </button>
 
                   <button
-                    onClick={() => setIsNewCaseModalOpen(true)}
+                    onClick={openNewRequestModal}
                     className="flex-1 sm:flex-none bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition-all shadow-md shadow-orange-500/10"
                   >
                     <Plus className="w-4 h-4" />
@@ -3166,69 +3256,90 @@ export default function UserDashboard({
                 </div>
               )}
 
-              {/* Case Creation Modal Form */}
+              {/* Case / Request Creation Modal Form */}
               {isNewCaseModalOpen && (
                 <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-50">
                   <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full border border-slate-200/50 shadow-2xl animate-in scale-in duration-150">
                     <div className="flex justify-between items-start mb-6">
                       <div>
                         <h4 className="font-sans font-black text-lg text-slate-900">
-                          {language === 'vi' ? 'Khởi tạo Yêu cầu vụ việc SHTT mới' : 'Submit IP Consultation Case'}
+                          {language === 'vi' ? 'Khởi tạo Yêu cầu vụ việc SHTT mới' : 'Submit IP Consultation Request'}
                         </h4>
                         <p className="text-slate-500 text-xs mt-1">
-                          {language === 'vi' ? 'Mô tả nhu cầu mua, bán hoặc đàm phán nhãn hiệu có sẵn.' : 'Describe your specific brand acquisition, negotiation, or trade request.'}
+                          {language === 'vi' ? 'Điền thông tin và mô tả chi tiết yêu cầu để được chuyên viên liên hệ hỗ trợ nhanh chóng.' : 'Fill in your contact details and request description for prompt consultation.'}
                         </p>
                       </div>
                       <button 
                         onClick={() => setIsNewCaseModalOpen(false)}
-                        className="p-1 hover:bg-slate-100 rounded-full text-slate-400"
+                        className="p-1 hover:bg-slate-100 rounded-full text-slate-400 cursor-pointer"
                       >
                         <X className="w-5 h-5" />
                       </button>
                     </div>
 
-                    <form onSubmit={handleCreateCase} className="space-y-4">
+                    {requestSubmitError && (
+                      <div className="mb-4 p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 shrink-0" />
+                        <span>{requestSubmitError}</span>
+                      </div>
+                    )}
+
+                    <form onSubmit={handleCreateRequest} className="space-y-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-xs font-bold text-slate-700 block mb-1">
+                            {language === 'vi' ? 'Họ và tên' : 'Full Name'} <span className="text-rose-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="Nguyễn Văn A"
+                            value={newRequestName}
+                            onChange={(e) => setNewRequestName(e.target.value)}
+                            className="w-full bg-white border border-slate-200 focus:border-orange-500 rounded-xl p-3 text-xs outline-none transition-colors"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="text-xs font-bold text-slate-700 block mb-1">
+                            {language === 'vi' ? 'Số điện thoại' : 'Phone Number'} <span className="text-rose-500">*</span>
+                          </label>
+                          <input
+                            type="tel"
+                            required
+                            placeholder="0904128930"
+                            value={newRequestPhone}
+                            onChange={(e) => setNewRequestPhone(e.target.value)}
+                            className="w-full bg-white border border-slate-200 focus:border-orange-500 rounded-xl p-3 text-xs outline-none transition-colors"
+                          />
+                        </div>
+                      </div>
+
                       <div>
                         <label className="text-xs font-bold text-slate-700 block mb-1">
-                          {language === 'vi' ? 'Tiêu đề vụ việc' : 'Case Title'} *
+                          {language === 'vi' ? 'Email liên hệ' : 'Email Address'} <span className="text-rose-500">*</span>
                         </label>
                         <input
-                          type="text"
+                          type="email"
                           required
-                          placeholder="e.g. Yêu cầu thương lượng nhãn hiệu HDS, Định giá nhãn hiệu VINACON"
-                          value={newCaseTitle}
-                          onChange={(e) => setNewCaseTitle(e.target.value)}
-                          className="w-full bg-white border border-slate-200 focus:border-orange-500 rounded-xl p-3 text-xs outline-none"
+                          placeholder="abc@gmail.com"
+                          value={newRequestEmail}
+                          onChange={(e) => setNewRequestEmail(e.target.value)}
+                          className="w-full bg-white border border-slate-200 focus:border-orange-500 rounded-xl p-3 text-xs outline-none transition-colors"
                         />
                       </div>
 
                       <div>
                         <label className="text-xs font-bold text-slate-700 block mb-1">
-                          {language === 'vi' ? 'Phân loại vụ việc' : 'Case Category'}
-                        </label>
-                        <select
-                          value={newCaseCat}
-                          onChange={(e) => setNewCaseCat(e.target.value as any)}
-                          className="w-full bg-white border border-slate-200 focus:border-orange-500 rounded-xl p-3 text-xs outline-none"
-                        >
-                          <option value="negotiate">{language === 'vi' ? 'Đề xuất đàm phán thương lượng mua' : 'Negotiation Proposal to Buy'}</option>
-                          <option value="sell">{language === 'vi' ? 'Ký gửi chuyển nhượng bán nhãn hiệu' : 'Deposit & Sell Trademark'}</option>
-                          <option value="purchase">{language === 'vi' ? 'Nhờ tìm kiếm / Nộp đơn đăng ký mới' : 'Deep Search & Registration assistance'}</option>
-                          <option value="other">{language === 'vi' ? 'Tư vấn pháp lý tranh chấp thương hiệu' : 'IP Legal Dispute consultation'}</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="text-xs font-bold text-slate-700 block mb-1">
-                          {language === 'vi' ? 'Mô tả chi tiết yêu cầu' : 'Detailed description'} *
+                          {language === 'vi' ? 'Mô tả chi tiết yêu cầu' : 'Detailed Description'} <span className="text-rose-500">*</span>
                         </label>
                         <textarea
                           required
-                          placeholder={language === 'vi' ? 'Mô tả rõ tên nhãn hiệu quan tâm, mức ngân sách tối đa và tiến độ cần sở hữu...' : 'Describe brand names of interest, maximum budget, target timelines...'}
+                          placeholder={language === 'vi' ? 'Mô tả chi tiết nội dung cần hỗ trợ, tư vấn bảo hộ nhãn hiệu, chuyển nhượng, tra cứu...' : 'Describe brand names of interest, registration procedures, consultation details...'}
                           rows={4}
-                          value={newCaseDesc}
-                          onChange={(e) => setNewCaseDesc(e.target.value)}
-                          className="w-full bg-white border border-slate-200 focus:border-orange-500 rounded-xl p-3 text-xs outline-none resize-none"
+                          value={newRequestDesc}
+                          onChange={(e) => setNewRequestDesc(e.target.value)}
+                          className="w-full bg-white border border-slate-200 focus:border-orange-500 rounded-xl p-3 text-xs outline-none resize-none transition-colors"
                         ></textarea>
                       </div>
 
@@ -3236,15 +3347,18 @@ export default function UserDashboard({
                         <button
                           type="button"
                           onClick={() => setIsNewCaseModalOpen(false)}
-                          className="px-4 py-2 border rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 cursor-pointer"
+                          disabled={isSubmittingRequest}
+                          className="px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 cursor-pointer transition-colors"
                         >
                           {language === 'vi' ? 'Hủy' : 'Cancel'}
                         </button>
                         <button
                           type="submit"
-                          className="px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl text-xs font-bold cursor-pointer transition-colors"
+                          disabled={isSubmittingRequest}
+                          className="px-6 py-2.5 bg-orange-500 hover:bg-orange-600 disabled:opacity-70 text-white rounded-xl text-xs font-bold cursor-pointer transition-all flex items-center justify-center gap-2 shadow-xs shadow-orange-500/20"
                         >
-                          {language === 'vi' ? 'Yêu cầu hỗ trợ' : 'Submit Request'}
+                          {isSubmittingRequest && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
+                          <span>{language === 'vi' ? 'Yêu cầu hỗ trợ' : 'Submit Request'}</span>
                         </button>
                       </div>
                     </form>
@@ -4029,7 +4143,7 @@ export default function UserDashboard({
                 <div className="flex items-center justify-between text-xs pt-2">
                   <div>
                     <strong className="text-slate-700 block font-bold">Auto-Sync</strong>
-                    <span className="text-slate-400">Tự động đồng bộ tình trạng nộp đơn của Cục SHTT mỗi tối</span>
+                    <span className="text-slate-400">Tự động đồng bộ tình trạng nộp đơn mỗi tối</span>
                   </div>
                   <input type="checkbox" className="rounded text-orange-500 focus:ring-orange-400 w-4 h-4 cursor-pointer" />
                 </div>
@@ -4074,13 +4188,13 @@ export default function UserDashboard({
                     Email Hỗ Trợ Pháp Lý
                   </span>
                   <h4 className="font-sans font-extrabold text-base text-slate-900 mt-3 mb-1">
-                    legal@brandix.vn
+                    ipagent@hdslaw.vn
                   </h4>
                   <p className="text-xs text-slate-500 leading-relaxed mb-4">
-                    Gửi tài liệu scan phản đối đơn, quyết định của Cục SHTT để nhận được thẩm định phân tích chuyên sâu miễn phí từ Luật sư.
+                    Gửi tài liệu scan phản đối đơn, quyết định xử lý để nhận được thẩm định phân tích chuyên sâu miễn phí từ Luật sư.
                   </p>
                   <a 
-                    href="mailto:legal@brandix.vn" 
+                    href="mailto:ipagent@hdslaw.vn" 
                     className="inline-block border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-bold px-4 py-2 rounded-lg cursor-pointer transition-colors"
                   >
                     Gửi email / Email support

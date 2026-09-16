@@ -192,7 +192,7 @@ export default function TrademarkModal({
                 <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-slate-800 font-bold block mb-0.5">Sạch tranh chấp</strong>
-                  <span className="text-slate-500">Đối chiếu 100% CSDL Cục SHTT.</span>
+                  <span className="text-slate-500">Đối chiếu 100% CSDL nhãn hiệu chuẩn hóa.</span>
                 </div>
               </div>
               <div className="flex items-start gap-2.5 text-xs">
@@ -324,7 +324,7 @@ export default function TrademarkModal({
                         <label htmlFor="addon-service" className="cursor-pointer">
                           <strong className="text-slate-800 block">Dịch vụ Chuyển nhượng trọn gói (+12Tr VND)</strong>
                           <span className="text-slate-500 text-[11px] leading-normal block mt-0.5">
-                            Brandix sẽ thay mặt soạn hồ sơ, đóng nộp lệ phí Cục SHTT, bàn giao văn bằng gốc tại nhà.
+                            Brandix sẽ thay mặt soạn hồ sơ, đóng nộp đầy đủ lệ phí, bàn giao văn bằng gốc tại nhà.
                           </span>
                         </label>
                       </div>

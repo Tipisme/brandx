@@ -108,9 +108,9 @@ export default function Header({
               <Phone className="w-3.5 h-3.5 text-orange-500" />
               <span>{language === 'vi' ? 'Điện thoại' : 'Phone'}: <strong className="text-orange-400">0901727373</strong></span>
             </a>
-            <a href="mailto:hdslaw.vn@gmail.com" className="flex items-center gap-1.5 text-gray-300 hover:text-white transition-colors">
+            <a href="mailto:ipagent@hdslaw.vn" className="flex items-center gap-1.5 text-gray-300 hover:text-white transition-colors">
               <Mail className="w-3.5 h-3.5 text-orange-500" />
-              <span>Email: <span className="text-gray-300 hover:text-orange-400 transition-colors">hdslaw.vn@gmail.com</span></span>
+              <span>Email: <span className="text-gray-300 hover:text-orange-400 transition-colors">ipagent@hdslaw.vn</span></span>
             </a>
           </div>
           <div className="flex items-center gap-4 text-gray-400">
@@ -716,7 +716,7 @@ export default function Header({
               {t.registerNew}
             </button>
             <div className="text-[10px] text-center text-slate-400 mt-1">
-              {language === 'vi' ? 'Liên kết cơ sở dữ liệu quốc tế WIPO & Cục SHTT' : 'Linked with international WIPO & NOIP databases'}
+              {language === 'vi' ? 'Liên kết cơ sở dữ liệu quốc tế WIPO & CSDL quốc gia' : 'Linked with international WIPO & national databases'}
             </div>
           </div>
         </div>

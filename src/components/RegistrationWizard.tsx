@@ -14,7 +14,8 @@ import {
   AlertCircle,
   RefreshCw,
   Layers,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Eye
 } from 'lucide-react';
 import { TRADEMARK_CLASSES } from '../data';
 
@@ -70,6 +71,9 @@ export default function RegistrationWizard({
 
   // Search filter for Nice classes grid
   const [searchTerm, setSearchTerm] = useState("");
+
+  // Viewing group detail modal
+  const [viewingGroup, setViewingGroup] = useState<{ id: number; name: string } | null>(null);
 
   // API items list state
   const [groupsList, setGroupsList] = useState<{ id: number; name: string }[]>([]);
@@ -553,8 +557,8 @@ export default function RegistrationWizard({
                   </div>
                 </div>
 
-                {/* Nice Classes Grid (Matching Image 2 Layout) */}
-                <div className="relative border border-slate-200/80 rounded-2xl p-3 bg-slate-50/50 max-h-72 overflow-y-auto min-h-[160px]">
+                {/* Nice Classes Grid (Responsive Cards without browser title or broken tooltips) */}
+                <div className="relative border border-slate-200/80 rounded-2xl p-3 sm:p-4 bg-slate-50/50 max-h-80 overflow-y-auto min-h-[160px] scrollbar-thin">
                   {groupsLoading ? (
                     <div className="py-12 text-center text-xs text-slate-400 flex items-center justify-center gap-2">
                       <RefreshCw className="w-4 h-4 animate-spin text-orange-500" />
@@ -565,48 +569,61 @@ export default function RegistrationWizard({
                       Không tìm thấy nhóm sản phẩm nào phù hợp từ từ khóa "{searchTerm}"
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
                       {filteredGroups.map((group) => {
                         const isSelected = selectedClasses.includes(group.id);
+                        const formattedId = group.id < 10 ? `0${group.id}` : `${group.id}`;
                         return (
-                          <div key={group.id} className="relative group/item">
-                            <div
-                              onClick={() => handleToggleGroup(group.id)}
-                              title={`Nhóm ${group.id}: ${group.name}`}
-                              className={`p-3 rounded-2xl text-xs border transition-all cursor-pointer flex items-start gap-2.5 select-none hover:shadow-md ${
-                                isSelected
-                                  ? 'bg-orange-50/80 border-orange-500 text-slate-900 shadow-xs ring-1 ring-orange-500/20'
-                                  : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50'
-                              }`}
-                            >
-                              <input
-                                type="checkbox"
-                                checked={isSelected}
-                                onChange={() => {}} // Controlled via card click
-                                className="mt-0.5 rounded border-slate-300 text-orange-500 focus:ring-orange-500 shrink-0 cursor-pointer pointer-events-none"
-                              />
-                              <div className="flex-1 min-w-0">
-                                <span className="font-extrabold text-slate-900 block truncate">
-                                  Nhóm {group.id} <span className="font-normal text-slate-600">({group.name})</span>
-                                </span>
-                              </div>
+                          <div
+                            key={group.id}
+                            onClick={() => handleToggleGroup(group.id)}
+                            className={`p-3 rounded-2xl text-xs border transition-all duration-150 cursor-pointer flex items-start gap-2.5 select-none ${
+                              isSelected
+                                ? 'bg-orange-50/90 border-orange-500 text-slate-900 shadow-xs ring-1 ring-orange-500/30'
+                                : 'bg-white border-slate-200 text-slate-700 hover:border-orange-300 hover:bg-orange-50/20'
+                            }`}
+                          >
+                            {/* Custom Checkbox indicator */}
+                            <div className={`w-4 h-4 rounded mt-0.5 flex items-center justify-center shrink-0 border transition-colors ${
+                              isSelected 
+                                ? 'bg-orange-500 border-orange-500 text-white' 
+                                : 'border-slate-300 bg-white'
+                            }`}>
+                              {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
                             </div>
 
-                            {/* Floating Detailed Hover Tooltip */}
-                            <div className="hidden group-hover/item:block absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-72 sm:w-80 p-3 bg-slate-900 text-white text-xs rounded-xl shadow-2xl z-40 pointer-events-none transition-all border border-slate-700">
-                              <div className="font-extrabold text-orange-400 mb-1 flex items-center justify-between">
-                                <span>Nhóm {group.id}</span>
-                                {isSelected && (
-                                  <span className="text-[10px] bg-orange-500/20 text-orange-300 px-2 py-0.5 rounded-full font-semibold">
-                                    Đã chọn
+                            {/* Group Card Content */}
+                            <div className="flex-1 min-w-0 space-y-1">
+                              <div className="flex items-center justify-between gap-1.5 flex-wrap">
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                  <span className={`inline-block font-sans text-xs px-2 py-0.5 rounded-md ${
+                                    isSelected 
+                                      ? 'bg-orange-200/80 text-orange-950 font-extrabold' 
+                                      : 'bg-slate-100 text-slate-800 font-bold'
+                                  }`}>
+                                    Nhóm {formattedId}
                                   </span>
-                                )}
+                                  {isSelected && (
+                                    <span className="text-[10px] font-semibold text-orange-600 bg-orange-100/60 px-1.5 py-0.5 rounded-md">
+                                      Đã chọn
+                                    </span>
+                                  )}
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setViewingGroup(group);
+                                  }}
+                                  className="text-[11px] font-bold text-orange-600 hover:text-orange-700 bg-orange-50 hover:bg-orange-100 px-2 py-0.5 rounded-md flex items-center gap-1 transition-colors cursor-pointer border border-orange-200/60"
+                                >
+                                  <Eye className="w-3 h-3" />
+                                  <span>Xem</span>
+                                </button>
                               </div>
-                              <div className="text-slate-200 leading-relaxed font-normal text-[11px] whitespace-normal">
+                              <p className="text-[11px] text-slate-600 leading-relaxed line-clamp-2 break-words">
                                 {group.name}
-                              </div>
-                              {/* Tooltip triangle arrow */}
-                              <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900"></div>
+                              </p>
                             </div>
                           </div>
                         );
@@ -627,6 +644,82 @@ export default function RegistrationWizard({
                     )}
                   </span>
                 </div>
+
+                {/* Detailed Nice Class Full View Modal */}
+                {viewingGroup && (
+                  <div 
+                    className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 z-[70] animate-in fade-in duration-150"
+                    onClick={() => setViewingGroup(null)}
+                  >
+                    <div 
+                      className="bg-white rounded-3xl p-6 max-w-lg w-full border border-slate-200 shadow-2xl space-y-4 animate-in zoom-in-95 duration-150"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="bg-orange-500 text-white font-extrabold text-sm px-2.5 py-1 rounded-xl shadow-xs shadow-orange-500/20">
+                            Nhóm {viewingGroup.id < 10 ? `0${viewingGroup.id}` : viewingGroup.id}
+                          </span>
+                          <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
+                            {viewingGroup.id <= 34 ? 'Nhóm sản phẩm (Hàng hóa)' : 'Nhóm dịch vụ'}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setViewingGroup(null)}
+                          className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
+                        >
+                          <X className="w-5 h-5" />
+                        </button>
+                      </div>
+
+                      <div className="space-y-2">
+                        <h5 className="font-extrabold text-slate-900 text-sm flex items-center gap-1.5">
+                          <span>Nội dung chi tiết phân loại Nice:</span>
+                        </h5>
+                        <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/80 max-h-64 overflow-y-auto scrollbar-thin">
+                          <p className="text-xs sm:text-sm text-slate-700 leading-relaxed break-words whitespace-pre-wrap">
+                            {viewingGroup.name}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleToggleGroup(viewingGroup.id);
+                          }}
+                          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                            selectedClasses.includes(viewingGroup.id)
+                              ? 'bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100'
+                              : 'bg-orange-500 text-white hover:bg-orange-600 shadow-xs shadow-orange-500/20'
+                          }`}
+                        >
+                          {selectedClasses.includes(viewingGroup.id) ? (
+                            <>
+                              <X className="w-3.5 h-3.5" />
+                              <span>Bỏ chọn nhóm này</span>
+                            </>
+                          ) : (
+                            <>
+                              <Check className="w-3.5 h-3.5" />
+                              <span>Chọn nhóm này</span>
+                            </>
+                          )}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setViewingGroup(null)}
+                          className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                        >
+                          Đóng
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Modal Footer Controls */}
@@ -721,7 +814,7 @@ export default function RegistrationWizard({
                       Quy trình xử lý tự động của HDS Law:
                     </p>
                     <p className="text-blue-700 leading-relaxed text-[11px]">
-                      Sau khi nhận được chuyển khoản thanh toán, luật sư HDS Law sẽ lập tức tra cứu chuyên sâu mức độ bảo hộ và liên hệ lại với bạn để thực hiện ký đơn gốc nộp Cục Sở hữu Trí tuệ.
+                      Sau khi nhận được chuyển khoản thanh toán, luật sư HDS Law sẽ lập tức tra cứu chuyên sâu mức độ bảo hộ và liên hệ lại với bạn để thực hiện ký hồ sơ nộp đăng ký bảo hộ.
                     </p>
                   </div>
                 </div>

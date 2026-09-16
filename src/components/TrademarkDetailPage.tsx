@@ -39,7 +39,7 @@ export default function TrademarkDetailPage({
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`https://admin.hdslaw.vn/${language}/api/products/${slug}`);
+        const response = await fetch(`https://admin.hdslaw.vn/vi/api/products/${slug}`);
         if (!response.ok) {
           throw new Error(language === 'vi' ? 'Không thể tải chi tiết nhãn hiệu.' : 'Failed to fetch trademark details.');
         }
@@ -64,7 +64,7 @@ export default function TrademarkDetailPage({
     const fetchOwnerTrademarks = async () => {
       setIsOwnerLoading(true);
       try {
-        const response = await fetch(`https://admin.hdslaw.vn/${language}/api/related-trademarks/${encodeURIComponent(slug)}`);
+        const response = await fetch(`https://admin.hdslaw.vn/vi/api/related-trademarks/${encodeURIComponent(slug)}`);
         if (response.ok) {
           const json = await response.json();
           if (json) {
@@ -163,7 +163,7 @@ export default function TrademarkDetailPage({
       <div className="max-w-7xl mx-auto px-4 py-20 flex flex-col items-center justify-center min-h-[50vh]">
         <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-4"></div>
         <p className="text-slate-500 text-sm font-medium">
-          {language === 'vi' ? 'Đang truy xuất thông tin từ CSDL Cục SHTT...' : 'Querying NOIP database...'}
+          {language === 'vi' ? 'Đang truy xuất thông tin dữ liệu nhãn hiệu...' : 'Querying trademark database...'}
         </p>
       </div>
     );

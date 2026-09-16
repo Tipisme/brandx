@@ -144,7 +144,7 @@ const extractShortTitle = (fullText: string, lang: Language): string => {
  */
 export async function fetchNiceClasses(lang: Language): Promise<Record<number, NiceClassInfo>> {
   const baseUrl = getApiBaseUrl();
-  const url = `${baseUrl}/${lang}/api/attributes/nhom-san-pham-code`;
+  const url = `${baseUrl}/vi/api/attributes/nhom-san-pham-code`;
   
   console.log(`Fetching Nice classes from API: ${url}`);
   
@@ -155,12 +155,21 @@ export async function fetchNiceClasses(lang: Language): Promise<Record<number, N
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 6000);
     
-    const response = await fetch(url, {
+    let response = await fetch(url, {
       signal: controller.signal,
       headers: {
         'Accept': 'application/json',
       },
     });
+
+    if (!response.ok) {
+      response = await fetch(`${baseUrl}/api/attributes/nhom-san-pham-code`, {
+        signal: controller.signal,
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+    }
     
     clearTimeout(timeoutId);
     
@@ -198,11 +207,14 @@ export async function fetchNiceClasses(lang: Language): Promise<Record<number, N
       if (!position) return;
       
       const descText = item.name || '';
-      const shortName = extractShortTitle(descText, lang);
+      let shortName = extractShortTitle(descText, lang);
+      if (lang === 'en' && FALLBACK_CLASSES_EN[position]) {
+        shortName = FALLBACK_CLASSES_EN[position].name;
+      }
       
       transformed[position] = {
         name: shortName,
-        desc: descText
+        desc: lang === 'en' && FALLBACK_CLASSES_EN[position] ? FALLBACK_CLASSES_EN[position].desc : descText
       };
     });
     

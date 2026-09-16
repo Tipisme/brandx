@@ -60,10 +60,10 @@ const DEFAULT_STEPS: Step[] = [
     desc: "Ký kết hợp đồng chuyển nhượng chính thức tại VP Công chứng và nộp tiền ký quỹ an toàn.",
     icon: Landmark,
     milestones: [
-      "Brandix soạn thảo bộ hợp đồng chuyển nhượng nhãn hiệu chuẩn Cục SHTT",
+      "Brandix soạn thảo bộ hợp đồng chuyển nhượng nhãn hiệu chuẩn quy định pháp luật",
       "Ký kết hợp đồng công chứng chuyển nhượng tại VP Công chứng",
       "Nộp tiền thanh toán vào tài khoản ký quỹ phong tỏa của Ngân hàng liên kết",
-      "Cục SHTT tiếp nhận hồ sơ và đóng dấu biên nhận chuyển nhượng"
+      "Tiếp nhận hồ sơ và đóng dấu biên nhận chuyển nhượng"
     ],
     duration: "2 - 3 ngày làm việc",
     documentRequired: "Hợp đồng chuyển nhượng có chữ ký và công chứng"
@@ -71,16 +71,16 @@ const DEFAULT_STEPS: Step[] = [
   {
     num: 4,
     title: "Nhận Bằng & Hoàn Tất",
-    desc: "Cục SHTT ghi nhận chủ sở hữu mới trên Văn bằng bảo hộ. Bàn giao Giấy chứng nhận gốc.",
+    desc: "Ghi nhận chủ sở hữu mới trên Văn bằng bảo hộ. Bàn giao Giấy chứng nhận gốc.",
     icon: MailCheck,
     milestones: [
-      "Brandix theo dõi tiến trình xử lý hồ sơ tại Cục SHTT",
+      "Brandix theo dõi tiến trình xử lý hồ sơ",
       "Khai thác quyền thương mại ngay khi có Biên nhận nộp hồ sơ hợp lệ",
-      "Cục SHTT ban hành Quyết định ghi nhận chuyển nhượng nhãn hiệu",
+      "Ban hành Quyết định ghi nhận chuyển nhượng nhãn hiệu",
       "Nhận Giấy chứng nhận gốc và cấp phôi tên chủ sở hữu mới"
     ],
-    duration: "3 - 5 tháng (Cục SHTT) - Quyền kinh doanh có hiệu lực ngay khi ký",
-    documentRequired: "Quyết định ghi nhận chuyển nhượng của Cục SHTT"
+    duration: "3 - 5 tháng - Quyền kinh doanh có hiệu lực ngay khi ký",
+    documentRequired: "Quyết định ghi nhận chuyển nhượng"
   }
 ];
 

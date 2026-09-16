@@ -90,7 +90,7 @@ export default function NegotiationModal({
       }
 
       // Try /vi/api/negotiations first
-      let res = await fetch(`https://admin.hdslaw.vn/${language}/api/negotiations`, {
+      let res = await fetch(`https://admin.hdslaw.vn/vi/api/negotiations`, {
         method: 'POST',
         headers,
         body: JSON.stringify(payload)

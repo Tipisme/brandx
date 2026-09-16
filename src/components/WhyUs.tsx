@@ -74,7 +74,7 @@ const DEFAULT_BENEFITS: BenefitTab[] = [
     summaryHtml: '<p>Tránh hoàn toàn rủi ro tranh chấp xâm phạm thương quyền.</p>',
     contentHtml: `
       <h3 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight mb-4 leading-tight">Bảo Vệ Pháp Lý Tuyệt Đối</h3>
-      <p class="text-gray-300 text-sm leading-relaxed mb-6">Sở hữu ngay sự bảo hộ pháp lý tức thời với các nhãn hiệu đã được Cục Sở Hữu Trí Tuệ cấp Văn bằng bảo hộ độc quyền độc lập. Bảo vệ hoạt động kinh doanh của bạn khỏi các hành vi làm giả, làm nhái và các vấn đề pháp lý phức tạp khác. Bắt đầu kinh doanh một cách yên tâm khi biết rằng tài sản sở hữu trí tuệ của bạn được an toàn tuyệt đối dưới sự bảo trợ của Luật SHTT Việt Nam.</p>
+      <p class="text-gray-300 text-sm leading-relaxed mb-6">Sở hữu ngay sự bảo hộ pháp lý tức thời với các nhãn hiệu đã được cấp Văn bằng bảo hộ độc quyền hợp pháp. Bảo vệ hoạt động kinh doanh của bạn khỏi các hành vi làm giả, làm nhái và các vấn đề pháp lý phức tạp khác. Bắt đầu kinh doanh một cách yên tâm khi biết rằng tài sản sở hữu trí tuệ của bạn được an toàn tuyệt đối dưới sự bảo trợ của pháp luật.</p>
       <div class="space-y-2 mb-8">
         <ul>
           <li class="flex items-center gap-2.5 text-xs text-gray-300">Đại diện làm thủ tục trọn gói miễn phí</li>
@@ -109,7 +109,7 @@ const DEFAULT_BENEFITS: BenefitTab[] = [
     id: 'nhan-hieu-da-phe-duyet',
     contentSlug: 'nhan-hieu-da-phe-duyet-content',
     title: 'Nhãn Hiệu Đã Phê Duyệt',
-    summaryHtml: '<p>100% nhãn hiệu đã có văn bằng bảo hộ độc quyền từ Cục SHTT.</p>',
+    summaryHtml: '<p>100% nhãn hiệu đã có văn bằng bảo hộ độc quyền hợp pháp.</p>',
     contentHtml: `
       <h3 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight mb-4 leading-tight">Nhãn Hiệu Đã Phê Duyệt</h3>
       <p class="text-gray-300 text-sm leading-relaxed mb-6">Tất cả các nhãn hiệu nằm trong danh mục giao dịch chính của Brandix đều đã được cấp Văn bằng bảo hộ (Giấy chứng nhận đăng ký nhãn hiệu) có giá trị pháp lý hiện hữu, còn nguyên thời hạn sử dụng. Bạn loại bỏ hoàn toàn khả năng bị bên thứ ba phản đối đơn hoặc bị thẩm định viên từ chối cấp bằng do trùng lắp ngành hàng.</p>
@@ -131,7 +131,7 @@ const DEFAULT_BENEFITS: BenefitTab[] = [
     summaryHtml: '<p>Kiểm tra chủ sở hữu gốc và phân loại nhóm Nice chuẩn quốc tế.</p>',
     contentHtml: `
       <h3 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight mb-4 leading-tight">Danh Sách Xác Thực 3 Lớp</h3>
-      <p class="text-gray-300 text-sm leading-relaxed mb-6">Đội ngũ luật sư sở hữu trí tuệ của chúng tôi trực tiếp kiểm định hồ sơ, đối chiếu dữ liệu gốc của Cục SHTT Việt Nam và tổ chức SHTT Thế giới (WIPO). Đảm bảo nhãn hiệu không bị tranh chấp, không thế chấp, không nằm trong danh sách thi hành án và được phân nhóm danh mục sản phẩm/dịch vụ theo Thỏa ước Nice chính xác 100%.</p>
+      <p class="text-gray-300 text-sm leading-relaxed mb-6">Đội ngũ luật sư sở hữu trí tuệ của chúng tôi trực tiếp kiểm định hồ sơ, đối chiếu dữ liệu gốc và tổ chức SHTT Thế giới (WIPO). Đảm bảo nhãn hiệu không bị tranh chấp, không thế chấp, không nằm trong danh sách thi hành án và được phân nhóm danh mục sản phẩm/dịch vụ theo Thỏa ước Nice chính xác 100%.</p>
       <div class="space-y-2 mb-8">
         <ul>
           <li class="flex items-center gap-2.5 text-xs text-gray-300">Đại diện làm thủ tục trọn gói miễn phí</li>
@@ -150,7 +150,7 @@ const DEFAULT_BENEFITS: BenefitTab[] = [
     summaryHtml: '<p>Bảo vệ dòng tiền qua tài khoản trung gian của Ngân hàng liên kết.</p>',
     contentHtml: `
       <h3 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight mb-4 leading-tight">Ký Quỹ Chuyển Giao An Toàn</h3>
-      <p class="text-gray-300 text-sm leading-relaxed mb-6">An toàn tài chính tối đa với hệ thống thanh toán ký quỹ (Escrow). Người mua chuyển tiền vào tài khoản phong tỏa của Ngân hàng đối tác. Brandix và các bên tiến hành nộp hồ sơ chuyển nhượng văn bằng bảo hộ lên Cục SHTT. Dòng tiền chỉ được giải ngân cho người bán sau khi hồ sơ nhận đơn hợp lệ được ghi nhận chính thức, đảm bảo quyền lợi tuyệt đối cho đôi bên.</p>
+      <p class="text-gray-300 text-sm leading-relaxed mb-6">An toàn tài chính tối đa với hệ thống thanh toán ký quỹ (Escrow). Người mua chuyển tiền vào tài khoản phong tỏa của Ngân hàng đối tác. Brandix và các bên tiến hành nộp hồ sơ chuyển nhượng văn bằng bảo hộ. Dòng tiền chỉ được giải ngân cho người bán sau khi hồ sơ nhận đơn hợp lệ được ghi nhận chính thức, đảm bảo quyền lợi tuyệt đối cho đôi bên.</p>
       <div class="space-y-2 mb-8">
         <ul>
           <li class="flex items-center gap-2.5 text-xs text-gray-300">Đại diện làm thủ tục trọn gói miễn phí</li>

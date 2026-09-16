@@ -40,10 +40,10 @@ export const fetchPageBySlug = async (
 ): Promise<ApiPageResponse> => {
   const baseUrl = getAdminApiUrl();
   
-  // Try direct API first as requested, then language-prefixed route
+  // Try direct API first as requested, then vi language-prefixed route
   const endpoints = [
+    `${baseUrl}/vi/api/pages/${encodeURIComponent(slug)}`,
     `${baseUrl}/api/pages/${encodeURIComponent(slug)}`,
-    `${baseUrl}/${lang}/api/pages/${encodeURIComponent(slug)}`,
   ];
 
   let lastError: Error | null = null;

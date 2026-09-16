@@ -105,7 +105,7 @@ export default function ComparisonSection({
                     Tỷ lệ thành công pháp lý:
                   </span>
                   <strong className="text-emerald-400 text-sm text-right">
-                    {renderItem('mua-nhan-hieu-ty-le-thanh-cong', '100% (Đã được Cục SHTT cấp bằng)')}
+                    {renderItem('mua-nhan-hieu-ty-le-thanh-cong', '100% (Đã được cấp văn bằng bảo hộ)')}
                   </strong>
                 </div>
                 <div className="flex justify-between items-center border-b border-slate-800 pb-3 gap-4">

@@ -93,7 +93,7 @@ export const translations: Record<Language, TranslationDict> = {
     news: "Tin tức",
     knowledge: "Kiến thức",
     hotline: "Hotline",
-    connectedDB: "Kết nối CSDL Cục SHTT Việt Nam",
+    connectedDB: "Kết nối CSDL nhãn hiệu chuẩn hóa",
     connectedStatus: "Đã liên kết",
     registerNew: "Nộp Đơn Đăng Ký Mới",
     loginRegister: "Đăng Nhập / Đăng Ký",
@@ -137,7 +137,7 @@ export const translations: Record<Language, TranslationDict> = {
     heroStat2: "24 Giờ",
     heroStat2Sub: "Hoàn tất chuyển quyền",
     heroStat3: "100%",
-    heroStat3Sub: "Bảo hộ bởi Cục SHTT",
+    heroStat3Sub: "Văn bằng bảo hộ hợp pháp",
 
     whyBadge: "TẠI SAO CHỌN BRANDIX",
     whyTitle: "Giải pháp chuyển nhượng nhãn hiệu thông minh nhất",

@@ -191,7 +191,7 @@ export const MOCK_BLOGS: Blog[] = [
   {
     id: "blog-1",
     title: "Cách chọn dịch vụ đăng ký nhãn hiệu phù hợp tại Việt Nam",
-    excerpt: "Lựa chọn đại diện sở hữu trí tuệ uy tín giúp rút ngắn thời gian thẩm định, tránh các rủi ro bị từ chối đơn đăng ký nhãn hiệu từ Cục Sở hữu trí tuệ.",
+    excerpt: "Lựa chọn đại diện sở hữu trí tuệ uy tín giúp rút ngắn thời gian thẩm định, tránh các rủi ro bị từ chối đơn đăng ký nhãn hiệu.",
     date: "2026-07-01",
     imageUrl: "https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&q=80&w=600",
     readTime: "5 phút đọc",
@@ -222,13 +222,13 @@ export const MOCK_FAQS: FAQ[] = [
     id: "faq-1",
     category: "buy",
     question: "Các nhãn hiệu hoặc tên miền có được xác minh về quyền sở hữu, tình trạng đăng ký và tính hợp lệ không?",
-    answer: "Tất cả các nhãn hiệu niêm yết trên Brandix đều trải qua quy trình thẩm định 3 lớp nghiêm ngặt bởi đội ngũ chuyên gia pháp lý và luật sư SHTT của chúng tôi. Chúng tôi đối chiếu trực tiếp dữ liệu với Cục Sở hữu Trí tuệ Việt Nam (WIPO / CSDL quốc gia), kiểm tra tình trạng hiệu lực, tranh chấp, khiếu nại hoặc cầm cố trước khi cho phép hiển thị lên sàn. Người mua được đảm bảo 100% về tính sạch sẽ pháp lý."
+    answer: "Tất cả các nhãn hiệu niêm yết trên Brandix đều trải qua quy trình thẩm định 3 lớp nghiêm ngặt bởi đội ngũ chuyên gia pháp lý và luật sư SHTT của chúng tôi. Chúng tôi đối chiếu trực tiếp dữ liệu (WIPO / CSDL quốc gia), kiểm tra tình trạng hiệu lực, tranh chấp, khiếu nại hoặc cầm cố trước khi cho phép hiển thị lên sàn. Người mua được đảm bảo 100% về tính sạch sẽ pháp lý."
   },
   {
     id: "faq-2",
     category: "buy",
     question: "Quy trình giao dịch gồm những bước nào và mất bao lâu để hoàn tất?",
-    answer: "Quy trình gồm 4 bước đơn giản: 1. Đặt mua và ký hợp đồng đặt cọc; 2. Soạn thảo hợp đồng chuyển nhượng chính thức ký 3 bên/công chứng; 3. Nộp hồ sơ chuyển nhượng lên Cục SHTT; 4. Bàn giao Giấy chứng nhận đăng ký nhãn hiệu (văn bằng bảo hộ gốc) đã được ghi nhận chủ sở hữu mới. Thời gian bàn giao quyền khai thác thương mại là ngay lập tức khi ký hợp đồng, thời gian hoàn thành ghi nhận hành chính tại Cục SHTT từ 3-6 tháng."
+    answer: "Quy trình gồm 4 bước đơn giản: 1. Đặt mua và ký hợp đồng đặt cọc; 2. Soạn thảo hợp đồng chuyển nhượng chính thức ký 3 bên/công chứng; 3. Nộp hồ sơ chuyển nhượng; 4. Bàn giao Giấy chứng nhận đăng ký nhãn hiệu (văn bằng bảo hộ gốc) đã được ghi nhận chủ sở hữu mới. Thời gian bàn giao quyền khai thác thương mại là ngay lập tức khi ký hợp đồng, thời gian hoàn thành ghi nhận hành chính từ 3-6 tháng."
   },
   {
     id: "faq-3",
@@ -246,7 +246,7 @@ export const MOCK_FAQS: FAQ[] = [
     id: "faq-5",
     category: "sell",
     question: "Thanh toán giao dịch được thực hiện như thế nào để đảm bảo an toàn cho cả hai bên?",
-    answer: "Brandix áp dụng cơ chế tài khoản Escrow (Ký quỹ an toàn). Khi người mua thanh toán, tiền sẽ được giữ tại tài khoản ký quỹ của Ngân hàng đối tác liên kết với Brandix. Tiền chỉ được giải ngân cho người bán sau khi hồ sơ chuyển nhượng hợp lệ được nộp và có dấu nhận đơn của Cục Sở hữu Trí tuệ Việt Nam, hoặc khi hợp đồng công chứng chuyển nhượng đã hoàn tất tùy thỏa thuận đặt cọc."
+    answer: "Brandix áp dụng cơ chế tài khoản Escrow (Ký quỹ an toàn). Khi người mua thanh toán, tiền sẽ được giữ tại tài khoản ký quỹ của Ngân hàng đối tác liên kết với Brandix. Tiền chỉ được giải ngân cho người bán sau khi hồ sơ chuyển nhượng hợp lệ được nộp và có dấu nhận đơn, hoặc khi hợp đồng công chứng chuyển nhượng đã hoàn tất tùy thỏa thuận đặt cọc."
   },
   {
     id: "faq-6",
@@ -271,7 +271,7 @@ export const MOCK_REVIEWS: Review[] = [
     role: "CEO EcoGlow Cosmetics",
     avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150",
     rating: 5,
-    content: "Nhờ Brandix, tôi đã thanh lý được 2 nhãn hiệu mỹ phẩm chưa dùng tới với giá rất tốt. Đội ngũ tư vấn pháp lý hỗ trợ tận tình từ khâu soạn hợp đồng đến khâu nộp hồ sơ lên Cục SHTT. Dịch vụ tuyệt vời và uy tín!"
+    content: "Nhờ Brandix, tôi đã thanh lý được 2 nhãn hiệu mỹ phẩm chưa dùng tới với giá rất tốt. Đội ngũ tư vấn pháp lý hỗ trợ tận tình từ khâu soạn hợp đồng đến khâu hoàn tất chuyển giao. Dịch vụ tuyệt vời và uy tín!"
   },
   {
     id: "rev-3",
