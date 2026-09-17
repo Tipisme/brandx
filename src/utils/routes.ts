@@ -1,6 +1,6 @@
 import { Language } from '../localization';
 
-export type AdminTab = 'profile' | 'trademarks' | 'cases' | 'files' | 'settings' | 'support';
+export type AdminTab = 'profile' | 'trademarks' | 'cases' | 'files' | 'commissions' | 'settings' | 'support';
 
 export interface RouteInfo {
   route: 'home' | 'catalog' | 'catalog-detail' | 'workflow' | 'about' | 'faq' | 'news' | 'news-detail' | 'reset-password' | 'admin' | 'dashboard';
@@ -20,6 +20,7 @@ export const ADMIN_TAB_SLUGS: Record<AdminTab, string> = {
   trademarks: 'quan-ly-tai-san',
   cases: 'quan-ly-yeu-cau',
   files: 'quan-ly-file',
+  commissions: 'hoa-hong-cua-toi',
   settings: 'cai-dat',
   support: 'ho-tro',
 };
@@ -36,6 +37,10 @@ export const SLUG_TO_ADMIN_TAB: Record<string, AdminTab> = {
   'cases': 'cases',
   'quan-ly-file': 'files',
   'files': 'files',
+  'hoa-hong-cua-toi': 'commissions',
+  'hoa-hong': 'commissions',
+  'commissions': 'commissions',
+  'referrals': 'commissions',
   'cai-dat': 'settings',
   'settings': 'settings',
   'ho-tro': 'support',
@@ -48,6 +53,7 @@ export const ADMIN_TAB_LABELS: Record<AdminTab, { vi: string; en: string }> = {
   trademarks: { vi: 'Quản lý tài sản', en: 'Asset Management' },
   cases: { vi: 'Quản lý yêu cầu', en: 'Request Management' },
   files: { vi: 'Quản lý file', en: 'File Management' },
+  commissions: { vi: 'Hoa hồng của tôi', en: 'My Commissions' },
   settings: { vi: 'Cài đặt', en: 'Settings' },
   support: { vi: 'Hỗ trợ', en: 'Help & Support' },
 };

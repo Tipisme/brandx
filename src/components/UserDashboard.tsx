@@ -38,12 +38,14 @@ import {
   Check,
   Clock,
   FileJson,
-  Eye
+  Eye,
+  Coins
 } from 'lucide-react';
 import { Language, translations } from '../localization';
 import { Trademark } from '../types';
 import { AdminTab, ADMIN_TAB_SLUGS, getAdminTabPath } from '../utils/routes';
 import { getAdminApiUrl } from '../services/pageService';
+import CommissionsTab from './CommissionsTab';
 
 interface UserDashboardProps {
   user: { name: string; email: string; token?: string; first_name?: string; last_name?: string; [key: string]: any } | null;
@@ -1980,6 +1982,17 @@ export default function UserDashboard({
               >
                 <Folder className="w-4 h-4" />
                 {language === 'vi' ? 'Quản lý file' : 'File Manager'}
+              </a>
+
+              <a
+                href={getAdminTabPath('commissions')}
+                onClick={(e) => { e.preventDefault(); handleSelectTab('commissions'); }}
+                className={`w-full text-left px-4 py-3 rounded-2xl text-xs font-bold transition-all flex items-center gap-3 cursor-pointer ${
+                  activeTab === 'commissions' ? 'bg-orange-50 text-orange-600 shadow-xs' : 'text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                <Coins className="w-4 h-4" />
+                {language === 'vi' ? 'Hoa hồng của tôi' : 'My Commissions'}
               </a>
             </div>
           </div>
@@ -4111,7 +4124,12 @@ export default function UserDashboard({
             </div>
           )}
 
-          {/* TAB 5: Settings Placeholder */}
+          {/* TAB 5: My Commissions */}
+          {activeTab === 'commissions' && (
+            <CommissionsTab user={user} language={language} />
+          )}
+
+          {/* TAB 6: Settings Placeholder */}
           {activeTab === 'settings' && (
             <div className="space-y-6 animate-in fade-in duration-200" id="settings-tab-panel">
               <div>

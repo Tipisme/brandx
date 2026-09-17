@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Phone, Mail, Award, ShoppingCart, User, Menu, X, Sparkles, ChevronDown, Briefcase, Folder, Settings, HelpCircle, ShieldCheck } from 'lucide-react';
+import { Search, Phone, Mail, Award, ShoppingCart, User, Menu, X, Sparkles, ChevronDown, Briefcase, Folder, Settings, HelpCircle, ShieldCheck, Coins } from 'lucide-react';
 import { translations, Language } from '../localization';
 import BrandixLogo from './BrandixLogo';
 import { AdminTab, getAdminTabPath, ADMIN_TAB_LABELS } from '../utils/routes';
@@ -469,6 +469,29 @@ export default function Header({
                     </div>
                   </a>
 
+                  <a
+                    href="/quan-tri/hoa-hong-cua-toi"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowAdminDropdown(false);
+                      if (!user) {
+                        onOpenLogin({ path: '/quan-tri/hoa-hong-cua-toi', tab: 'commissions', label: 'Hoa hồng của tôi' });
+                      } else {
+                        onViewModeChange?.('dashboard');
+                        onNavigate?.('/quan-tri/hoa-hong-cua-toi');
+                      }
+                    }}
+                    className={`flex items-center gap-2.5 px-3.5 py-2.5 hover:bg-orange-50 hover:text-orange-600 transition-colors ${
+                      viewMode === 'dashboard' && adminTab === 'commissions' ? 'bg-orange-50/80 text-orange-600 font-bold' : 'text-slate-700'
+                    }`}
+                  >
+                    <Coins className="w-4 h-4 text-orange-500 shrink-0" />
+                    <div>
+                      <div className="font-bold text-xs">{language === 'vi' ? 'Hoa hồng của tôi' : 'My Commissions'}</div>
+                      <div className="text-[10px] text-slate-400">/quan-tri/hoa-hong-cua-toi</div>
+                    </div>
+                  </a>
+
                   <div className="border-t border-slate-100 my-1"></div>
 
                   <a
@@ -681,6 +704,22 @@ export default function Header({
                   className={`block py-1 hover:text-orange-500 ${viewMode === 'dashboard' && adminTab === 'files' ? 'text-orange-600 font-bold' : 'text-slate-600'}`}
                 >
                   • {language === 'vi' ? 'Quản lý file' : 'File Manager'}
+                </a>
+                <a
+                  href="/quan-tri/hoa-hong-cua-toi"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowMobileMenu(false);
+                    if (!user) {
+                      onOpenLogin({ path: '/quan-tri/hoa-hong-cua-toi', tab: 'commissions', label: 'Hoa hồng của tôi' });
+                    } else {
+                      onViewModeChange?.('dashboard');
+                      onNavigate?.('/quan-tri/hoa-hong-cua-toi');
+                    }
+                  }}
+                  className={`block py-1 hover:text-orange-500 ${viewMode === 'dashboard' && adminTab === 'commissions' ? 'text-orange-600 font-bold' : 'text-slate-600'}`}
+                >
+                  • {language === 'vi' ? 'Hoa hồng của tôi' : 'My Commissions'}
                 </a>
               </div>
             </div>
