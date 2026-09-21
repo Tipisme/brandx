@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Award, Mail, Phone, MapPin, Send, CheckCircle2, FileText, ShieldCheck, RefreshCw, ChevronRight } from 'lucide-react';
+import { Award, Mail, Phone, MapPin, Send, CheckCircle2, FileText, ShieldCheck, ChevronRight } from 'lucide-react';
 import BrandixLogo from './BrandixLogo';
-import { forceClearCacheAndReload, APP_VERSION } from '../utils/cacheManager';
+import { APP_VERSION } from '../utils/cacheManager';
 import { POLICY_DOCUMENTS } from '../policyData';
 
 interface FooterProps {
@@ -57,6 +57,21 @@ export default function Footer({ onOpenPolicy }: FooterProps) {
               <p><strong className="text-gray-300">MST:</strong> 0108553521</p>
               <p><strong className="text-gray-300">Giấy ĐKHĐ:</strong> Số 01021497/TP/ĐKHĐ cấp ngày 13/12/2018 tại Sở Tư pháp</p>
               <p><strong className="text-gray-300">Đại diện SHTT:</strong> Mã HNi-006 (475) cấp ngày 19/11/2025 tại Sở KH&CN</p>
+              <div className="pt-2">
+                <a
+                  href="https://online.gov.vn/nen-tang/424301b2-8e73-40fb-9c51-491bfc8facf8"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Đã xác nhận với Bộ Công Thương"
+                  className="inline-block hover:opacity-90 transition-opacity"
+                >
+                  <img
+                    src="https://fileserver.online.gov.vn/uploads/Resources/iconxacnhan/DaThongBao.png"
+                    alt="Đã xác nhận"
+                    style={{ height: '44px' }}
+                  />
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -141,24 +156,10 @@ export default function Footer({ onOpenPolicy }: FooterProps) {
         </div>
       </div>
 
-      {/* Centered Copyright Line & Cache Refresh */}
+      {/* Centered Copyright Line */}
       <div className="max-w-7xl mx-auto border-t border-slate-900 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-gray-500 text-[11px]">
         <p>© 2026 Brandix Việt Nam (brandix.vn). All rights reserved.</p>
-        <div className="flex items-center gap-3">
-          <span className="text-[10px] text-slate-600">Bản dựng: {APP_VERSION}</span>
-          <button
-            onClick={() => {
-              if (confirm("Làm mới giao diện và xóa bộ nhớ đệm (cache) để cập nhật phiên bản mới nhất?")) {
-                forceClearCacheAndReload();
-              }
-            }}
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-orange-400 border border-slate-800 transition-colors cursor-pointer text-[10px]"
-            title="Nhấn để tải lại toàn bộ giao diện mới nhất và xóa cache"
-          >
-            <RefreshCw className="w-3 h-3" />
-            <span>Làm mới giao diện (Xóa Cache)</span>
-          </button>
-        </div>
+        <span className="text-[10px] text-slate-600">Bản dựng: {APP_VERSION}</span>
       </div>
     </footer>
   );
