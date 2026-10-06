@@ -13,7 +13,7 @@ interface HeaderProps {
   cartCount: number;
   selectedClass: number | null;
   onOpenLogin: (redirectTarget?: { path: string; tab?: AdminTab; label?: string }) => void;
-  user: { name: string; email: string } | null;
+  user: { name: string; email: string; is_partner?: boolean | number | string; [key: string]: any } | null;
   onLogout: () => void;
   language: Language;
   onLanguageChange: (lang: Language) => void;
@@ -49,6 +49,14 @@ export default function Header({
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [showAdminDropdown, setShowAdminDropdown] = useState(false);
   const adminDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Partner status verification - default is false unless is_partner is true
+  const isPartner = Boolean(
+    user?.is_partner === true ||
+    (user as any)?.is_partner === 1 ||
+    (user as any)?.is_partner === '1' ||
+    (user as any)?.is_partner === 'true'
+  );
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -469,28 +477,30 @@ export default function Header({
                     </div>
                   </a>
 
-                  <a
-                    href="/quan-tri/hoa-hong-cua-toi"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setShowAdminDropdown(false);
-                      if (!user) {
-                        onOpenLogin({ path: '/quan-tri/hoa-hong-cua-toi', tab: 'commissions', label: 'Hoa hồng của tôi' });
-                      } else {
-                        onViewModeChange?.('dashboard');
-                        onNavigate?.('/quan-tri/hoa-hong-cua-toi');
-                      }
-                    }}
-                    className={`flex items-center gap-2.5 px-3.5 py-2.5 hover:bg-orange-50 hover:text-orange-600 transition-colors ${
-                      viewMode === 'dashboard' && adminTab === 'commissions' ? 'bg-orange-50/80 text-orange-600 font-bold' : 'text-slate-700'
-                    }`}
-                  >
-                    <Coins className="w-4 h-4 text-orange-500 shrink-0" />
-                    <div>
-                      <div className="font-bold text-xs">{language === 'vi' ? 'Hoa hồng của tôi' : 'My Commissions'}</div>
-                      <div className="text-[10px] text-slate-400">/quan-tri/hoa-hong-cua-toi</div>
-                    </div>
-                  </a>
+                  {isPartner && (
+                    <a
+                      href="/quan-tri/hoa-hong-cua-toi"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setShowAdminDropdown(false);
+                        if (!user) {
+                          onOpenLogin({ path: '/quan-tri/hoa-hong-cua-toi', tab: 'commissions', label: 'Hoa hồng của tôi' });
+                        } else {
+                          onViewModeChange?.('dashboard');
+                          onNavigate?.('/quan-tri/hoa-hong-cua-toi');
+                        }
+                      }}
+                      className={`flex items-center gap-2.5 px-3.5 py-2.5 hover:bg-orange-50 hover:text-orange-600 transition-colors ${
+                        viewMode === 'dashboard' && adminTab === 'commissions' ? 'bg-orange-50/80 text-orange-600 font-bold' : 'text-slate-700'
+                      }`}
+                    >
+                      <Coins className="w-4 h-4 text-orange-500 shrink-0" />
+                      <div>
+                        <div className="font-bold text-xs">{language === 'vi' ? 'Hoa hồng của tôi' : 'My Commissions'}</div>
+                        <div className="text-[10px] text-slate-400">/quan-tri/hoa-hong-cua-toi</div>
+                      </div>
+                    </a>
+                  )}
 
                   <div className="border-t border-slate-100 my-1"></div>
 
@@ -705,22 +715,24 @@ export default function Header({
                 >
                   • {language === 'vi' ? 'Quản lý file' : 'File Manager'}
                 </a>
-                <a
-                  href="/quan-tri/hoa-hong-cua-toi"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setShowMobileMenu(false);
-                    if (!user) {
-                      onOpenLogin({ path: '/quan-tri/hoa-hong-cua-toi', tab: 'commissions', label: 'Hoa hồng của tôi' });
-                    } else {
-                      onViewModeChange?.('dashboard');
-                      onNavigate?.('/quan-tri/hoa-hong-cua-toi');
-                    }
-                  }}
-                  className={`block py-1 hover:text-orange-500 ${viewMode === 'dashboard' && adminTab === 'commissions' ? 'text-orange-600 font-bold' : 'text-slate-600'}`}
-                >
-                  • {language === 'vi' ? 'Hoa hồng của tôi' : 'My Commissions'}
-                </a>
+                {isPartner && (
+                  <a
+                    href="/quan-tri/hoa-hong-cua-toi"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowMobileMenu(false);
+                      if (!user) {
+                        onOpenLogin({ path: '/quan-tri/hoa-hong-cua-toi', tab: 'commissions', label: 'Hoa hồng của tôi' });
+                      } else {
+                        onViewModeChange?.('dashboard');
+                        onNavigate?.('/quan-tri/hoa-hong-cua-toi');
+                      }
+                    }}
+                    className={`block py-1 hover:text-orange-500 ${viewMode === 'dashboard' && adminTab === 'commissions' ? 'text-orange-600 font-bold' : 'text-slate-600'}`}
+                  >
+                    • {language === 'vi' ? 'Hoa hồng của tôi' : 'My Commissions'}
+                  </a>
+                )}
               </div>
             </div>
           </div>

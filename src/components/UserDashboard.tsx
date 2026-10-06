@@ -153,13 +153,36 @@ export default function UserDashboard({
   // Current active sidebar menu option
   const [activeTab, setActiveTab] = useState<AdminTab>(propActiveTab || initialTab);
 
+  // Partner status verification - default is false unless is_partner is true
+  const isPartner = Boolean(
+    user?.is_partner === true ||
+    (user as any)?.is_partner === 1 ||
+    (user as any)?.is_partner === '1' ||
+    (user as any)?.is_partner === 'true'
+  );
+
   useEffect(() => {
     if (propActiveTab) {
-      setActiveTab(propActiveTab);
+      if (propActiveTab === 'commissions' && !isPartner) {
+        setActiveTab('profile');
+      } else {
+        setActiveTab(propActiveTab);
+      }
     } else if (initialTab) {
-      setActiveTab(initialTab);
+      if (initialTab === 'commissions' && !isPartner) {
+        setActiveTab('profile');
+      } else {
+        setActiveTab(initialTab);
+      }
     }
-  }, [propActiveTab, initialTab]);
+  }, [propActiveTab, initialTab, isPartner]);
+
+  useEffect(() => {
+    if (!isPartner && activeTab === 'commissions') {
+      setActiveTab('profile');
+      onTabChange?.('profile');
+    }
+  }, [isPartner, activeTab, onTabChange]);
 
   const handleSelectTab = (tab: AdminTab) => {
     setActiveTab(tab);
@@ -1984,16 +2007,18 @@ export default function UserDashboard({
                 {language === 'vi' ? 'Quản lý file' : 'File Manager'}
               </a>
 
-              <a
-                href={getAdminTabPath('commissions')}
-                onClick={(e) => { e.preventDefault(); handleSelectTab('commissions'); }}
-                className={`w-full text-left px-4 py-3 rounded-2xl text-xs font-bold transition-all flex items-center gap-3 cursor-pointer ${
-                  activeTab === 'commissions' ? 'bg-orange-50 text-orange-600 shadow-xs' : 'text-slate-600 hover:bg-slate-50'
-                }`}
-              >
-                <Coins className="w-4 h-4" />
-                {language === 'vi' ? 'Hoa hồng của tôi' : 'My Commissions'}
-              </a>
+              {isPartner && (
+                <a
+                  href={getAdminTabPath('commissions')}
+                  onClick={(e) => { e.preventDefault(); handleSelectTab('commissions'); }}
+                  className={`w-full text-left px-4 py-3 rounded-2xl text-xs font-bold transition-all flex items-center gap-3 cursor-pointer ${
+                    activeTab === 'commissions' ? 'bg-orange-50 text-orange-600 shadow-xs' : 'text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  <Coins className="w-4 h-4" />
+                  {language === 'vi' ? 'Hoa hồng của tôi' : 'My Commissions'}
+                </a>
+              )}
             </div>
           </div>
 
@@ -4125,7 +4150,7 @@ export default function UserDashboard({
           )}
 
           {/* TAB 5: My Commissions */}
-          {activeTab === 'commissions' && (
+          {isPartner && activeTab === 'commissions' && (
             <CommissionsTab user={user} language={language} />
           )}
 

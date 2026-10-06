@@ -142,6 +142,10 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, redirectNo
         const userObj = data.user || data.data?.user || data.data || {};
         const userName = userObj.name || userObj.fullName || data.name || loginEmail.split('@')[0].toUpperCase();
 
+        // Extract is_partner: handles boolean true/false, number 1/0, string "1"/"0"/"true"/"false"
+        const isPartnerRaw = data?.is_partner ?? data?.data?.is_partner ?? userObj?.is_partner ?? data?.user?.is_partner;
+        const isPartner = isPartnerRaw === true || isPartnerRaw === 1 || isPartnerRaw === '1' || isPartnerRaw === 'true';
+
         setSuccessMsg(`Chào mừng bạn quay trở lại, ${userName}!`);
         
         setTimeout(() => {
@@ -150,7 +154,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, redirectNo
             ...userObj,
             name: userName, 
             email: loginEmail, 
-            token: token 
+            token: token,
+            is_partner: isPartner
           });
           setSuccessMsg('');
           setLoginEmail('');
@@ -268,6 +273,9 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, redirectNo
         const userObj = data?.user || data?.data?.user || data?.data || {};
         const userName = `${regLastName} ${regFirstName}`.trim();
 
+        const isPartnerRaw = data?.is_partner ?? data?.data?.is_partner ?? userObj?.is_partner ?? data?.user?.is_partner;
+        const isPartner = isPartnerRaw === true || isPartnerRaw === 1 || isPartnerRaw === '1' || isPartnerRaw === 'true';
+
         setTimeout(() => {
           onLoginSuccess({
             ...data,
@@ -275,6 +283,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, redirectNo
             name: userName,
             email: regEmail,
             token: token,
+            is_partner: isPartner
           });
           setSuccessMsg('');
           setRegFirstName('');

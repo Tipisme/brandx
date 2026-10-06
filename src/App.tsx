@@ -176,7 +176,28 @@ export default function App() {
       }
 
       if (parsed.route === 'dashboard') {
-        const tab = parsed.adminTab || 'profile';
+        let tab = parsed.adminTab || 'profile';
+        const storedUserStr = localStorage.getItem('brandhub_user');
+        let parsedUser: any = null;
+        if (storedUserStr) {
+          try {
+            parsedUser = JSON.parse(storedUserStr);
+          } catch (e) {
+            console.error('Failed to parse stored user', e);
+          }
+        }
+
+        const isPartnerUser = Boolean(
+          parsedUser?.is_partner === true ||
+          parsedUser?.is_partner === 1 ||
+          parsedUser?.is_partner === '1' ||
+          parsedUser?.is_partner === 'true'
+        );
+
+        if (tab === 'commissions' && storedUserStr && !isPartnerUser) {
+          tab = 'profile';
+        }
+
         setDashboardInitialTab(tab);
         setViewMode('dashboard');
         setCurrentRoute('dashboard');
@@ -184,8 +205,7 @@ export default function App() {
         setActivePostId(null);
 
         // Check if user is logged in
-        const storedUser = localStorage.getItem('brandhub_user');
-        if (!storedUser) {
+        if (!storedUserStr) {
           const tabLabel = getAdminTabLabel(tab, language);
           saveLoginRedirect(parsed.path, tab, tabLabel);
           setLoginRedirectNotice(`Vui lòng đăng nhập để truy cập: ${tabLabel}`);
@@ -656,13 +676,25 @@ export default function App() {
             setIsNegotiationOpen(true);
           } else {
             const savedRedirect = getSavedLoginRedirect();
+            const userIsPartner = Boolean(
+              userData?.is_partner === true ||
+              userData?.is_partner === 1 ||
+              userData?.is_partner === '1' ||
+              userData?.is_partner === 'true'
+            );
+
             if (savedRedirect && savedRedirect.path) {
               clearSavedLoginRedirect();
               setViewMode('dashboard');
-              if (savedRedirect.tab) {
+              if (savedRedirect.tab === 'commissions' && !userIsPartner) {
+                setDashboardInitialTab('profile');
+                navigateTo('/quan-tri/ca-nhan-to-chuc');
+              } else if (savedRedirect.tab) {
                 setDashboardInitialTab(savedRedirect.tab);
+                navigateTo(savedRedirect.path);
+              } else {
+                navigateTo(savedRedirect.path);
               }
-              navigateTo(savedRedirect.path);
             } else {
               setViewMode('dashboard');
               setDashboardInitialTab('profile');
