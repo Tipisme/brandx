@@ -1,11 +1,17 @@
 import { ArrowRight, ShieldCheck, Zap, Handshake } from 'lucide-react';
+import { ApiPageResponse } from '../services/pageService';
 
 interface HeroProps {
   onScrollToCatalog: () => void;
   onOpenSellRequest: () => void;
+  pageData?: ApiPageResponse | null;
 }
 
-export default function Hero({ onScrollToCatalog, onOpenSellRequest }: HeroProps) {
+export default function Hero({ onScrollToCatalog, onOpenSellRequest, pageData }: HeroProps) {
+  const cleanApiSubtitle = pageData?.body 
+    ? pageData.body.replace(/<\/?[^>]+(>|$)/g, " ").replace(/&[a-z]+;/gi, " ").replace(/\s+/g, " ").trim()
+    : pageData?.description || null;
+
   return (
     <section className="relative bg-gradient-to-br from-red-950 via-amber-950 to-stone-900 text-white overflow-hidden" id="home">
       {/* Decorative background elements */}
@@ -28,8 +34,12 @@ export default function Hero({ onScrollToCatalog, onOpenSellRequest }: HeroProps
 
           {/* Subtitle */}
           <p className="text-gray-300 text-base sm:text-lg md:text-xl leading-relaxed mb-8 max-w-3xl">
-            Sở hữu nhãn hiệu & Bảo hộ sở hữu trí tuệ trực tuyến hàng đầu Việt Nam.
-            Kết nối trực tiếp chủ thương hiệu – Giao dịch an toàn tuyệt đối – Thủ tục tinh gọn trong 72 giờ.
+            {cleanApiSubtitle || (
+              <>
+                Sở hữu nhãn hiệu & Bảo hộ sở hữu trí tuệ trực tuyến hàng đầu Việt Nam.
+                Kết nối trực tiếp chủ thương hiệu – Giao dịch an toàn tuyệt đối – Thủ tục tinh gọn trong 72 giờ.
+              </>
+            )}
           </p>
 
           {/* Call to Actions */}

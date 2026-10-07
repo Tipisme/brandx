@@ -3,6 +3,7 @@ import { fetchPageBySlug, ApiPageResponse } from '../services/pageService';
 import WhyUs from './WhyUs';
 import ComparisonSection from './ComparisonSection';
 import WaitlessBenefitsSection from './WaitlessBenefitsSection';
+import { updateMetaSeo, resetMetaSeo, resolveMetaImage } from '../utils/seo';
 
 interface AboutPageProps {
   language?: 'vi' | 'en';
@@ -38,6 +39,26 @@ export default function AboutPage({
       isMounted = false;
     };
   }, [language]); // Only re-fetches if language changes or component remounts
+
+  useEffect(() => {
+    if (pageData) {
+      const metaTitle = pageData.title || 'Về Chúng Tôi - Brandix Việt Nam';
+      const metaDesc = pageData.description || 'Tìm hiểu về Brandix - Nền tảng giao dịch, chuyển nhượng và bảo hộ nhãn hiệu trực tuyến hàng đầu Việt Nam.';
+      const metaImg = resolveMetaImage(pageData.image, '/brandix-logo.jpg');
+
+      updateMetaSeo({
+        title: `${metaTitle} | Brandix`,
+        description: metaDesc,
+        image: metaImg,
+        imageAlt: metaTitle,
+        type: 'website'
+      });
+
+      return () => {
+        resetMetaSeo();
+      };
+    }
+  }, [pageData]);
 
   return (
     <div id="about-page-container">

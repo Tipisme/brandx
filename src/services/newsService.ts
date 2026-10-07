@@ -7,8 +7,10 @@ export const stripHtmlAndTruncate = (html: string, length: number = 150) => {
   return cleanText.substring(0, length) + '...';
 };
 
-export const getPostImageUrl = (img: any) => {
-  if (!img) return null;
+export const DEFAULT_POST_IMAGE = '/brandix-logo.jpg';
+
+export const getPostImageUrl = (img: any, fallback: string = DEFAULT_POST_IMAGE) => {
+  if (!img) return fallback;
   if (typeof img === 'string') {
     if (img.startsWith('http')) return img;
     return `https://admin.hdslaw.vn${img.startsWith('/') ? '' : '/'}${img}`;
@@ -21,7 +23,7 @@ export const getPostImageUrl = (img: any) => {
     if (img.url.startsWith('http')) return img.url;
     return `https://admin.hdslaw.vn${img.url.startsWith('/') ? '' : '/'}${img.url}`;
   }
-  return null;
+  return fallback;
 };
 
 export async function fetchNewsPosts(page: number = 1) {

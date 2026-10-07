@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, Heart, Share2, Award, Calendar, ShieldCheck, User, MapPin, Layers, Sparkles, CheckCircle2, Tag, Clock, XCircle } from 'lucide-react';
 import { Language } from '../localization';
 import { isExpiredOrRefusedStatus, checkIsExpiringSoon, getTrademarkStatusDisplay, extractFilingDate } from '../utils/trademarkStatus';
+import { updateMetaSeo, resetMetaSeo, resolveMetaImage } from '../utils/seo';
 
 interface TrademarkDetailPageProps {
   slug: string;
@@ -57,6 +58,46 @@ export default function TrademarkDetailPage({
       fetchDetail();
     }
   }, [slug, language]);
+
+  // Dynamic SEO meta tags for trademark product details
+  useEffect(() => {
+    if (product) {
+      const tmName = product.name || 'Nhãn hiệu';
+      const metaTitle = product.meta_title || `Nhãn hiệu ${tmName} - Giao Dịch & Chuyển Nhượng | Brandix`;
+      const metaDesc = product.meta_description || product.short_description || `Xem chi tiết nhãn hiệu ${tmName}. Nền tảng giao dịch, chuyển nhượng và bảo hộ nhãn hiệu trực tuyến hàng đầu Việt Nam.`;
+      const metaImg = resolveMetaImage(
+        product.image || product.featured_image || (product.images && product.images[0]?.url) || (product.images && product.images[0]?.path),
+        '/brandix-logo.jpg'
+      );
+
+      const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": tmName,
+        "image": [metaImg],
+        "description": metaDesc,
+        "offers": {
+          "@type": "Offer",
+          "price": product.price || "0",
+          "priceCurrency": "VND",
+          "availability": "https://schema.org/InStock"
+        }
+      };
+
+      updateMetaSeo({
+        title: metaTitle,
+        description: metaDesc,
+        image: metaImg,
+        imageAlt: tmName,
+        type: 'product',
+        jsonLd
+      });
+
+      return () => {
+        resetMetaSeo();
+      };
+    }
+  }, [product]);
 
   useEffect(() => {
     if (activeTab !== 'owner' || !slug) return;

@@ -22,6 +22,7 @@ import { Trademark } from './types';
 import { ShieldCheck, Zap, Handshake, Star, ArrowUpRight, HelpCircle, Phone, Sparkles, Lock, ArrowLeft, ArrowRight } from 'lucide-react';
 import { Language } from './localization';
 import { fetchNiceClasses } from './services/niceClasses';
+import { fetchHomePage, ApiPageResponse } from './services/pageService';
 import {
   parseCurrentLocation,
   navigateTo,
@@ -32,6 +33,7 @@ import {
   getAdminTabPath,
   getAdminTabLabel
 } from './utils/routes';
+import { resetMetaSeo, syncHomePageSeo } from './utils/seo';
 
 export default function App() {
   // Application State managers
@@ -134,6 +136,7 @@ export default function App() {
   const [selectedClass, setSelectedClass] = useState<number | null>(null);
   const [language, setLanguage] = useState<Language>('vi');
   const [niceClasses, setNiceClasses] = useState<Record<number, { name: string; desc: string }>>({});
+  const [homePageData, setHomePageData] = useState<ApiPageResponse | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -142,6 +145,25 @@ export default function App() {
         setNiceClasses(data);
       }
     });
+    return () => {
+      active = false;
+    };
+  }, [language]);
+
+  // Fetch Homepage Data from API (/api/pages/brandix-home)
+  useEffect(() => {
+    let active = true;
+    fetchHomePage(language)
+      .then((data) => {
+        if (active && data) {
+          setHomePageData(data);
+          syncHomePageSeo(data);
+        }
+      })
+      .catch((err) => {
+        console.warn('Could not load brandix-home API data:', err);
+      });
+
     return () => {
       active = false;
     };
@@ -231,7 +253,14 @@ export default function App() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [currentRoute]);
+    if (currentRoute === 'home') {
+      if (homePageData) {
+        syncHomePageSeo(homePageData);
+      } else {
+        resetMetaSeo();
+      }
+    }
+  }, [currentRoute, homePageData]);
 
   const [favoriteTrademarks, setFavoriteTrademarks] = useState<any[]>([]);
 
@@ -431,6 +460,7 @@ export default function App() {
               <Hero
                 onScrollToCatalog={() => { navigateTo('/catalog'); }}
                 onOpenSellRequest={handleOpenWizard}
+                pageData={homePageData}
               />
 
               {/* 7. Stats Counter Block Row */}

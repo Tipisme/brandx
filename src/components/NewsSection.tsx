@@ -30,6 +30,7 @@ import {
   fetchNewsPosts, 
   fetchSinglePostBySlug 
 } from '../services/newsService';
+import { updateMetaSeo, resetMetaSeo, resolveMetaImage } from '../utils/seo';
 
 interface NewsSectionProps {
   language: Language;
@@ -125,29 +126,9 @@ export default function NewsSection({
   // Dynamic SEO Updates & JSON-LD Structured Schema.org Injection
   useEffect(() => {
     if (currentPostId && singlePost) {
-      const originalTitle = document.title;
-      // Set SEO Title
-      document.title = `${singlePost.meta_title || singlePost.title} | Cập nhật Pháp Luật Brandix`;
-      
-      // Update SEO Meta Description
-      const metaDesc = document.querySelector('meta[name="description"]');
-      const originalMetaDesc = metaDesc?.getAttribute('content') || '';
       const summaryText = singlePost.meta_description || stripHtmlAndTruncate(singlePost.description, 160);
-      if (metaDesc) {
-        metaDesc.setAttribute('content', summaryText);
-      }
-
-      // Append Structured JSON-LD Schema Script
-      const scriptId = 'news-article-seo-schema';
-      let scriptEl = document.getElementById(scriptId) as HTMLScriptElement | null;
-      if (!scriptEl) {
-        scriptEl = document.createElement('script');
-        scriptEl.id = scriptId;
-        scriptEl.type = 'application/ld+json';
-        document.head.appendChild(scriptEl);
-      }
+      const imageUrl = resolveMetaImage(singlePost.featured_image, '/brandix-logo.jpg');
       
-      const imageUrl = getPostImageUrl(singlePost.featured_image);
       const schemaMarkup = {
         "@context": "https://schema.org",
         "@type": "NewsArticle",
@@ -170,15 +151,17 @@ export default function NewsSection({
         "description": summaryText
       };
       
-      scriptEl.text = JSON.stringify(schemaMarkup);
+      updateMetaSeo({
+        title: `${singlePost.meta_title || singlePost.title} | Brandix`,
+        description: summaryText,
+        image: imageUrl,
+        imageAlt: singlePost.title,
+        type: 'article',
+        jsonLd: schemaMarkup
+      });
 
       return () => {
-        document.title = originalTitle;
-        if (metaDesc) {
-          metaDesc.setAttribute('content', originalMetaDesc);
-        }
-        const el = document.getElementById(scriptId);
-        if (el) el.remove();
+        resetMetaSeo();
       };
     }
   }, [currentPostId, singlePost]);

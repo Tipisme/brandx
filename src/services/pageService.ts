@@ -70,3 +70,11 @@ export const fetchPageBySlug = async (
 
   throw lastError || new Error(`Không thể tải dữ liệu trang cho slug "${slug}"`);
 };
+
+/**
+ * Call API for homepage: {baseUrl}/api/pages/brandix-home
+ */
+export const fetchHomePage = async (lang: string = 'vi'): Promise<ApiPageResponse> => {
+  return fetchPageBySlug('brandix-home', lang);
+};
+
