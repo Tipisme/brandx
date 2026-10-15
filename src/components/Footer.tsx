@@ -89,6 +89,7 @@ export default function Footer({ onOpenPolicy }: FooterProps) {
             <li><a href="#workflow" className="hover:text-white transition-colors">Gia hạn bằng</a></li>
             <li><a href="#/faq" className="hover:text-white transition-colors">Hỏi đáp pháp lý</a></li>
             <li><a href="#/about" className="hover:text-white transition-colors">Tra cứu bảo hộ</a></li>
+            <li><a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="text-orange-400 hover:text-orange-300 font-medium transition-colors">Sitemap XML (SEO)</a></li>
           </ul>
         </div>
 
@@ -159,7 +160,19 @@ export default function Footer({ onOpenPolicy }: FooterProps) {
       {/* Centered Copyright Line */}
       <div className="max-w-7xl mx-auto border-t border-slate-900 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-gray-500 text-[11px]">
         <p>© 2026 Brandix Việt Nam (brandix.vn). All rights reserved.</p>
-        <span className="text-[10px] text-slate-600">Bản dựng: {APP_VERSION}</span>
+        <div className="flex items-center gap-3 text-[11px]">
+          <a
+            href="/sitemap.xml"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-orange-400 transition-colors"
+            title="Sơ đồ website Google Sitemap XML"
+          >
+            Sitemap.xml
+          </a>
+          <span className="text-slate-700">•</span>
+          <span className="text-[10px] text-slate-600">Bản dựng: {APP_VERSION}</span>
+        </div>
       </div>
     </footer>
   );
