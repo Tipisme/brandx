@@ -261,7 +261,7 @@ export const MOCK_REVIEWS: Review[] = [
     id: "rev-1",
     author: "Nguyễn Minh Trí",
     role: "Quản lý chuỗi ẩm thực Trí Việt",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150",
+    avatar: "/avatars/nguyen-minh-tri.jpg",
     rating: 5,
     content: "Tôi đã tìm kiếm một thương hiệu về mảng thực phẩm và ăn uống rất khó khăn trong suốt thời gian qua vì hầu hết các tên đẹp đều bị đăng ký hết. Thật tuyệt vời khi tìm được Brandix! Quy trình chuyển nhượng cực kỳ nhanh gọn, giúp chúng tôi sở hữu nhãn hiệu độc quyền chỉ trong vài ngày thay vì chờ đợi 2 năm."
   },
@@ -269,7 +269,7 @@ export const MOCK_REVIEWS: Review[] = [
     id: "rev-2",
     author: "Phan Thị Thu Hà",
     role: "CEO EcoGlow Cosmetics",
-    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150",
+    avatar: "/avatars/phan-thi-thu-ha.jpg",
     rating: 5,
     content: "Nhờ Brandix, tôi đã thanh lý được 2 nhãn hiệu mỹ phẩm chưa dùng tới với giá rất tốt. Đội ngũ tư vấn pháp lý hỗ trợ tận tình từ khâu soạn hợp đồng đến khâu hoàn tất chuyển giao. Dịch vụ tuyệt vời và uy tín!"
   },
@@ -277,7 +277,7 @@ export const MOCK_REVIEWS: Review[] = [
     id: "rev-3",
     author: "Trần Hoàng Nam",
     role: "Nhà sáng lập TechVina Solutions",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150",
+    avatar: "/avatars/tran-hoang-nam.jpg",
     rating: 5,
     content: "Sàn giao dịch rất chuyên nghiệp, thông tin nhãn hiệu minh bạch rõ ràng, tra cứu nhóm hàng hóa phân loại cực kỳ chuẩn xác theo Thỏa ước Nice. Đây đúng là giải pháp tối ưu cho giới khởi nghiệp công nghệ."
   }

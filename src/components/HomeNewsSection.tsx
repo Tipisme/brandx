@@ -123,6 +123,9 @@ export default function HomeNewsSection({ language }: HomeNewsSectionProps) {
                             alt={rawPost.title}
                             referrerPolicy="no-referrer"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            onError={(e) => {
+                              (e.currentTarget as HTMLImageElement).src = '/brandix-logo.jpg';
+                            }}
                           />
                           <span className="absolute top-3 left-3 bg-slate-900/85 backdrop-blur-md text-white text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md">
                             {categoryName}

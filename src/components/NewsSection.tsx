@@ -94,17 +94,34 @@ export default function NewsSection({
   // Fetch single post details for detail view by slug
   useEffect(() => {
     if (currentPostId) {
+      let isMounted = true;
       const fetchSinglePost = async () => {
         setIsSingleLoading(true);
         setError(null);
         try {
-          const json = await fetchSinglePostBySlug(currentPostId);
-          if (json && json.data && json.data.length > 0) {
-            setSinglePost(json.data[0]);
-          } else {
-            // Fallback: search in local posts list
-            const localFound = posts.find(p => p.slug === currentPostId);
-            if (localFound) {
+          const cleanId = decodeURIComponent(currentPostId).trim().toLowerCase();
+
+          // 1. Instant optimistic display if post already exists in current loaded list
+          const localFound = posts.find(
+            p => String(p.slug).toLowerCase() === cleanId || String(p.id).toLowerCase() === cleanId
+          );
+          if (localFound && localFound.description) {
+            setSinglePost(localFound);
+          }
+
+          // 2. Fetch the exact post from API
+          const result = await fetchSinglePostBySlug(currentPostId);
+          if (isMounted) {
+            const post = result?.data && Array.isArray(result.data)
+              ? (result.data.find((p: any) => 
+                  String(p.slug).toLowerCase() === cleanId || 
+                  String(p.id).toLowerCase() === cleanId
+                ) || result.data[0])
+              : result;
+
+            if (post && (post.slug || post.description)) {
+              setSinglePost(post);
+            } else if (localFound) {
               setSinglePost(localFound);
             } else {
               throw new Error('Bài viết không tồn tại hoặc đã bị gỡ bỏ.');
@@ -112,12 +129,27 @@ export default function NewsSection({
           }
         } catch (err: any) {
           console.error(err);
-          setError(err.message || 'Lỗi kết nối nội dung bài viết.');
+          if (isMounted) {
+            const cleanId = decodeURIComponent(currentPostId).trim().toLowerCase();
+            const localFound = posts.find(
+              p => String(p.slug).toLowerCase() === cleanId || String(p.id).toLowerCase() === cleanId
+            );
+            if (localFound) {
+              setSinglePost(localFound);
+            } else {
+              setError(err.message || 'Lỗi kết nối nội dung bài viết.');
+            }
+          }
         } finally {
-          setIsSingleLoading(false);
+          if (isMounted) {
+            setIsSingleLoading(false);
+          }
         }
       };
       fetchSinglePost();
+      return () => {
+        isMounted = false;
+      };
     } else {
       setSinglePost(null);
     }
@@ -165,6 +197,24 @@ export default function NewsSection({
       };
     }
   }, [currentPostId, singlePost]);
+
+  // Clean up any expired or broken images in blog HTML
+  useEffect(() => {
+    if (singlePost) {
+      const timer = setTimeout(() => {
+        const container = document.querySelector('.blog-content');
+        if (container) {
+          const imgs = container.querySelectorAll('img');
+          imgs.forEach((img) => {
+            img.onerror = () => {
+              img.style.display = 'none';
+            };
+          });
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [singlePost]);
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -289,6 +339,20 @@ export default function NewsSection({
           {/* Centered Main Post Body */}
           <div className="bg-white border border-slate-100 rounded-3xl p-5 sm:p-10 space-y-8 shadow-xs">
             
+            {/* Featured Image Banner if available */}
+            {detailImage && (
+              <div className="w-full max-h-[460px] rounded-2xl overflow-hidden shadow-xs bg-slate-100">
+                <img
+                  src={detailImage}
+                  alt={singlePost.title}
+                  className="w-full h-full max-h-[460px] object-cover"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = '/brandix-logo.jpg';
+                  }}
+                />
+              </div>
+            )}
+
             {/* Lead Intro text from API if available */}
             {singlePost.meta_description && (
               <p className="font-serif italic text-slate-700 text-sm sm:text-base leading-relaxed border-l-4 border-[#D4AF37] pl-4 py-1.5 bg-amber-50/20 rounded-r-xl">
@@ -476,6 +540,9 @@ export default function NewsSection({
                           alt={rawPost.title}
                           referrerPolicy="no-referrer"
                           className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300"
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).src = '/brandix-logo.jpg';
+                          }}
                         />
                         <span className="absolute top-3 left-3 bg-slate-900/85 backdrop-blur-md text-white text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md">
                           {categoryName}

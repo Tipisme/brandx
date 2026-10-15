@@ -517,6 +517,12 @@ export default function App() {
                             src={rev.avatar}
                             alt={rev.author}
                             referrerPolicy="no-referrer"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              if (target.src !== '/brandix-logo.jpg') {
+                                target.src = '/brandix-logo.jpg';
+                              }
+                            }}
                             className="w-10 h-10 rounded-full object-cover border border-slate-700 shrink-0"
                           />
                           <div>
