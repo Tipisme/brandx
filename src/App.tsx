@@ -240,6 +240,17 @@ export default function App() {
       setCurrentRoute(parsed.route);
       setActiveSlug(parsed.slug || null);
       setActivePostId(parsed.postId || null);
+
+      // Track non-detail route as return source
+      if (parsed.route !== 'news-detail') {
+        try {
+          const currentHash = window.location.hash || '#/home';
+          sessionStorage.setItem('news_source_page', currentHash);
+          sessionStorage.setItem('news_source_route', parsed.route);
+        } catch {
+          // ignore storage errors
+        }
+      }
     };
 
     syncRouteFromUrl();
@@ -252,7 +263,30 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    // If returning from news detail, restore previous scroll position
+    const returnScroll = sessionStorage.getItem('news_return_scroll');
+    const returnTarget = sessionStorage.getItem('news_return_target');
+
+    if (returnScroll && (currentRoute === 'home' || currentRoute === 'news')) {
+      sessionStorage.removeItem('news_return_scroll');
+      sessionStorage.removeItem('news_return_target');
+
+      const scrollY = Number(returnScroll);
+      const performScroll = () => {
+        if (!isNaN(scrollY) && scrollY > 0) {
+          window.scrollTo({ top: scrollY, behavior: 'smooth' });
+        } else if (returnTarget === 'news') {
+          const el = document.getElementById('news');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+      };
+
+      setTimeout(performScroll, 40);
+      setTimeout(performScroll, 160);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
     if (currentRoute === 'home') {
       if (homePageData) {
         syncHomePageSeo(homePageData);
@@ -578,6 +612,29 @@ export default function App() {
             <NewsSection
               language={language}
               currentPostId={activePostId}
+              onBack={() => {
+                const sourcePage = sessionStorage.getItem('news_source_page');
+                const sourceRoute = sessionStorage.getItem('news_source_route');
+
+                setActivePostId(null);
+
+                if (sourceRoute === 'home' || sourcePage === '#/home' || sourcePage === '/' || sourcePage === '#' || !sourceRoute) {
+                  setCurrentRoute('home');
+                  window.location.hash = '#/home';
+                } else if (sourceRoute === 'news' || sourcePage === '#/news') {
+                  setCurrentRoute('news');
+                  window.location.hash = '#/news';
+                } else if (sourceRoute === 'catalog' || sourcePage?.includes('catalog')) {
+                  setCurrentRoute('catalog');
+                  window.location.hash = sourcePage || '#/catalog';
+                } else if (sourcePage && sourcePage.startsWith('#/')) {
+                  setCurrentRoute(sourceRoute);
+                  window.location.hash = sourcePage;
+                } else {
+                  setCurrentRoute('home');
+                  window.location.hash = '#/home';
+                }
+              }}
               onSelectPost={(id) => {
                 if (id) {
                   window.location.hash = `#/news/${id}`;

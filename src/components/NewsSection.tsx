@@ -36,12 +36,14 @@ interface NewsSectionProps {
   language: Language;
   currentPostId: string | null;
   onSelectPost: (id: string | null) => void;
+  onBack?: () => void;
 }
 
 export default function NewsSection({
   language,
   currentPostId,
-  onSelectPost
+  onSelectPost,
+  onBack
 }: NewsSectionProps) {
   const [posts, setPosts] = useState<any[]>([]);
   const [singlePost, setSinglePost] = useState<any>(null);
@@ -51,6 +53,30 @@ export default function NewsSection({
   const [currentPage, setCurrentPage] = useState(1);
   const [meta, setMeta] = useState<any>(null);
   const [copied, setCopied] = useState(false);
+
+  // Helper to return back to where user was
+  const handleBack = () => {
+    if (onBack) {
+      onBack();
+      return;
+    }
+    try {
+      const sourcePage = sessionStorage.getItem('news_source_page');
+      const sourceRoute = sessionStorage.getItem('news_source_route');
+      if (sourceRoute === 'home' || sourcePage === '#/home' || sourcePage === '/' || sourcePage === '#' || !sourceRoute) {
+        window.location.hash = '#/home';
+      } else if (sourceRoute === 'news' || sourcePage === '#/news') {
+        window.location.hash = '#/news';
+      } else if (sourcePage && sourcePage.startsWith('#/')) {
+        window.location.hash = sourcePage;
+      } else {
+        window.location.hash = '#/home';
+      }
+    } catch {
+      window.location.hash = '#/home';
+    }
+    onSelectPost(null);
+  };
 
   // Quick consult form state
   const [consultPhone, setConsultPhone] = useState('');
@@ -259,11 +285,23 @@ export default function NewsSection({
   if (currentPostId) {
     if (isSingleLoading) {
       return (
-        <div className="max-w-7xl mx-auto px-4 py-20 flex flex-col items-center justify-center min-h-[50vh]">
-          <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-slate-500 text-sm font-medium">
-            {language === 'vi' ? 'Đang tải bài viết chi tiết từ API...' : 'Loading news details from production API...'}
-          </p>
+        <div className="max-w-4xl mx-auto px-4 py-12">
+          <div className="mb-6">
+            <button
+              type="button"
+              onClick={handleBack}
+              className="inline-flex items-center gap-2 px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-bold shadow-xs transition-all cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>{language === 'vi' ? 'Quay lại' : 'Go back'}</span>
+            </button>
+          </div>
+          <div className="flex flex-col items-center justify-center min-h-[40vh]">
+            <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p className="text-slate-500 text-sm font-medium">
+              {language === 'vi' ? 'Đang tải bài viết chi tiết từ API...' : 'Loading news details from production API...'}
+            </p>
+          </div>
         </div>
       );
     }
@@ -276,10 +314,12 @@ export default function NewsSection({
               {language === 'vi' ? 'Không tìm thấy bài viết này trong cơ sở dữ liệu.' : 'Post not found.'}
             </p>
             <button
-              onClick={() => onSelectPost(null)}
-              className="bg-slate-900 text-white text-xs font-bold px-5 py-2.5 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors"
+              type="button"
+              onClick={handleBack}
+              className="inline-flex items-center gap-2 bg-slate-900 text-white text-xs font-bold px-5 py-2.5 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors"
             >
-              {language === 'vi' ? 'Quay về danh sách tin tức' : 'Back to news list'}
+              <ArrowLeft className="w-4 h-4" />
+              {language === 'vi' ? 'Quay lại' : 'Go back'}
             </button>
           </div>
         </div>
@@ -294,20 +334,55 @@ export default function NewsSection({
       <div className="bg-slate-50 min-h-screen pb-16">
         <div className="max-w-4xl mx-auto px-4 py-6 sm:py-8 space-y-8 animate-in fade-in duration-200" id="news-detail-page">
           
-          {/* SEO Structured Breadcrumb Trail */}
-          <nav className="flex items-center gap-2 text-xs text-slate-500 font-semibold" aria-label="Breadcrumb">
-            <a href="#/home" className="hover:text-amber-600 transition-colors">
-              {language === 'vi' ? 'Trang chủ' : 'Home'}
-            </a>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
-            <a href="#/news" onClick={() => onSelectPost(null)} className="hover:text-amber-600 transition-colors">
-              {language === 'vi' ? 'Tin tức' : 'News'}
-            </a>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
-            <span className="text-slate-800 line-clamp-1 max-w-[200px] sm:max-w-sm">
-              {singlePost.title}
-            </span>
-          </nav>
+          {/* Top Bar with Prominent Back Button & Breadcrumbs */}
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/70 pb-4">
+            <button
+              type="button"
+              onClick={handleBack}
+              className="group inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-amber-50 hover:border-amber-300 text-slate-700 hover:text-amber-800 border border-slate-200 rounded-xl text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer active:scale-95"
+              title={language === 'vi' ? 'Quay lại đúng trang vừa mở' : 'Back to previous page'}
+            >
+              <ArrowLeft className="w-4 h-4 text-slate-500 group-hover:text-amber-600 transition-transform group-hover:-translate-x-0.5" />
+              <span>{language === 'vi' ? 'Quay lại' : 'Go back'}</span>
+            </button>
+
+            {/* SEO Structured Breadcrumb Trail */}
+            <nav className="flex items-center gap-2 text-xs text-slate-500 font-semibold" aria-label="Breadcrumb">
+              <button
+                type="button"
+                onClick={() => {
+                  try {
+                    sessionStorage.setItem('news_source_page', '#/home');
+                    sessionStorage.setItem('news_source_route', 'home');
+                  } catch (e) {}
+                  window.location.hash = '#/home';
+                  onSelectPost(null);
+                }}
+                className="hover:text-amber-600 transition-colors cursor-pointer"
+              >
+                {language === 'vi' ? 'Trang chủ' : 'Home'}
+              </button>
+              <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+              <button 
+                type="button"
+                onClick={() => {
+                  try {
+                    sessionStorage.setItem('news_source_page', '#/news');
+                    sessionStorage.setItem('news_source_route', 'news');
+                  } catch (e) {}
+                  window.location.hash = '#/news';
+                  onSelectPost(null);
+                }} 
+                className="hover:text-amber-600 transition-colors cursor-pointer"
+              >
+                {language === 'vi' ? 'Tin tức' : 'News'}
+              </button>
+              <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+              <span className="text-slate-800 line-clamp-1 max-w-[160px] sm:max-w-xs font-normal">
+                {singlePost.title}
+              </span>
+            </nav>
+          </div>
 
           {/* Heading block with luxury brand gold border line and serif fonts */}
           <div className="space-y-4 border-l-4 border-[#D4AF37] pl-5 py-2">
@@ -468,11 +543,13 @@ export default function NewsSection({
               </div>
 
               <button
-                onClick={() => onSelectPost(null)}
-                className="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer transition-colors inline-flex items-center gap-1.5"
+                type="button"
+                onClick={handleBack}
+                className="bg-slate-100 hover:bg-amber-50 hover:text-amber-800 hover:border-amber-200 border border-slate-200 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer transition-all inline-flex items-center gap-1.5 active:scale-95 shadow-xs"
+                title={language === 'vi' ? 'Quay lại đúng trang vừa mở' : 'Back to previous page'}
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
-                {language === 'vi' ? 'Quay lại danh mục tin tức' : 'Back to News List'}
+                {language === 'vi' ? 'Quay lại' : 'Go back'}
               </button>
             </div>
 
@@ -529,7 +606,17 @@ export default function NewsSection({
                 <div 
                   key={rawPost.slug} 
                   className="bg-white border border-slate-100 rounded-3xl overflow-hidden hover:shadow-xl hover:border-amber-200 transition-all flex flex-col justify-between min-h-[380px] h-full group cursor-pointer"
-                  onClick={() => onSelectPost(rawPost.slug)}
+                  onClick={() => {
+                    try {
+                      sessionStorage.setItem('news_source_page', '#/news');
+                      sessionStorage.setItem('news_source_route', 'news');
+                      sessionStorage.setItem('news_return_scroll', String(window.scrollY));
+                      sessionStorage.setItem('news_return_target', 'news');
+                    } catch (e) {
+                      // ignore
+                    }
+                    onSelectPost(rawPost.slug);
+                  }}
                 >
                   <div>
                     {/* Image top - rendered only if cardImage is present */}

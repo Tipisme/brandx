@@ -111,6 +111,14 @@ export default function HomeNewsSection({ language }: HomeNewsSectionProps) {
                     key={postSlug}
                     className="bg-white border border-slate-100 rounded-3xl overflow-hidden hover:shadow-xl hover:border-amber-200 transition-all flex flex-col justify-between min-h-[410px] h-full group cursor-pointer"
                     onClick={() => {
+                      try {
+                        sessionStorage.setItem('news_source_page', '#/home');
+                        sessionStorage.setItem('news_source_route', 'home');
+                        sessionStorage.setItem('news_return_scroll', String(window.scrollY));
+                        sessionStorage.setItem('news_return_target', 'home');
+                      } catch (e) {
+                        // ignore storage errors
+                      }
                       window.location.hash = `#/news/${postSlug}`;
                     }}
                   >
