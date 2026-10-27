@@ -96,6 +96,9 @@ export function parseCurrentLocation(): RouteInfo {
     const [hBase] = rawHash.split('?');
     cleanPath = hBase.replace(/^#\/?/, '/');
     if (!cleanPath.startsWith('/')) cleanPath = '/' + cleanPath;
+    if (typeof window !== 'undefined' && window.history?.replaceState) {
+      window.history.replaceState(null, '', cleanPath);
+    }
   } else {
     cleanPath = pathname;
   }
@@ -227,7 +230,9 @@ export function navigateTo(path: string, options?: { replace?: boolean }) {
     path = '/' + path;
   }
 
-  if (options?.replace) {
+  if (typeof window !== 'undefined' && window.location.hash) {
+    window.history.replaceState(null, '', path);
+  } else if (options?.replace) {
     window.history.replaceState(null, '', path);
   } else {
     window.history.pushState(null, '', path);

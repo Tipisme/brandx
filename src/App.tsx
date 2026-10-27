@@ -244,8 +244,8 @@ export default function App() {
       // Track non-detail route as return source
       if (parsed.route !== 'news-detail') {
         try {
-          const currentHash = window.location.hash || '#/home';
-          sessionStorage.setItem('news_source_page', currentHash);
+          const currentPath = parsed.path || '/';
+          sessionStorage.setItem('news_source_page', currentPath);
           sessionStorage.setItem('news_source_route', parsed.route);
         } catch {
           // ignore storage errors
@@ -577,7 +577,7 @@ export default function App() {
             /* 6. Dynamic Sàn Giao Dịch Trademarks Catalog */
             <TrademarkList
               onSelectTrademark={(tm) => {
-                window.location.hash = `#/catalog/${tm.slug}`;
+                navigateTo(`/catalog/${tm.slug}`);
               }}
               onToggleFavorite={handleToggleFavorite}
               favorites={favorites}
@@ -596,7 +596,7 @@ export default function App() {
             <TrademarkDetailPage
               slug={activeSlug}
               language={language}
-              onBack={() => { window.location.hash = '#/catalog'; }}
+              onBack={() => { navigateTo('/catalog'); }}
               onToggleFavorite={handleToggleFavorite}
               favorites={favorites}
               onRequestRegistration={handleOpenWizard}
@@ -616,28 +616,28 @@ export default function App() {
 
                 setActivePostId(null);
 
-                if (sourceRoute === 'home' || sourcePage === '#/home' || sourcePage === '/' || sourcePage === '#' || !sourceRoute) {
+                if (sourceRoute === 'home' || sourcePage === '/' || sourcePage === '/home' || !sourceRoute) {
                   setCurrentRoute('home');
-                  window.location.hash = '#/home';
-                } else if (sourceRoute === 'news' || sourcePage === '#/news') {
+                  navigateTo('/');
+                } else if (sourceRoute === 'news' || sourcePage === '/news') {
                   setCurrentRoute('news');
-                  window.location.hash = '#/news';
+                  navigateTo('/news');
                 } else if (sourceRoute === 'catalog' || sourcePage?.includes('catalog')) {
                   setCurrentRoute('catalog');
-                  window.location.hash = sourcePage || '#/catalog';
-                } else if (sourcePage && sourcePage.startsWith('#/')) {
+                  navigateTo(sourcePage || '/catalog');
+                } else if (sourcePage && sourcePage.startsWith('/')) {
                   setCurrentRoute(sourceRoute);
-                  window.location.hash = sourcePage;
+                  navigateTo(sourcePage);
                 } else {
                   setCurrentRoute('home');
-                  window.location.hash = '#/home';
+                  navigateTo('/');
                 }
               }}
               onSelectPost={(id) => {
                 if (id) {
-                  window.location.hash = `#/news/${id}`;
+                  navigateTo(`/news/${id}`);
                 } else {
-                  window.location.hash = `#/news`;
+                  navigateTo('/news');
                 }
               }}
             />

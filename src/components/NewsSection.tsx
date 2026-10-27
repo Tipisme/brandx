@@ -31,6 +31,7 @@ import {
   fetchSinglePostBySlug 
 } from '../services/newsService';
 import { updateMetaSeo, resetMetaSeo, resolveMetaImage } from '../utils/seo';
+import { navigateTo } from '../utils/routes';
 
 interface NewsSectionProps {
   language: Language;
@@ -63,17 +64,17 @@ export default function NewsSection({
     try {
       const sourcePage = sessionStorage.getItem('news_source_page');
       const sourceRoute = sessionStorage.getItem('news_source_route');
-      if (sourceRoute === 'home' || sourcePage === '#/home' || sourcePage === '/' || sourcePage === '#' || !sourceRoute) {
-        window.location.hash = '#/home';
-      } else if (sourceRoute === 'news' || sourcePage === '#/news') {
-        window.location.hash = '#/news';
-      } else if (sourcePage && sourcePage.startsWith('#/')) {
-        window.location.hash = sourcePage;
+      if (sourceRoute === 'home' || sourcePage === '/' || sourcePage === '/home' || !sourceRoute) {
+        navigateTo('/');
+      } else if (sourceRoute === 'news' || sourcePage === '/news') {
+        navigateTo('/news');
+      } else if (sourcePage && sourcePage.startsWith('/')) {
+        navigateTo(sourcePage);
       } else {
-        window.location.hash = '#/home';
+        navigateTo('/');
       }
     } catch {
-      window.location.hash = '#/home';
+      navigateTo('/');
     }
     onSelectPost(null);
   };
@@ -186,6 +187,8 @@ export default function NewsSection({
     if (currentPostId && singlePost) {
       const summaryText = singlePost.meta_description || stripHtmlAndTruncate(singlePost.description, 160);
       const imageUrl = resolveMetaImage(singlePost.featured_image, '/brandix-logo.jpg');
+      const postSlug = singlePost.slug || currentPostId;
+      const articleUrl = `/news/${postSlug}`;
       
       const schemaMarkup = {
         "@context": "https://schema.org",
@@ -203,10 +206,14 @@ export default function NewsSection({
           "name": "Brandix Việt Nam",
           "logo": {
             "@type": "ImageObject",
-            "url": "/brandix-logo.jpg"
+            "url": "https://brandix.vn/brandix-logo.jpg"
           }
         },
-        "description": summaryText
+        "description": summaryText,
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": `https://brandix.vn${articleUrl}`
+        }
       };
       
       updateMetaSeo({
@@ -214,6 +221,7 @@ export default function NewsSection({
         description: summaryText,
         image: imageUrl,
         imageAlt: singlePost.title,
+        url: articleUrl,
         type: 'article',
         jsonLd: schemaMarkup
       });
@@ -352,10 +360,10 @@ export default function NewsSection({
                 type="button"
                 onClick={() => {
                   try {
-                    sessionStorage.setItem('news_source_page', '#/home');
+                    sessionStorage.setItem('news_source_page', '/');
                     sessionStorage.setItem('news_source_route', 'home');
                   } catch (e) {}
-                  window.location.hash = '#/home';
+                  navigateTo('/');
                   onSelectPost(null);
                 }}
                 className="hover:text-amber-600 transition-colors cursor-pointer"
@@ -367,10 +375,10 @@ export default function NewsSection({
                 type="button"
                 onClick={() => {
                   try {
-                    sessionStorage.setItem('news_source_page', '#/news');
+                    sessionStorage.setItem('news_source_page', '/news');
                     sessionStorage.setItem('news_source_route', 'news');
                   } catch (e) {}
-                  window.location.hash = '#/news';
+                  navigateTo('/news');
                   onSelectPost(null);
                 }} 
                 className="hover:text-amber-600 transition-colors cursor-pointer"
@@ -600,7 +608,7 @@ export default function NewsSection({
                   className="bg-white border border-slate-100 rounded-3xl overflow-hidden hover:shadow-xl hover:border-amber-200 transition-all flex flex-col justify-between min-h-[380px] h-full group cursor-pointer"
                   onClick={() => {
                     try {
-                      sessionStorage.setItem('news_source_page', '#/news');
+                      sessionStorage.setItem('news_source_page', '/news');
                       sessionStorage.setItem('news_source_route', 'news');
                       sessionStorage.setItem('news_return_scroll', String(window.scrollY));
                       sessionStorage.setItem('news_return_target', 'news');

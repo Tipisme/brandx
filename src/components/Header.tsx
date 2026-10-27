@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Search, Phone, Mail, Award, ShoppingCart, User, Menu, X, Sparkles, ChevronDown, Briefcase, Folder, Settings, HelpCircle, ShieldCheck, Coins } from 'lucide-react';
 import { translations, Language } from '../localization';
 import BrandixLogo from './BrandixLogo';
-import { AdminTab, getAdminTabPath, ADMIN_TAB_LABELS } from '../utils/routes';
+import { AdminTab, getAdminTabPath, ADMIN_TAB_LABELS, navigateTo } from '../utils/routes';
 
 interface HeaderProps {
   searchKeyword?: string;
@@ -99,7 +99,7 @@ export default function Header({
     e.preventDefault();
     if (currentRoute !== 'catalog' || viewMode === 'dashboard') {
       onViewModeChange?.('marketplace');
-      window.location.hash = '#/catalog';
+      navigateTo('/catalog');
     }
     onSearchChange(searchVal.trim());
   };
@@ -122,11 +122,11 @@ export default function Header({
             </a>
           </div>
           <div className="flex items-center gap-4 text-gray-400">
-            <a href="#/about" className="hover:text-white transition-colors">{t.whyUs}</a>
+            <a href="/about" onClick={(e) => { e.preventDefault(); navigateTo('/about'); }} className="hover:text-white transition-colors">{t.whyUs}</a>
             <span className="text-slate-700">|</span>
-            <a href="#news" className="hover:text-white transition-colors">Tin tức SHTT</a>
+            <a href="/news" onClick={(e) => { e.preventDefault(); navigateTo('/news'); }} className="hover:text-white transition-colors">Tin tức SHTT</a>
             <span className="text-slate-700">|</span>
-            <a href="#/faq" onClick={() => { if(viewMode === 'dashboard') { onViewModeChange?.('marketplace'); } }} className="hover:text-white transition-colors">{t.faq}</a>
+            <a href="/faq" onClick={(e) => { e.preventDefault(); if(viewMode === 'dashboard') { onViewModeChange?.('marketplace'); } navigateTo('/faq'); }} className="hover:text-white transition-colors">{t.faq}</a>
           </div>
         </div>
       </div>
@@ -138,7 +138,7 @@ export default function Header({
           size="md"
           variant="horizontal"
           showTagline={true}
-          onClick={() => { window.location.hash = '#/home'; onSearchChange(""); onClassSelect(null); onViewModeChange?.('marketplace'); }}
+          onClick={() => { navigateTo('/'); onSearchChange(""); onClassSelect(null); onViewModeChange?.('marketplace'); }}
         />
 
         {/* Search Bar */}

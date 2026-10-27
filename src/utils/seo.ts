@@ -100,13 +100,25 @@ export function updateMetaSeo(options: MetaSeoOptions = {}) {
   setMetaTag('meta[name="description"]', 'name', 'description', description);
   setMetaTag('meta[name="image"]', 'name', 'image', image);
 
+  // Canonical link tag for SEO
+  let linkCanonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+  if (!linkCanonical) {
+    linkCanonical = document.createElement('link');
+    linkCanonical.setAttribute('rel', 'canonical');
+    document.head.appendChild(linkCanonical);
+  }
+  const canonicalUrl = url.startsWith('http') 
+    ? url 
+    : `https://brandix.vn${url.startsWith('/') ? url : '/' + url}`;
+  linkCanonical.setAttribute('href', canonicalUrl);
+
   // OpenGraph Social Tags
   setMetaTag('meta[property="og:title"]', 'property', 'og:title', title);
   setMetaTag('meta[property="og:description"]', 'property', 'og:description', description);
   setMetaTag('meta[property="og:image"]', 'property', 'og:image', image);
   setMetaTag('meta[property="og:image:alt"]', 'property', 'og:image:alt', imageAlt);
   setMetaTag('meta[property="og:type"]', 'property', 'og:type', type);
-  setMetaTag('meta[property="og:url"]', 'property', 'og:url', url);
+  setMetaTag('meta[property="og:url"]', 'property', 'og:url', canonicalUrl);
   setMetaTag('meta[property="og:site_name"]', 'property', 'og:site_name', HOMEPAGE_SEO.siteName);
 
   // Twitter / X Cards

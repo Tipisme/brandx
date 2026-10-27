@@ -6,6 +6,7 @@ import {
   getPostImageUrl, 
   stripHtmlAndTruncate 
 } from '../services/newsService';
+import { navigateTo } from '../utils/routes';
 
 interface HomeNewsSectionProps {
   language: Language;
@@ -108,14 +109,14 @@ export default function HomeNewsSection({ language }: HomeNewsSectionProps) {
                     className="bg-white border border-slate-100 rounded-3xl overflow-hidden hover:shadow-xl hover:border-amber-200 transition-all flex flex-col justify-between min-h-[410px] h-full group cursor-pointer"
                     onClick={() => {
                       try {
-                        sessionStorage.setItem('news_source_page', '#/home');
+                        sessionStorage.setItem('news_source_page', '/');
                         sessionStorage.setItem('news_source_route', 'home');
                         sessionStorage.setItem('news_return_scroll', String(window.scrollY));
                         sessionStorage.setItem('news_return_target', 'home');
                       } catch (e) {
                         // ignore storage errors
                       }
-                      window.location.hash = `#/news/${postSlug}`;
+                      navigateTo(`/news/${postSlug}`);
                     }}
                   >
                     <div>
@@ -178,7 +179,11 @@ export default function HomeNewsSection({ language }: HomeNewsSectionProps) {
             {/* View All Button */}
             <div className="text-center mt-12">
               <a
-                href="#/news"
+                href="/news"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateTo('/news');
+                }}
                 className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase px-7 py-3.5 rounded-xl shadow-md transition-all duration-200 hover:-translate-y-0.5"
               >
                 Xem tất cả tin tức & bài viết
