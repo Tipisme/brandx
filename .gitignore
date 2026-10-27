@@ -8,3 +8,5 @@ coverage/
 !.env.example
 yarn.lock
 .idea
+public/robots.txt
+public/sitemap.xml

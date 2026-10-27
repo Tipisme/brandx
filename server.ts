@@ -6,6 +6,15 @@ import type { ViteDevServer } from 'vite';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+// In development this file runs from the project root; after bundling it runs from dist/.
+const PROJECT_ROOT = path.basename(__dirname).toLowerCase() === 'dist'
+  ? path.resolve(__dirname, '..')
+  : __dirname;
+const DIST_ROOT = path.basename(__dirname).toLowerCase() === 'dist'
+  ? __dirname
+  : path.resolve(__dirname, 'dist');
+const SOURCE_INDEX_PATH = path.resolve(PROJECT_ROOT, 'index.html');
+const DIST_INDEX_PATH = path.resolve(DIST_ROOT, 'index.html');
 const isProd = process.env.NODE_ENV === 'production';
 const PORT = process.env.PORT || 3000;
 const BASE_DOMAIN = 'https://brandix.vn';
@@ -16,6 +25,8 @@ const app = express();
 // In-memory cache for news articles to ensure ultra-fast and consistent SSR responses
 const postCache = new Map<string, { data: any; timestamp: number }>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache TTL
+let sitemapCache: { xml: string; timestamp: number } | null = null;
+const SITEMAP_CACHE_TTL = 5 * 60 * 1000;
 
 // Trademark catalog database for Sàn Nhãn Hiệu SSR
 const TRADEMARKS_DATA = [
@@ -262,12 +273,12 @@ function findTrademarkBySlug(slug: string) {
 /**
  * Scans CMS API pages for all live posts
  */
-async function fetchAllPostsFromCms(): Promise<any[]> {
+async function fetchAllPostsFromCms(maxPages: number = 5): Promise<any[]> {
   const allPosts: any[] = [];
   try {
     let page = 1;
     let lastPage = 1;
-    while (page <= lastPage && page <= 5) {
+    while (page <= lastPage && page <= maxPages) {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 4000);
       const res = await fetch(`${CMS_API_BASE}/api/blogs/posts/tin-tuc?page=${page}`, {
@@ -330,6 +341,73 @@ async function fetchPostBySlug(slug: string): Promise<any | null> {
   }
 
   return null;
+}
+
+function escapeXml(value: any): string {
+  return String(value ?? '').replace(/[<>&'\"]/g, (char) => {
+    const entities: Record<string, string> = {
+      '<': '&lt;',
+      '>': '&gt;',
+      '&': '&amp;',
+      "'": '&apos;',
+      '"': '&quot;',
+    };
+    return entities[char] || char;
+  });
+}
+
+function buildSitemapXml(posts: any[]): string {
+  const today = new Date().toISOString().slice(0, 10);
+  const entries: string[] = [];
+  const addUrl = (loc: string, priority: string, changefreq: string, title?: string, image?: string) => {
+    let entry = `  <url>\n    <loc>${escapeXml(loc)}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>`;
+    if (image) {
+      entry += `\n    <image:image>\n      <image:loc>${escapeXml(image)}</image:loc>${title ? `\n      <image:title>${escapeXml(title)}</image:title>` : ''}\n    </image:image>`;
+    }
+    entries.push(`${entry}\n  </url>`);
+  };
+
+  addUrl(`${BASE_DOMAIN}/`, '1.0', 'daily', 'Brandix - Sàn Giao Dịch Nhãn Hiệu Việt Nam', `${BASE_DOMAIN}/brandix-logo.jpg`);
+  addUrl(`${BASE_DOMAIN}/catalog`, '0.9', 'daily', 'Danh mục Nhãn hiệu Độc quyền & Chuyển nhượng');
+  addUrl(`${BASE_DOMAIN}/news`, '0.9', 'daily', 'Tin tức & Kiến thức Sở hữu trí tuệ');
+  addUrl(`${BASE_DOMAIN}/workflow`, '0.8', 'weekly', 'Quy trình Mua bán và Đăng ký Bảo hộ Nhãn hiệu');
+  addUrl(`${BASE_DOMAIN}/about`, '0.7', 'monthly', 'Về chúng tôi - Nền tảng Nhãn hiệu Brandix');
+  addUrl(`${BASE_DOMAIN}/faq`, '0.7', 'weekly', 'Câu hỏi thường gặp về Pháp lý SHTT');
+
+  for (const trademark of TRADEMARKS_DATA) {
+    const slug = trademark.slug || trademark.id;
+    addUrl(`${BASE_DOMAIN}/catalog/${encodeURIComponent(slug)}`, '0.8', 'weekly', `Nhãn hiệu ${trademark.name}`, `${BASE_DOMAIN}/brandix-logo.jpg`);
+  }
+
+  for (const post of posts) {
+    if (!post?.slug) continue;
+    addUrl(
+      `${BASE_DOMAIN}/news/${encodeURIComponent(String(post.slug))}`,
+      '0.8',
+      'weekly',
+      post.title || post.meta_title || post.slug,
+      resolveMetaImageUrl(post.featured_image),
+    );
+  }
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+${entries.join('\n')}
+</urlset>\n`;
+}
+
+async function getDynamicSitemapXml(): Promise<string> {
+  if (sitemapCache && Date.now() - sitemapCache.timestamp < SITEMAP_CACHE_TTL) {
+    return sitemapCache.xml;
+  }
+
+  // Sitemap should cover every CMS page (with a safety cap for a broken pagination response).
+  const livePosts = await fetchAllPostsFromCms(50);
+  const posts = livePosts.length > 0 ? livePosts : Object.values(FALLBACK_ARTICLES);
+  const xml = buildSitemapXml(posts);
+  sitemapCache = { xml, timestamp: Date.now() };
+  return xml;
 }
 
 /**
@@ -572,6 +650,61 @@ function renderArticleServerHtml(post: any): string {
 }
 
 /**
+ * Pre-renders the news listing so crawlers and View Source receive article links and text
+ * before the client-side React app loads.
+ */
+function renderNewsListServerHtml(posts: any[]): string {
+  const cards = posts.map((post) => {
+    const slug = String(post?.slug || post?.id || '').trim();
+    if (!slug) return '';
+
+    const title = escapeHtml(post?.title || post?.meta_title || 'Tin tức sở hữu trí tuệ');
+    const excerpt = escapeHtml(post?.meta_description || stripHtmlAndTruncate(post?.description || '', 130));
+    const category = escapeHtml(post?.tags?.[0]?.name || 'Pháp Luật SHTT');
+    const image = resolveMetaImageUrl(post?.featured_image);
+    const readTime = Math.max(1, Math.ceil(String(post?.description || '').length / 1000));
+
+    return `<article class="bg-white border border-slate-100 rounded-3xl overflow-hidden flex flex-col justify-between min-h-[380px] h-full">
+      <div>
+        <a href="/news/${encodeURIComponent(slug)}" aria-label="Đọc bài: ${title}">
+          <div class="w-full h-48 overflow-hidden relative shrink-0">
+            <img src="${escapeHtml(image)}" alt="${title}" class="w-full h-full object-cover" />
+            <span class="absolute top-3 left-3 bg-slate-900/85 text-white text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md">${category}</span>
+          </div>
+        </a>
+        <div class="p-5 space-y-2.5">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-[10px] text-slate-400 font-bold">16.07.2026 • ${readTime} phút đọc</span>
+          </div>
+          <h2 class="font-serif font-bold text-sm sm:text-base text-slate-900 leading-snug">
+            <a href="/news/${encodeURIComponent(slug)}">${title}</a>
+          </h2>
+          <p class="text-slate-500 text-xs leading-relaxed">${excerpt}</p>
+        </div>
+      </div>
+      <div class="p-5 pt-0 border-t border-slate-50 flex items-center justify-between text-xs">
+        <span class="text-slate-400 font-semibold">HDS Law Team</span>
+        <a href="/news/${encodeURIComponent(slug)}" class="text-amber-600 font-black">Đọc chi tiết</a>
+      </div>
+    </article>`;
+  }).filter(Boolean).join('\n');
+
+  return `<div id="root">
+  <div class="min-h-screen bg-white font-sans text-slate-800 antialiased" id="main-app">
+    ${renderHeaderHtml()}
+    <main class="max-w-7xl mx-auto px-4 py-8 sm:py-12 space-y-12" id="news-list-section">
+      <div class="text-center max-w-3xl mx-auto space-y-3">
+        <span class="text-xs font-extrabold text-orange-500 uppercase tracking-widest block">KIẾN THỨC PHÁP LUẬT SHTT</span>
+        <h1 class="text-3xl sm:text-4xl font-sans font-black text-slate-900 tracking-tight">Tin tức &amp; Kiến thức Sở Hữu Trí Tuệ</h1>
+        <p class="text-slate-500 text-xs sm:text-sm">Cập nhật nhanh nhất các thay đổi quy chế pháp luật, thông tư hướng dẫn cùng cẩm nang bảo hộ nhãn hiệu kinh doanh an toàn.</p>
+      </div>
+      ${cards ? `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">${cards}</div>` : '<p class="text-center text-slate-500">Chưa có bài viết nào được đăng tải.</p>'}
+    </main>
+  </div>
+</div>`;
+}
+
+/**
  * 404 Not Found Server HTML template
  */
 function render404ServerHtml(indexTemplate: string, reqUrl: string): string {
@@ -613,28 +746,41 @@ async function startServer() {
       server: { middlewareMode: true },
       appType: 'custom',
     });
-    app.use(vite.middlewares);
+    const viteMiddleware = vite.middlewares;
+    app.use((req, res, next) => {
+      if (req.path === '/sitemap.xml') return next();
+      return viteMiddleware(req, res, next);
+    });
   } else {
-    app.use(express.static(path.resolve(__dirname, 'dist'), { index: false }));
+    const staticAssets = express.static(DIST_ROOT, { index: false });
+    // Let the dynamic sitemap route below handle this URL instead of serving the build artifact.
+    app.use((req, res, next) => {
+      if (req.path === '/sitemap.xml') return next();
+      return staticAssets(req, res, next);
+    });
   }
 
   // Serve dynamic /sitemap.xml
   app.get('/sitemap.xml', async (req, res) => {
     try {
-      const sitemapPath = path.resolve(__dirname, 'public/sitemap.xml');
+      const xml = await getDynamicSitemapXml();
+      res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+      res.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+      return res.status(200).send(xml);
+    } catch (err) {
+      // Keep the last build-time sitemap available if the CMS is temporarily unavailable.
+      const sitemapPath = path.resolve(PROJECT_ROOT, 'public/sitemap.xml');
       if (fs.existsSync(sitemapPath)) {
-        res.setHeader('Content-Type', 'application/xml');
+        res.setHeader('Content-Type', 'application/xml; charset=utf-8');
         return res.sendFile(sitemapPath);
       }
-      res.status(404).send('Sitemap not found');
-    } catch (err) {
-      res.status(500).send('Error reading sitemap');
+      return res.status(500).send('Error generating sitemap');
     }
   });
 
   // Serve /robots.txt
   app.get('/robots.txt', (req, res) => {
-    const robotsPath = path.resolve(__dirname, 'public/robots.txt');
+    const robotsPath = path.resolve(PROJECT_ROOT, 'public/robots.txt');
     if (fs.existsSync(robotsPath)) {
       res.setHeader('Content-Type', 'text/plain');
       return res.sendFile(robotsPath);
@@ -650,10 +796,10 @@ async function startServer() {
     try {
       let indexTemplate = '';
       if (!isProd && vite) {
-        const rawIndex = fs.readFileSync(path.resolve(__dirname, 'index.html'), 'utf-8');
+        const rawIndex = fs.readFileSync(SOURCE_INDEX_PATH, 'utf-8');
         indexTemplate = await vite.transformIndexHtml(req.originalUrl, rawIndex);
       } else {
-        indexTemplate = fs.readFileSync(path.resolve(__dirname, 'dist/index.html'), 'utf-8');
+        indexTemplate = fs.readFileSync(DIST_INDEX_PATH, 'utf-8');
       }
 
       const trademark = findTrademarkBySlug(slug);
@@ -709,10 +855,10 @@ async function startServer() {
     try {
       let indexTemplate = '';
       if (!isProd && vite) {
-        const rawIndex = fs.readFileSync(path.resolve(__dirname, 'index.html'), 'utf-8');
+        const rawIndex = fs.readFileSync(SOURCE_INDEX_PATH, 'utf-8');
         indexTemplate = await vite.transformIndexHtml(req.originalUrl, rawIndex);
       } else {
-        indexTemplate = fs.readFileSync(path.resolve(__dirname, 'dist/index.html'), 'utf-8');
+        indexTemplate = fs.readFileSync(DIST_INDEX_PATH, 'utf-8');
       }
 
       const post = await fetchPostBySlug(slug);
@@ -782,13 +928,13 @@ async function startServer() {
     try {
       let indexTemplate = '';
       if (!isProd && vite) {
-        const rawIndex = fs.readFileSync(path.resolve(__dirname, 'index.html'), 'utf-8');
+        const rawIndex = fs.readFileSync(SOURCE_INDEX_PATH, 'utf-8');
         indexTemplate = await vite.transformIndexHtml(req.originalUrl, rawIndex);
       } else {
-        const distIndexPath = path.resolve(__dirname, 'dist/index.html');
+        const distIndexPath = DIST_INDEX_PATH;
         indexTemplate = fs.existsSync(distIndexPath)
           ? fs.readFileSync(distIndexPath, 'utf-8')
-          : fs.readFileSync(path.resolve(__dirname, 'index.html'), 'utf-8');
+          : fs.readFileSync(SOURCE_INDEX_PATH, 'utf-8');
       }
 
       const cleanPath = req.path === '/' ? '' : req.path;
@@ -805,6 +951,11 @@ async function startServer() {
       } else if (req.path === '/news') {
         title = 'Tin tức & Kiến thức Sở Hữu Trí Tuệ | Brandix';
         description = 'Cập nhật tin tức pháp luật sở hữu trí tuệ, thông tư bảo hộ nhãn hiệu kinh doanh và cẩm nang từ chuyên gia HDS Law.';
+        // Fetch the same first-page data used by the React listing so Ctrl+U contains
+        // meaningful article links and excerpts instead of an empty #root container.
+        const livePosts = await fetchAllPostsFromCms(1);
+        const newsPosts = livePosts.length > 0 ? livePosts : Object.values(FALLBACK_ARTICLES);
+        preRenderedBody = renderNewsListServerHtml(newsPosts);
       } else if (req.path === '/workflow') {
         title = 'Quy Trình Mua Bán & Đăng Ký Nhãn Hiệu | Brandix';
         description = 'Tìm hiểu quy trình 4 bước giao dịch nhãn hiệu trực tuyến minh bạch, pháp lý đảm bảo 100%.';
