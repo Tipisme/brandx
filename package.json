@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0 --port 3000",
-    "build": "node scripts/generate-sitemap.mjs && vite build",
+    "dev": "tsx server.ts",
+    "build": "node scripts/generate-sitemap.mjs && vite build && esbuild server.ts --bundle --platform=node --format=esm --outfile=dist/server.js --external:express --external:vite",
+    "start": "node dist/server.js",
     "sitemap": "node scripts/generate-sitemap.mjs",
-    "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit"
   },
