@@ -1,5 +1,6 @@
 import { ArrowRight, ShieldCheck, Zap, Handshake } from 'lucide-react';
 import { ApiPageResponse } from '../services/pageService';
+import { decodeHtmlEntities } from '../utils/seo';
 
 interface HeroProps {
   onScrollToCatalog: () => void;
@@ -9,8 +10,8 @@ interface HeroProps {
 
 export default function Hero({ onScrollToCatalog, onOpenSellRequest, pageData }: HeroProps) {
   const cleanApiSubtitle = pageData?.body 
-    ? pageData.body.replace(/<\/?[^>]+(>|$)/g, " ").replace(/&[a-z]+;/gi, " ").replace(/\s+/g, " ").trim()
-    : pageData?.description || null;
+    ? decodeHtmlEntities(pageData.body).trim()
+    : (pageData?.description ? decodeHtmlEntities(pageData.description).trim() : null);
 
   return (
     <section className="relative bg-gradient-to-br from-red-950 via-amber-950 to-stone-900 text-white overflow-hidden" id="home">
@@ -36,8 +37,8 @@ export default function Hero({ onScrollToCatalog, onOpenSellRequest, pageData }:
           <p className="text-gray-300 text-base sm:text-lg md:text-xl leading-relaxed mb-8 max-w-3xl">
             {cleanApiSubtitle || (
               <>
-                Sở hữu nhãn hiệu & Bảo hộ sở hữu trí tuệ trực tuyến hàng đầu Việt Nam.
-                Kết nối trực tiếp chủ thương hiệu – Giao dịch an toàn tuyệt đối – Thủ tục tinh gọn trong 72 giờ.
+                Nền tảng giao dịch, chuyển nhượng và đăng ký bảo hộ nhãn hiệu trực tuyến hàng đầu Việt Nam.
+                Kết nối trực tiếp, giao dịch an toàn, thủ tục nhanh chóng.
               </>
             )}
           </p>
@@ -55,7 +56,7 @@ export default function Hero({ onScrollToCatalog, onOpenSellRequest, pageData }:
               onClick={onOpenSellRequest}
               className="w-full sm:w-auto bg-white/10 hover:bg-white/15 border border-white/20 text-white font-extrabold text-sm uppercase px-8 py-4 rounded-xl flex items-center justify-center gap-2 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
             >
-              BÁN NGAY (KÝ GỬI)
+              Đăng ký mới
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

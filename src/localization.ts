@@ -95,7 +95,7 @@ export const translations: Record<Language, TranslationDict> = {
     hotline: "Hotline",
     connectedDB: "Kết nối CSDL nhãn hiệu chuẩn hóa",
     connectedStatus: "Đã liên kết",
-    registerNew: "Nộp Đơn Đăng Ký Mới",
+    registerNew: "Đăng ký mới",
     loginRegister: "Đăng Nhập / Đăng Ký",
     logout: "Đăng xuất",
     welcome: "Chào mừng",

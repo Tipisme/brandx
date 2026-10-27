@@ -15,8 +15,8 @@ interface HeaderProps {
   onOpenLogin: (redirectTarget?: { path: string; tab?: AdminTab; label?: string }) => void;
   user: { name: string; email: string; is_partner?: boolean | number | string; [key: string]: any } | null;
   onLogout: () => void;
-  language: Language;
-  onLanguageChange: (lang: Language) => void;
+  language?: Language;
+  onLanguageChange?: (lang: Language) => void;
   viewMode?: 'marketplace' | 'dashboard';
   onViewModeChange?: (mode: 'marketplace' | 'dashboard') => void;
   currentRoute: string;
@@ -35,7 +35,7 @@ export default function Header({
   onOpenLogin,
   user,
   onLogout,
-  language,
+  language = 'vi',
   onLanguageChange,
   viewMode = 'marketplace',
   onViewModeChange,
@@ -43,7 +43,7 @@ export default function Header({
   adminTab = 'profile',
   onNavigate
 }: HeaderProps) {
-  const t = translations[language];
+  const t = translations.vi;
   const [searchVal, setSearchVal] = useState(searchKeyword);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
@@ -76,17 +76,17 @@ export default function Header({
   }, [searchKeyword]);
 
   const categories = [
-    { id: null, label: language === 'vi' ? "Tất cả danh mục" : "All Categories" },
-    { id: 29, label: language === 'vi' ? "Thực phẩm & Sữa (Nhóm 29)" : "Foods & Milk (Class 29)" },
-    { id: 30, label: language === 'vi' ? "Cà phê, Trà & Bánh kẹo (Nhóm 30)" : "Coffee, Tea & Confectionery (Class 30)" },
-    { id: 32, label: language === 'vi' ? "Đồ uống không cồn (Nhóm 32)" : "Non-alcoholic beverages (Class 32)" },
-    { id: 33, label: language === 'vi' ? "Đồ uống có cồn (Nhóm 33)" : "Alcoholic beverages (Class 33)" },
-    { id: 9, label: language === 'vi' ? "Thiết bị điện tử (Nhóm 9)" : "Electronic devices (Class 9)" },
-    { id: 5, label: language === 'vi' ? "Y tế & Dược phẩm (Nhóm 5)" : "Medical & Pharma (Class 5)" },
-    { id: 25, label: language === 'vi' ? "Thời trang & May mặc (Nhóm 25)" : "Fashion & Apparel (Class 25)" },
-    { id: 35, label: language === 'vi' ? "Quảng cáo & Bán lẻ (Nhóm 35)" : "Advertising & Retail (Class 35)" },
-    { id: 43, label: language === 'vi' ? "Ăn uống & Lưu trú (Nhóm 43)" : "Dining & Lodging (Class 43)" },
-    { id: 44, label: language === 'vi' ? "Y tế & Làm đẹp (Nhóm 44)" : "Medical & Beauty (Class 44)" }
+    { id: null, label: "Tất cả danh mục" },
+    { id: 29, label: "Thực phẩm & Sữa (Nhóm 29)" },
+    { id: 30, label: "Cà phê, Trà & Bánh kẹo (Nhóm 30)" },
+    { id: 32, label: "Đồ uống không cồn (Nhóm 32)" },
+    { id: 33, label: "Đồ uống có cồn (Nhóm 33)" },
+    { id: 9, label: "Thiết bị điện tử (Nhóm 9)" },
+    { id: 5, label: "Y tế & Dược phẩm (Nhóm 5)" },
+    { id: 25, label: "Thời trang & May mặc (Nhóm 25)" },
+    { id: 35, label: "Quảng cáo & Bán lẻ (Nhóm 35)" },
+    { id: 43, label: "Ăn uống & Lưu trú (Nhóm 43)" },
+    { id: 44, label: "Y tế & Làm đẹp (Nhóm 44)" }
   ];
 
   // Simply update local input text while typing - do NOT jump page while typing
@@ -104,7 +104,7 @@ export default function Header({
     onSearchChange(searchVal.trim());
   };
 
-  const currentCategoryLabel = categories.find(c => c.id === selectedClass)?.label || (language === 'vi' ? "Chọn Nhóm hàng..." : "Select Class...");
+  const currentCategoryLabel = categories.find(c => c.id === selectedClass)?.label || "Chọn Nhóm hàng...";
 
   return (
     <header className="w-full bg-white text-slate-800 shadow-sm sticky top-0 z-40" id="main-header">
@@ -114,7 +114,7 @@ export default function Header({
           <div className="flex items-center gap-6">
             <a href="tel:0901727373" className="flex items-center gap-1.5 text-gray-300 hover:text-white transition-colors">
               <Phone className="w-3.5 h-3.5 text-orange-500" />
-              <span>{language === 'vi' ? 'Điện thoại' : 'Phone'}: <strong className="text-orange-400">0901727373</strong></span>
+              <span>Điện thoại: <strong className="text-orange-400">0901727373</strong></span>
             </a>
             <a href="mailto:ipagent@hdslaw.vn" className="flex items-center gap-1.5 text-gray-300 hover:text-white transition-colors">
               <Mail className="w-3.5 h-3.5 text-orange-500" />
@@ -124,28 +124,9 @@ export default function Header({
           <div className="flex items-center gap-4 text-gray-400">
             <a href="#/about" className="hover:text-white transition-colors">{t.whyUs}</a>
             <span className="text-slate-700">|</span>
-            <a href="#news" className="hover:text-white transition-colors">{language === 'vi' ? 'Tin tức SHTT' : 'IP News'}</a>
+            <a href="#news" className="hover:text-white transition-colors">Tin tức SHTT</a>
             <span className="text-slate-700">|</span>
             <a href="#/faq" onClick={() => { if(viewMode === 'dashboard') { onViewModeChange?.('marketplace'); } }} className="hover:text-white transition-colors">{t.faq}</a>
-            <span className="text-slate-700">|</span>
-            
-            {/* Language Selector Pill */}
-            <div className="flex bg-slate-800 p-0.5 rounded-full border border-slate-700 items-center">
-              <button
-                type="button"
-                onClick={() => onLanguageChange('vi')}
-                className={`px-2 py-0.5 rounded-full text-[9px] font-black cursor-pointer transition-all ${language === 'vi' ? 'bg-orange-500 text-white shadow-xs' : 'text-slate-400 hover:text-white'}`}
-              >
-                VI
-              </button>
-              <button
-                type="button"
-                onClick={() => onLanguageChange('en')}
-                className={`px-2 py-0.5 rounded-full text-[9px] font-black cursor-pointer transition-all ${language === 'en' ? 'bg-orange-500 text-white shadow-xs' : 'text-slate-400 hover:text-white'}`}
-              >
-                EN
-              </button>
-            </div>
           </div>
         </div>
       </div>
@@ -219,7 +200,7 @@ export default function Header({
             className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2.5 rounded-full font-bold text-xs flex items-center gap-1.5 transition-all duration-150 shadow-sm shadow-orange-500/10 cursor-pointer hover:-translate-y-0.5 active:translate-y-0"
           >
             <Sparkles className="w-3.5 h-3.5" />
-            {t.registerNew}
+            Đăng ký mới
           </button>
 
           {/* Cart Interest Button */}
@@ -242,7 +223,7 @@ export default function Header({
               <button 
                 onClick={() => onViewModeChange?.('dashboard')}
                 className="text-[11px] font-bold text-slate-700 max-w-[80px] truncate hover:text-orange-500 transition-colors cursor-pointer text-left focus:outline-none"
-                title={language === 'vi' ? 'Vào trang quản trị' : 'Go to dashboard'}
+                title="Vào trang quản trị"
               >
                 {user.name}
               </button>
@@ -364,7 +345,7 @@ export default function Header({
                   }`}
                 >
                   <Briefcase className="w-3.5 h-3.5 text-orange-500" />
-                  <span>{language === 'vi' ? 'Trang quản trị' : 'Workspace'}</span>
+                  <span>Trang quản trị</span>
                 </a>
                 <button
                   type="button"
@@ -372,7 +353,7 @@ export default function Header({
                   className={`p-1 hover:text-orange-500 transition-colors cursor-pointer ${
                     viewMode === 'dashboard' ? 'text-orange-500' : 'text-slate-400'
                   }`}
-                  title={language === 'vi' ? 'Xem các mục quản trị' : 'Workspace menus'}
+                  title="Xem các mục quản trị"
                 >
                   <ChevronDown className={`w-3 h-3 transition-transform duration-150 ${showAdminDropdown ? 'rotate-180 text-orange-500' : ''}`} />
                 </button>
@@ -382,7 +363,7 @@ export default function Header({
               {showAdminDropdown && (
                 <div className="absolute left-0 mt-2 w-64 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 py-2 text-xs normal-case animate-in fade-in slide-in-from-top-2 duration-150">
                   <div className="px-3 py-1.5 border-b border-slate-100 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                    {language === 'vi' ? 'Mục quản trị tài khoản' : 'Workspace Submenus'}
+                    Mục quản trị tài khoản
                   </div>
 
                   <a
@@ -403,7 +384,7 @@ export default function Header({
                   >
                     <User className="w-4 h-4 text-orange-500 shrink-0" />
                     <div>
-                      <div className="font-bold text-xs">{language === 'vi' ? 'Cá nhân và tổ chức' : 'Personal & Org'}</div>
+                      <div className="font-bold text-xs">Cá nhân và tổ chức</div>
                       <div className="text-[10px] text-slate-400">/quan-tri/ca-nhan-to-chuc</div>
                     </div>
                   </a>
@@ -426,7 +407,7 @@ export default function Header({
                   >
                     <Award className="w-4 h-4 text-orange-500 shrink-0" />
                     <div>
-                      <div className="font-bold text-xs">{language === 'vi' ? 'Quản lý tài sản' : 'Asset Management'}</div>
+                      <div className="font-bold text-xs">Quản lý tài sản</div>
                       <div className="text-[10px] text-slate-400">/quan-tri/quan-ly-tai-san</div>
                     </div>
                   </a>
@@ -449,7 +430,7 @@ export default function Header({
                   >
                     <Briefcase className="w-4 h-4 text-orange-500 shrink-0" />
                     <div>
-                      <div className="font-bold text-xs">{language === 'vi' ? 'Quản lý yêu cầu' : 'Request Management'}</div>
+                      <div className="font-bold text-xs">Quản lý yêu cầu</div>
                       <div className="text-[10px] text-slate-400">/quan-tri/quan-ly-yeu-cau</div>
                     </div>
                   </a>
@@ -472,7 +453,7 @@ export default function Header({
                   >
                     <Folder className="w-4 h-4 text-orange-500 shrink-0" />
                     <div>
-                      <div className="font-bold text-xs">{language === 'vi' ? 'Quản lý file' : 'File Manager'}</div>
+                      <div className="font-bold text-xs">Quản lý file</div>
                       <div className="text-[10px] text-slate-400">/quan-tri/quan-ly-file</div>
                     </div>
                   </a>
@@ -496,7 +477,7 @@ export default function Header({
                     >
                       <Coins className="w-4 h-4 text-orange-500 shrink-0" />
                       <div>
-                        <div className="font-bold text-xs">{language === 'vi' ? 'Hoa hồng của tôi' : 'My Commissions'}</div>
+                        <div className="font-bold text-xs">Hoa hồng của tôi</div>
                         <div className="text-[10px] text-slate-400">/quan-tri/hoa-hong-cua-toi</div>
                       </div>
                     </a>
@@ -521,7 +502,7 @@ export default function Header({
                     }`}
                   >
                     <Settings className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span className="font-medium text-xs">{language === 'vi' ? 'Cài đặt' : 'Settings'}</span>
+                    <span className="font-medium text-xs">Cài đặt</span>
                   </a>
 
                   <a
@@ -541,7 +522,7 @@ export default function Header({
                     }`}
                   >
                     <HelpCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span className="font-medium text-xs">{language === 'vi' ? 'Hỗ trợ' : 'Help & Support'}</span>
+                    <span className="font-medium text-xs">Hỗ trợ</span>
                   </a>
                 </div>
               )}
@@ -648,7 +629,7 @@ export default function Header({
             {/* Mobile Admin Section with deep-links */}
             <div className="border-t border-slate-100 pt-2">
               <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
-                💼 {language === 'vi' ? 'Trang quản trị (URLs riêng)' : 'Workspace Submenus'}
+                💼 Trang quản trị (URLs riêng)
               </div>
               <div className="pl-2 space-y-2 text-xs normal-case font-medium">
                 <a
@@ -665,7 +646,7 @@ export default function Header({
                   }}
                   className={`block py-1 hover:text-orange-500 ${viewMode === 'dashboard' && adminTab === 'profile' ? 'text-orange-600 font-bold' : 'text-slate-600'}`}
                 >
-                  • {language === 'vi' ? 'Cá nhân và tổ chức' : 'Personal & Org'}
+                  • Cá nhân và tổ chức
                 </a>
                 <a
                   href="/quan-tri/quan-ly-tai-san"
@@ -681,7 +662,7 @@ export default function Header({
                   }}
                   className={`block py-1 hover:text-orange-500 ${viewMode === 'dashboard' && adminTab === 'trademarks' ? 'text-orange-600 font-bold' : 'text-slate-600'}`}
                 >
-                  • {language === 'vi' ? 'Quản lý tài sản' : 'Asset Management'}
+                  • Quản lý tài sản
                 </a>
                 <a
                   href="/quan-tri/quan-ly-yeu-cau"
@@ -697,7 +678,7 @@ export default function Header({
                   }}
                   className={`block py-1 hover:text-orange-500 ${viewMode === 'dashboard' && adminTab === 'cases' ? 'text-orange-600 font-bold' : 'text-slate-600'}`}
                 >
-                  • {language === 'vi' ? 'Quản lý yêu cầu' : 'Request Management'}
+                  • Quản lý yêu cầu
                 </a>
                 <a
                   href="/quan-tri/quan-ly-file"
@@ -713,7 +694,7 @@ export default function Header({
                   }}
                   className={`block py-1 hover:text-orange-500 ${viewMode === 'dashboard' && adminTab === 'files' ? 'text-orange-600 font-bold' : 'text-slate-600'}`}
                 >
-                  • {language === 'vi' ? 'Quản lý file' : 'File Manager'}
+                  • Quản lý file
                 </a>
                 {isPartner && (
                   <a
@@ -730,7 +711,7 @@ export default function Header({
                     }}
                     className={`block py-1 hover:text-orange-500 ${viewMode === 'dashboard' && adminTab === 'commissions' ? 'text-orange-600 font-bold' : 'text-slate-600'}`}
                   >
-                    • {language === 'vi' ? 'Hoa hồng của tôi' : 'My Commissions'}
+                    • Hoa hồng của tôi
                   </a>
                 )}
               </div>
@@ -741,7 +722,7 @@ export default function Header({
             {user ? (
               <div className="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs mb-1">
                 <div>
-                  <span className="text-slate-400 block text-[10px]">{language === 'vi' ? 'Đã đăng nhập:' : 'Logged in as:'}</span>
+                  <span className="text-slate-400 block text-[10px]">Đã đăng nhập:</span>
                   <strong className="text-slate-800 font-bold block">{user.name}</strong>
                 </div>
                 <button
@@ -764,10 +745,10 @@ export default function Header({
               onClick={() => { setShowMobileMenu(false); onOpenWizard(); }}
               className="bg-orange-500 hover:bg-orange-600 text-white w-full py-2.5 rounded-lg font-bold text-xs text-center cursor-pointer"
             >
-              {t.registerNew}
+              Đăng ký mới
             </button>
             <div className="text-[10px] text-center text-slate-400 mt-1">
-              {language === 'vi' ? 'Liên kết cơ sở dữ liệu quốc tế WIPO & CSDL quốc gia' : 'Linked with international WIPO & national databases'}
+              Liên kết cơ sở dữ liệu quốc tế WIPO & CSDL quốc gia
             </div>
           </div>
         </div>

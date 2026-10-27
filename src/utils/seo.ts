@@ -133,6 +133,52 @@ export function updateMetaSeo(options: MetaSeoOptions = {}) {
 }
 
 /**
+ * Safely decodes HTML entities (e.g. &agrave; -> à, &yacute; -> ý, &oacute; -> ó)
+ * and strips HTML tags without destroying Vietnamese characters.
+ */
+export function decodeHtmlEntities(raw?: string | null): string {
+  if (!raw) return '';
+  if (typeof document !== 'undefined') {
+    try {
+      const doc = new DOMParser().parseFromString(raw, 'text/html');
+      return (doc.body.textContent || '').replace(/\s+/g, ' ').trim();
+    } catch {
+      // Fallback
+    }
+  }
+
+  return raw
+    .replace(/<\/?[^>]+(>|$)/g, ' ')
+    .replace(/&agrave;/gi, 'à')
+    .replace(/&aacute;/gi, 'á')
+    .replace(/&atilde;/gi, 'ã')
+    .replace(/&acirc;/gi, 'â')
+    .replace(/&egrave;/gi, 'è')
+    .replace(/&eacute;/gi, 'é')
+    .replace(/&ecirc;/gi, 'ê')
+    .replace(/&igrave;/gi, 'ì')
+    .replace(/&iacute;/gi, 'í')
+    .replace(/&ograve;/gi, 'ò')
+    .replace(/&oacute;/gi, 'ó')
+    .replace(/&otilde;/gi, 'õ')
+    .replace(/&ocirc;/gi, 'ô')
+    .replace(/&ugrave;/gi, 'ù')
+    .replace(/&uacute;/gi, 'ú')
+    .replace(/&utilde;/gi, 'ũ')
+    .replace(/&ygrave;/gi, 'ỳ')
+    .replace(/&yacute;/gi, 'ý')
+    .replace(/&ytilde;/gi, 'ỹ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
  * Resets meta tags back to the Brandix home page defaults
  */
 export function resetMetaSeo() {
@@ -149,12 +195,9 @@ export function syncHomePageSeo(data?: any) {
     return;
   }
 
-  const cleanBody = data.body 
-    ? data.body.replace(/<\/?[^>]+(>|$)/g, " ").replace(/&[a-z]+;/gi, " ").replace(/\s+/g, " ").trim() 
-    : '';
-
-  const title = data.title || HOMEPAGE_SEO.title;
-  const description = data.description || cleanBody || HOMEPAGE_SEO.description;
+  const cleanBody = decodeHtmlEntities(data.body);
+  const title = data.title ? decodeHtmlEntities(data.title) : HOMEPAGE_SEO.title;
+  const description = data.description ? decodeHtmlEntities(data.description) : (cleanBody || HOMEPAGE_SEO.description);
   const image = resolveMetaImage(data.image, DEFAULT_META_IMAGE);
   const canonical = data.canonical || 'https://brandix.vn/';
   const keywords = data.keyword || 'brandix,nhãn hiệu';
