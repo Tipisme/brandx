@@ -83,7 +83,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
     try {
       const d = new Date(dateStr);
       if (isNaN(d.getTime())) return dateStr;
-      return d.toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US', {
+      return d.toLocaleDateString('vi-VN', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
@@ -105,7 +105,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
     if (item.product_name) {
       return item.product_name;
     }
-    return language === 'vi' ? 'Sản phẩm / Dịch vụ sở hữu trí tuệ' : 'IP Product / Service';
+    return 'Sản phẩm / Dịch vụ sở hữu trí tuệ';
   };
 
   const getCommissionTypeLabel = (type?: string, val?: number | string): string => {
@@ -131,7 +131,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
       return (
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
           <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-          {language === 'vi' ? 'Đã thanh toán' : 'Paid / Approved'}
+          Đã thanh toán
         </span>
       );
     }
@@ -139,7 +139,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
       return (
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
           <Clock4 className="w-3 h-3 text-amber-600" />
-          {language === 'vi' ? 'Chờ xử lý' : 'Pending'}
+          Chờ xử lý
         </span>
       );
     }
@@ -147,13 +147,13 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
       return (
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
           <XCircle className="w-3 h-3 text-rose-600" />
-          {language === 'vi' ? 'Đã huỷ' : 'Cancelled'}
+          Đã huỷ
         </span>
       );
     }
     return (
       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-50 text-slate-700 border border-slate-200">
-        {status || (language === 'vi' ? 'Không xác định' : 'Unknown')}
+        {status || 'Không xác định'}
       </span>
     );
   };
@@ -162,7 +162,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
   const fetchDashboard = useCallback(async () => {
     const token = user?.token || localStorage.getItem('brandhub_token');
     if (!token) {
-      setDashboardError(language === 'vi' ? 'Vui lòng đăng nhập để xem thông tin hoa hồng.' : 'Please log in to view commissions.');
+      setDashboardError('Vui lòng đăng nhập để xem thông tin hoa hồng.');
       setIsDashboardLoading(false);
       return;
     }
@@ -205,11 +205,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
 
     if (!success) {
       console.warn('Referrals dashboard API returned:', lastErrMsg);
-      setDashboardError(
-        language === 'vi' 
-          ? 'Không thể tải dữ liệu tổng quan hoa hồng từ máy chủ.' 
-          : 'Failed to fetch referral dashboard data.'
-      );
+      setDashboardError('Không thể tải dữ liệu tổng quan hoa hồng từ máy chủ.');
     }
     setIsDashboardLoading(false);
   }, [user?.token, language]);
@@ -218,7 +214,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
   const fetchCommissions = useCallback(async (targetPage = 1) => {
     const token = user?.token || localStorage.getItem('brandhub_token');
     if (!token) {
-      setCommissionsError(language === 'vi' ? 'Vui lòng đăng nhập để xem lịch sử.' : 'Please log in to view history.');
+      setCommissionsError('Vui lòng đăng nhập để xem lịch sử.');
       setIsCommissionsLoading(false);
       return;
     }
@@ -280,11 +276,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
 
     if (!success) {
       console.warn('Commissions history API returned:', lastErrMsg);
-      setCommissionsError(
-        language === 'vi'
-          ? 'Không thể tải danh sách lịch sử hoa hồng.'
-          : 'Failed to fetch commissions list.'
-      );
+      setCommissionsError('Không thể tải danh sách lịch sử hoa hồng.');
     }
     setIsCommissionsLoading(false);
   }, [user?.token, perPage, language]);
@@ -341,13 +333,11 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
               <Coins className="w-5 h-5" />
             </div>
             <h3 className="text-xl font-sans font-extrabold text-slate-900">
-              {language === 'vi' ? 'Hoa hồng của tôi' : 'My Commissions'}
+              Hoa hồng của tôi
             </h3>
           </div>
           <p className="text-slate-500 text-xs mt-1">
-            {language === 'vi' 
-              ? 'Theo dõi số lượt giới thiệu thành công, quản lý mã giới thiệu và lịch sử hoa hồng nhận được.' 
-              : 'Track successful referrals, manage your referral code, and inspect received commission payouts.'}
+            Theo dõi số lượt giới thiệu thành công, quản lý mã giới thiệu và lịch sử hoa hồng nhận được.
           </p>
         </div>
 
@@ -357,7 +347,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
           className="inline-flex items-center gap-2 px-4 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all cursor-pointer disabled:opacity-50"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-orange-500' : ''}`} />
-          <span>{language === 'vi' ? 'Làm mới dữ liệu' : 'Refresh Data'}</span>
+          <span>Làm mới dữ liệu</span>
         </button>
       </div>
 
@@ -368,7 +358,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
         <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">
-              {language === 'vi' ? 'Tổng hoa hồng nhận được' : 'Total Commission Earned'}
+              Tổng hoa hồng nhận được
             </span>
             <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100">
               <Coins className="w-4 h-4" />
@@ -383,7 +373,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
               )}
             </div>
             <p className="text-[11px] text-slate-400 mt-1">
-              {language === 'vi' ? 'Tích luỹ từ tất cả các đơn hàng thành công' : 'Accumulated from all successful deals'}
+              Tích luỹ từ tất cả các đơn hàng thành công
             </p>
           </div>
         </div>
@@ -392,7 +382,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
         <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">
-              {language === 'vi' ? 'Lượt giới thiệu thành công' : 'Successful Referrals'}
+              Lượt giới thiệu thành công
             </span>
             <div className="p-2 bg-blue-50 text-blue-600 rounded-xl border border-blue-100">
               <Users className="w-4 h-4" />
@@ -407,7 +397,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
               )}
             </div>
             <p className="text-[11px] text-slate-400 mt-1">
-              {language === 'vi' ? 'Khách hàng / đối tác đã hoàn tất giao dịch' : 'Customers with completed orders'}
+              Khách hàng / đối tác đã hoàn tất giao dịch
             </p>
           </div>
         </div>
@@ -416,7 +406,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
         <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">
-              {language === 'vi' ? 'Mã giới thiệu của bạn' : 'Your Referral Code'}
+              Mã giới thiệu của bạn
             </span>
             <div className="p-2 bg-orange-50 text-orange-600 rounded-xl border border-orange-100">
               <TrendingUp className="w-4 h-4" />
@@ -436,15 +426,15 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
                   type="button"
                   onClick={handleCopyCode}
                   className="px-2.5 py-1 bg-orange-50 hover:bg-orange-100 text-orange-600 border border-orange-200 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shrink-0"
-                  title={language === 'vi' ? 'Sao chép mã' : 'Copy code'}
+                  title="Sao chép mã"
                 >
                   {copiedCode ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{copiedCode ? (language === 'vi' ? 'Đã chép' : 'Copied') : (language === 'vi' ? 'Chép' : 'Copy')}</span>
+                  <span>{copiedCode ? 'Đã chép' : 'Chép'}</span>
                 </button>
               )}
             </div>
             <p className="text-[11px] text-slate-400 mt-1">
-              {language === 'vi' ? 'Mã định danh tự động theo tài khoản' : 'Account-linked unique referral code'}
+              Mã định danh tự động theo tài khoản
             </p>
           </div>
         </div>
@@ -458,12 +448,10 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h4 className="text-base font-bold text-slate-900">
-              {language === 'vi' ? 'Lịch sử nhận hoa hồng' : 'Commission History'}
+              Lịch sử nhận hoa hồng
             </h4>
             <p className="text-slate-500 text-xs">
-              {language === 'vi' 
-                ? `Hiển thị danh sách các đơn hàng phát sinh hoa hồng (${totalItems} mục)` 
-                : `List of commission payouts and linked orders (${totalItems} total)`}
+              Hiển thị danh sách các đơn hàng phát sinh hoa hồng ({totalItems} mục)
             </p>
           </div>
 
@@ -475,7 +463,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder={language === 'vi' ? 'Tìm mã đơn, tên sản phẩm...' : 'Search order, product...'}
+                placeholder="Tìm mã đơn, tên sản phẩm..."
                 className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 outline-none focus:border-orange-500 transition-colors"
               />
             </div>
@@ -486,10 +474,10 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
               onChange={(e) => setStatusFilter(e.target.value)}
               className="py-1.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 outline-none focus:border-orange-500 transition-colors cursor-pointer"
             >
-              <option value="all">{language === 'vi' ? 'Tất cả trạng thái' : 'All Statuses'}</option>
-              <option value="paid">{language === 'vi' ? 'Đã thanh toán / Duyệt' : 'Paid / Approved'}</option>
-              <option value="pending">{language === 'vi' ? 'Chờ xử lý' : 'Pending'}</option>
-              <option value="rejected">{language === 'vi' ? 'Đã huỷ' : 'Cancelled'}</option>
+              <option value="all">Tất cả trạng thái</option>
+              <option value="paid">Đã thanh toán / Duyệt</option>
+              <option value="pending">Chờ xử lý</option>
+              <option value="rejected">Đã huỷ</option>
             </select>
           </div>
         </div>
@@ -499,13 +487,13 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
-                <th className="py-3 px-4">{language === 'vi' ? 'Mã đơn hàng' : 'Order ID'}</th>
-                <th className="py-3 px-4">{language === 'vi' ? 'Sản phẩm / Dịch vụ' : 'Product / Service'}</th>
-                <th className="py-3 px-4 text-right">{language === 'vi' ? 'Giá trị đơn' : 'Base Amount'}</th>
-                <th className="py-3 px-4 text-center">{language === 'vi' ? 'Tỷ lệ / Mức' : 'Rate'}</th>
-                <th className="py-3 px-4 text-right">{language === 'vi' ? 'Tiền hoa hồng' : 'Commission'}</th>
-                <th className="py-3 px-4 text-center">{language === 'vi' ? 'Trạng thái' : 'Status'}</th>
-                <th className="py-3 px-4 text-right">{language === 'vi' ? 'Thời gian' : 'Date'}</th>
+                <th className="py-3 px-4">Mã đơn hàng</th>
+                <th className="py-3 px-4">Sản phẩm / Dịch vụ</th>
+                <th className="py-3 px-4 text-right">Giá trị đơn</th>
+                <th className="py-3 px-4 text-center">Tỷ lệ / Mức</th>
+                <th className="py-3 px-4 text-right">Tiền hoa hồng</th>
+                <th className="py-3 px-4 text-center">Trạng thái</th>
+                <th className="py-3 px-4 text-right">Thời gian</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -514,7 +502,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
                   <td colSpan={7} className="py-12 text-center text-slate-400">
                     <div className="flex flex-col items-center justify-center gap-2">
                       <RefreshCw className="w-5 h-5 animate-spin text-orange-500" />
-                      <span className="text-xs">{language === 'vi' ? 'Đang tải dữ liệu hoa hồng...' : 'Loading commission records...'}</span>
+                      <span className="text-xs">Đang tải dữ liệu hoa hồng...</span>
                     </div>
                   </td>
                 </tr>
@@ -528,7 +516,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
                         onClick={() => fetchCommissions(page)}
                         className="mt-2 px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
                       >
-                        {language === 'vi' ? 'Thử lại' : 'Retry'}
+                        Thử lại
                       </button>
                     </div>
                   </td>
@@ -542,13 +530,13 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
                       </div>
                       <p className="font-bold text-slate-700 text-sm">
                         {searchTerm || statusFilter !== 'all' 
-                          ? (language === 'vi' ? 'Không tìm thấy giao dịch hoa hồng phù hợp' : 'No matching commissions found')
-                          : (language === 'vi' ? 'Chưa có lịch sử hoa hồng' : 'No commission history yet')}
+                          ? 'Không tìm thấy giao dịch hoa hồng phù hợp'
+                          : 'Chưa có lịch sử hoa hồng'}
                       </p>
                       <p className="text-xs text-slate-400 max-w-xs text-center">
                         {searchTerm || statusFilter !== 'all'
-                          ? (language === 'vi' ? 'Vui lòng thay đổi từ khoá tìm kiếm hoặc bộ lọc trạng thái.' : 'Please adjust your search keyword or filters.')
-                          : (language === 'vi' ? 'Hãy chia sẻ mã hoặc liên kết giới thiệu để bắt đầu nhận hoa hồng từ các đơn hàng mới.' : 'Share your referral link with clients to start receiving commissions.')}
+                          ? 'Vui lòng thay đổi từ khoá tìm kiếm hoặc bộ lọc trạng thái.'
+                          : 'Hãy chia sẻ mã hoặc liên kết giới thiệu để bắt đầu nhận hoa hồng từ các đơn hàng mới.'}
                       </p>
                     </div>
                   </td>
@@ -619,9 +607,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
         {totalItems > perPage && (
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-100 text-xs">
             <span className="text-slate-500">
-              {language === 'vi' 
-                ? `Hiển thị trang ${page} / ${totalPages} (${totalItems} kết quả)` 
-                : `Page ${page} of ${totalPages} (${totalItems} records)`}
+              Hiển thị trang {page} / {totalPages} ({totalItems} kết quả)
             </span>
 
             <div className="flex items-center gap-1.5">
@@ -630,7 +616,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
                 onClick={() => fetchCommissions(page - 1)}
                 disabled={page <= 1 || isCommissionsLoading}
                 className="p-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                title={language === 'vi' ? 'Trang trước' : 'Previous page'}
+                title="Trang trước"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
@@ -665,7 +651,7 @@ export default function CommissionsTab({ user, language }: CommissionsTabProps) 
                 onClick={() => fetchCommissions(page + 1)}
                 disabled={page >= totalPages || isCommissionsLoading}
                 className="p-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                title={language === 'vi' ? 'Trang sau' : 'Next page'}
+                title="Trang sau"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>

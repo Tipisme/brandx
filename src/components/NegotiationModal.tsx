@@ -43,11 +43,11 @@ export default function NegotiationModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!description.trim()) {
-      setError(language === 'vi' ? 'Vui lòng nhập mô tả yêu cầu đàm phán.' : 'Please enter request description.');
+      setError('Vui lòng nhập mô tả yêu cầu đàm phán.');
       return;
     }
     if (!price || Number(price) <= 0) {
-      setError(language === 'vi' ? 'Vui lòng nhập giá thương lượng hợp lệ.' : 'Please enter a valid price.');
+      setError('Vui lòng nhập giá thương lượng hợp lệ.');
       return;
     }
 
@@ -166,12 +166,12 @@ export default function NegotiationModal({
           <div className="flex items-center gap-2 mb-2">
             <span className="bg-white/20 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider backdrop-blur-md inline-flex items-center gap-1">
               <Handshake className="w-3 h-3" />
-              {language === 'vi' ? 'Thương lượng nhãn hiệu' : 'Trademark Negotiation'}
+              Thương lượng nhãn hiệu
             </span>
           </div>
 
           <h2 className="text-xl sm:text-2xl font-sans font-black tracking-tight text-white">
-            {language === 'vi' ? 'Đàm phán mua lại nhãn hiệu' : 'Negotiate Trademark Purchase'}
+            Đàm phán mua lại nhãn hiệu
           </h2>
           {trademarkName && (
             <p className="text-orange-100 text-xs mt-1 font-semibold">
@@ -190,12 +190,10 @@ export default function NegotiationModal({
 
             <div className="space-y-2">
               <h3 className="text-xl font-bold text-slate-900">
-                {language === 'vi' ? 'Gửi yêu cầu đàm phán thành công!' : 'Negotiation Request Submitted!'}
+                Gửi yêu cầu đàm phán thành công!
               </h3>
               <p className="text-xs text-slate-600 max-w-xs mx-auto leading-relaxed">
-                {language === 'vi' 
-                  ? 'Yêu cầu đàm phán mua lại nhãn hiệu đã được hệ thống ghi nhận. Chuyên viên sẽ liên hệ với bạn trong thời gian sớm nhất.' 
-                  : 'Your trademark purchase negotiation request has been received. Our specialist will contact you shortly.'}
+                Yêu cầu đàm phán mua lại nhãn hiệu đã được hệ thống ghi nhận. Chuyên viên sẽ liên hệ với bạn trong thời gian sớm nhất.
               </p>
             </div>
 
@@ -207,7 +205,7 @@ export default function NegotiationModal({
                 className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs uppercase py-3.5 px-4 rounded-xl cursor-pointer transition-colors flex items-center justify-center gap-2"
               >
                 <RotateCcw className="w-4 h-4 text-slate-500" />
-                {language === 'vi' ? 'Ở lại trang' : 'Stay on Page'}
+                Ở lại trang
               </button>
 
               {/* Button 2: Go to request management */}
@@ -216,7 +214,7 @@ export default function NegotiationModal({
                 onClick={handleGoToRequests}
                 className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-extrabold text-xs uppercase py-3.5 px-4 rounded-xl cursor-pointer transition-all flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 hover:-translate-y-0.5"
               >
-                <span>{language === 'vi' ? 'Quản lý yêu cầu' : 'Manage Requests'}</span>
+                <span>Quản lý yêu cầu</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -234,7 +232,7 @@ export default function NegotiationModal({
             {/* Price Field (price) */}
             <div>
               <label className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider block mb-1">
-                {language === 'vi' ? 'Giá thương lượng (VND)' : 'Negotiation Price (VND)'} <span className="text-red-500">*</span>
+                Giá thương lượng (VND) <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <input
@@ -253,7 +251,7 @@ export default function NegotiationModal({
               </div>
               {price && Number(price) > 0 && (
                 <p className="text-[11px] text-orange-600 font-bold mt-1">
-                  {language === 'vi' ? 'Mức giá đề xuất:' : 'Proposed price:'} {formatCurrency(price)}
+                  Mức giá đề xuất: {formatCurrency(price)}
                 </p>
               )}
             </div>
@@ -261,16 +259,14 @@ export default function NegotiationModal({
             {/* Description Field (description) */}
             <div>
               <label className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider block mb-1">
-                {language === 'vi' ? 'Mô tả yêu cầu' : 'Request Description'} <span className="text-red-500">*</span>
+                Mô tả yêu cầu <span className="text-red-500">*</span>
               </label>
               <textarea
                 required
                 rows={4}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder={language === 'vi' 
-                  ? 'Mô tả chi tiết mong muốn đàm phán, phương thức thanh toán, tiến độ chuyển nhượng...' 
-                  : 'Enter your detailed negotiation terms, proposal, payment schedule...'}
+                placeholder="Mô tả chi tiết mong muốn đàm phán, phương thức thanh toán, tiến độ chuyển nhượng..."
                 className="w-full bg-white border border-slate-200 rounded-xl p-3.5 text-xs text-slate-800 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 resize-none leading-relaxed"
               />
             </div>
@@ -278,7 +274,7 @@ export default function NegotiationModal({
             {/* User Info Confirmation */}
             {user && (
               <div className="bg-slate-50 border border-slate-100 rounded-2xl p-3.5 text-xs flex justify-between items-center text-slate-600">
-                <span>{language === 'vi' ? 'Người gửi:' : 'Sender:'} <strong className="text-slate-800">{user.name}</strong></span>
+                <span>Người gửi: <strong className="text-slate-800">{user.name}</strong></span>
                 <span className="text-slate-400 font-mono text-[11px]">{user.email}</span>
               </div>
             )}
@@ -291,7 +287,7 @@ export default function NegotiationModal({
                 disabled={isSubmitting}
                 className="w-1/3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs uppercase py-3.5 rounded-xl cursor-pointer transition-colors"
               >
-                {language === 'vi' ? 'Hủy' : 'Cancel'}
+                Hủy
               </button>
               <button
                 type="submit"
@@ -301,12 +297,12 @@ export default function NegotiationModal({
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    {language === 'vi' ? 'Đang gửi...' : 'Submitting...'}
+                    Đang gửi...
                   </>
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4 text-amber-200" />
-                    {language === 'vi' ? 'Gửi yêu cầu đàm phán' : 'Submit Negotiation'}
+                    Gửi yêu cầu đàm phán
                   </>
                 )}
               </button>

@@ -25,20 +25,12 @@ export default function ResetPasswordPage({ email, token, language, onBackToLogi
     setSuccess(false);
 
     if (newPassword.length < 6) {
-      setErrorMsg(
-        language === 'vi'
-          ? 'Mật khẩu phải có ít nhất 6 ký tự.'
-          : 'Password must be at least 6 characters long.'
-      );
+      setErrorMsg('Mật khẩu phải có ít nhất 6 ký tự.');
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setErrorMsg(
-        language === 'vi'
-          ? 'Mật khẩu xác nhận không trùng khớp.'
-          : 'Passwords do not match.'
-      );
+      setErrorMsg('Mật khẩu xác nhận không trùng khớp.');
       return;
     }
 
@@ -107,19 +99,11 @@ export default function ResetPasswordPage({ email, token, language, onBackToLogi
         }, 1000);
       } else {
         const errorDetail = data?.message || data?.error || '';
-        setErrorMsg(
-          language === 'vi'
-            ? `Cập nhật mật khẩu thất bại: ${errorDetail || 'Mã xác thực không hợp lệ hoặc đã hết hạn.'}`
-            : `Failed to reset password: ${errorDetail || 'Invalid or expired reset token.'}`
-        );
+        setErrorMsg(`Cập nhật mật khẩu thất bại: ${errorDetail || 'Mã xác thực không hợp lệ hoặc đã hết hạn.'}`);
       }
     } catch (err) {
       console.error('Error resetting password:', err);
-      setErrorMsg(
-        language === 'vi'
-          ? 'Có lỗi xảy ra trong quá trình gửi yêu cầu. Vui lòng thử lại sau.'
-          : 'An error occurred. Please try again later.'
-      );
+      setErrorMsg('Có lỗi xảy ra trong quá trình gửi yêu cầu. Vui lòng thử lại sau.');
     } finally {
       setLoading(false);
     }
@@ -141,17 +125,13 @@ export default function ResetPasswordPage({ email, token, language, onBackToLogi
             
             <div className="space-y-2">
               <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-                {language === 'vi' ? 'Đặt lại mật khẩu thành công' : 'Password Reset Successful'}
+                Đặt lại mật khẩu thành công
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-                {language === 'vi'
-                  ? 'Mật khẩu mới của bạn đã được cập nhật thành công. Bây giờ bạn có thể đăng nhập bằng thông tin mới.'
-                  : 'Your new password has been set successfully. You can now log in with your new credentials.'}
+                Mật khẩu mới của bạn đã được cập nhật thành công. Bây giờ bạn có thể đăng nhập bằng thông tin mới.
               </p>
               <p className="text-xs text-orange-500 font-semibold animate-pulse pt-2">
-                {language === 'vi'
-                  ? `Hệ thống sẽ tự động chuyển về trang chủ và mở Đăng nhập sau ${countdown} giây...`
-                  : `Automatically returning to homepage and opening login in ${countdown} seconds...`}
+                Hệ thống sẽ tự động chuyển về trang chủ và mở Đăng nhập sau {countdown} giây...
               </p>
             </div>
 
@@ -160,7 +140,7 @@ export default function ResetPasswordPage({ email, token, language, onBackToLogi
               className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs uppercase py-3.5 rounded-xl transition-all shadow-sm hover:shadow-md cursor-pointer inline-flex items-center justify-center gap-1.5"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              {language === 'vi' ? 'Quay lại Đăng nhập' : 'Back to Login'}
+              Quay lại Đăng nhập
             </button>
           </div>
         ) : (
@@ -168,26 +148,24 @@ export default function ResetPasswordPage({ email, token, language, onBackToLogi
             <div className="text-center space-y-2">
               <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-600 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mb-2">
                 <Sparkles className="w-3 h-3" />
-                {language === 'vi' ? 'Bảo mật tài khoản' : 'Account Security'}
+                Bảo mật tài khoản
               </div>
               <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-                {language === 'vi' ? 'Đặt lại mật khẩu mới' : 'Reset New Password'}
+                Đặt lại mật khẩu mới
               </h2>
               <p className="text-xs text-slate-400 leading-relaxed">
-                {language === 'vi'
-                  ? 'Nhập mật khẩu mới an toàn cho tài khoản của bạn bên dưới'
-                  : 'Enter a strong, secure new password for your account below'}
+                Nhập mật khẩu mới an toàn cho tài khoản của bạn bên dưới
               </p>
             </div>
 
             {/* Read-only verification info */}
             <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 text-xs space-y-2">
               <div className="flex justify-between items-center text-slate-500">
-                <span>{language === 'vi' ? 'Tài khoản:' : 'Account:'}</span>
+                <span>Tài khoản:</span>
                 <strong className="text-slate-800 break-all">{email}</strong>
               </div>
               <div className="flex justify-between items-center text-slate-500">
-                <span>{language === 'vi' ? 'Mã xác thực:' : 'Token:'}</span>
+                <span>Mã xác thực:</span>
                 <span className="text-slate-400 font-mono truncate max-w-[180px]" title={token}>
                   {token}
                 </span>
@@ -205,7 +183,7 @@ export default function ResetPasswordPage({ email, token, language, onBackToLogi
               {/* Password Input */}
               <div className="space-y-1">
                 <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">
-                  {language === 'vi' ? 'Mật khẩu mới' : 'New Password'}
+                  Mật khẩu mới
                 </label>
                 <div className="relative">
                   <input
@@ -213,7 +191,7 @@ export default function ResetPasswordPage({ email, token, language, onBackToLogi
                     required
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder={language === 'vi' ? 'Ít nhất 6 ký tự' : 'Min 6 characters'}
+                    placeholder="Ít nhất 6 ký tự"
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-4 pr-10 py-3 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-orange-500 transition-colors"
                   />
                   <button
@@ -229,7 +207,7 @@ export default function ResetPasswordPage({ email, token, language, onBackToLogi
               {/* Confirm Password Input */}
               <div className="space-y-1">
                 <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">
-                  {language === 'vi' ? 'Nhập lại mật khẩu mới' : 'Confirm New Password'}
+                  Nhập lại mật khẩu mới
                 </label>
                 <div className="relative">
                   <input
@@ -237,7 +215,7 @@ export default function ResetPasswordPage({ email, token, language, onBackToLogi
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder={language === 'vi' ? 'Trùng khớp mật khẩu trên' : 'Repeat new password'}
+                    placeholder="Trùng khớp mật khẩu trên"
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-4 pr-10 py-3 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-orange-500 transition-colors"
                   />
                   <button
@@ -259,7 +237,7 @@ export default function ResetPasswordPage({ email, token, language, onBackToLogi
                 {loading ? (
                   <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : null}
-                {language === 'vi' ? 'Cập nhật mật khẩu' : 'Update Password'}
+                Cập nhật mật khẩu
               </button>
             </form>
 
@@ -269,7 +247,7 @@ export default function ResetPasswordPage({ email, token, language, onBackToLogi
                 className="text-xs text-slate-500 hover:text-slate-800 font-semibold cursor-pointer transition-colors flex items-center justify-center gap-1 mx-auto"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
-                {language === 'vi' ? 'Quay lại Đăng nhập' : 'Back to Login'}
+                Quay lại Đăng nhập
               </button>
             </div>
           </div>

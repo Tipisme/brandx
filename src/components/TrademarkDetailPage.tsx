@@ -42,7 +42,7 @@ export default function TrademarkDetailPage({
       try {
         const response = await fetch(`https://admin.hdslaw.vn/vi/api/products/${slug}`);
         if (!response.ok) {
-          throw new Error(language === 'vi' ? 'Không thể tải chi tiết nhãn hiệu.' : 'Failed to fetch trademark details.');
+          throw new Error('Không thể tải chi tiết nhãn hiệu.');
         }
         const data = await response.json();
         setProduct(data);
@@ -204,7 +204,7 @@ export default function TrademarkDetailPage({
       <div className="max-w-7xl mx-auto px-4 py-20 flex flex-col items-center justify-center min-h-[50vh]">
         <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-4"></div>
         <p className="text-slate-500 text-sm font-medium">
-          {language === 'vi' ? 'Đang truy xuất thông tin dữ liệu nhãn hiệu...' : 'Querying trademark database...'}
+          Đang truy xuất thông tin dữ liệu nhãn hiệu...
         </p>
       </div>
     );
@@ -219,7 +219,7 @@ export default function TrademarkDetailPage({
             onClick={onBack}
             className="bg-slate-900 text-white text-xs font-bold px-5 py-2.5 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors"
           >
-            {language === 'vi' ? 'Quay lại danh sách' : 'Back to marketplace'}
+            Quay lại danh sách
           </button>
         </div>
       </div>
@@ -230,17 +230,17 @@ export default function TrademarkDetailPage({
   const isFav = favorites.includes(product.id?.toString() || slug);
 
   // Parse attributes
-  const typeStr = getAttrVal(attributes, 'loai-don') || (language === 'vi' ? 'Nhãn hiệu liên kết' : 'Associated Trademark');
-  const statusStr = getAttrVal(attributes, 'trang-thai') || (language === 'vi' ? 'Đã công bố' : 'Published');
+  const typeStr = getAttrVal(attributes, 'loai-don') || 'Nhãn hiệu liên kết';
+  const statusStr = getAttrVal(attributes, 'trang-thai') || 'Đã công bố';
   const appNo = getAttrVal(attributes, 'so-don') || 'N/A';
   const rawFilingDate = getAttrVal(attributes, 'ngay-nop-don');
   const filingDate = extractFilingDate(product.progresses, rawFilingDate);
   const pubInfo = getAttrVal(attributes, 'so-cong-bo-va-ngay-cong-bo') || 'N/A';
-  const colors = getAttrVal(attributes, 'mau-sac-nhan-hieu') || (language === 'vi' ? 'Đen trắng / Màu sắc tự do' : 'Black & White / Free color');
-  const owner = getAttrVal(attributes, 'chu-don-chu-bang') || (language === 'vi' ? 'Đang cập nhật' : 'To be updated');
-  const address = getAttrVal(attributes, 'address') || (language === 'vi' ? 'Việt Nam' : 'Vietnam');
-  const templateType = getAttrVal(attributes, 'kieu-cua-mau-nhan-hinh-chu-ket-hop') || (language === 'vi' ? 'Chữ & Hình kết hợp' : 'Combined device');
-  const exclusion = getAttrVal(attributes, 'yeu-to-loai-tru') || (language === 'vi' ? 'Không loại trừ' : 'None');
+  const colors = getAttrVal(attributes, 'mau-sac-nhan-hieu') || 'Đen trắng / Màu sắc tự do';
+  const owner = getAttrVal(attributes, 'chu-don-chu-bang') || 'Đang cập nhật';
+  const address = getAttrVal(attributes, 'address') || 'Việt Nam';
+  const templateType = getAttrVal(attributes, 'kieu-cua-mau-nhan-hinh-chu-ket-hop') || 'Chữ & Hình kết hợp';
+  const exclusion = getAttrVal(attributes, 'yeu-to-loai-tru') || 'Không loại trừ';
   const goodsStr = getAttrVal(attributes, 'nhom-san-pham-dich-vu') || 'N/A';
 
   // Extract classes
@@ -256,7 +256,7 @@ export default function TrademarkDetailPage({
           className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 text-xs font-bold cursor-pointer transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          {language === 'vi' ? 'Quay lại Sàn nhãn hiệu' : 'Back to Marketplace'}
+          Quay lại Sàn nhãn hiệu
         </button>
 
         <div className="flex gap-2">
@@ -278,7 +278,7 @@ export default function TrademarkDetailPage({
             <Share2 className="w-4 h-4" />
             {copied && (
               <span className="absolute bottom-full right-1/2 translate-x-1/2 mb-2 bg-slate-900 text-white text-[9px] px-2 py-1 rounded-md whitespace-nowrap">
-                {language === 'vi' ? 'Đã sao chép!' : 'Copied!'}
+                Đã sao chép!
               </span>
             )}
           </button>
@@ -349,19 +349,17 @@ export default function TrademarkDetailPage({
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
                   <span className="bg-blue-600 text-white text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded">
-                    {language === 'vi' ? 'Tự do đăng ký' : 'Free Registration'}
+                    Tự do đăng ký
                   </span>
                   <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">
-                    {language === 'vi' ? 'Quyền sở hữu SHTT' : 'IP Right Status'}
+                    Quyền sở hữu SHTT
                   </span>
                 </div>
                 <strong className="text-xl sm:text-2xl font-sans font-black text-blue-950 block">
-                  {language === 'vi' ? 'Được phép nộp đơn đăng ký mới' : 'Eligible for New Registration'}
+                  Được phép nộp đơn đăng ký mới
                 </strong>
                 <p className="text-slate-600 text-xs mt-1 max-w-lg leading-relaxed font-medium">
-                  {language === 'vi'
-                    ? 'Nhãn hiệu này bị từ chối/hết hạn nên bên sở hữu không còn quyền độc quyền. Do đó không có thỏa thuận chuyển nhượng và bạn có quyền đăng ký mới.'
-                    : 'This trademark is expired or refused, meaning the previous owner has no exclusive right. You are free to register it.'}
+                  Nhãn hiệu này bị từ chối/hết hạn nên bên sở hữu không còn quyền độc quyền. Do đó không có thỏa thuận chuyển nhượng và bạn có quyền đăng ký mới.
                 </p>
               </div>
               <button
@@ -374,14 +372,14 @@ export default function TrademarkDetailPage({
                 className="bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs uppercase px-7 py-4 rounded-xl cursor-pointer transition-all shrink-0 text-center shadow-md shadow-blue-600/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2"
               >
                 <Sparkles className="w-4 h-4 text-amber-300" />
-                {language === 'vi' ? 'Đăng ký nhãn hiệu ngay' : 'Register Trademark Now'}
+                Đăng ký nhãn hiệu ngay
               </button>
             </div>
           ) : (
             <div className="bg-emerald-50/50 border border-emerald-100 rounded-3xl p-6 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
               <div>
                 <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold block mb-1">
-                  {language === 'vi' ? 'Trạng thái pháp lý nhãn hiệu' : 'Trademark Legal Status'}
+                  Trạng thái pháp lý nhãn hiệu
                 </span>
                 {(() => {
                   const statusDisp = getTrademarkStatusDisplay(statusStr, product.progresses, language, filingDate);
@@ -404,7 +402,7 @@ export default function TrademarkDetailPage({
                 }}
                 className="bg-orange-500 hover:bg-orange-600 text-white font-extrabold text-xs uppercase px-6 py-3.5 rounded-xl cursor-pointer transition-colors shrink-0 text-center shadow-md shadow-orange-500/10"
               >
-                {language === 'vi' ? 'Đàm phán mua lại nhãn hiệu' : 'Negotiate Trademark Purchase'}
+                Đàm phán mua lại nhãn hiệu
               </button>
             </div>
           )}
@@ -414,17 +412,13 @@ export default function TrademarkDetailPage({
               <p className="font-bold flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 {isExpiredOrRefusedStatus(statusStr)
-                  ? (language === 'vi' ? 'Tiếp nhận yêu cầu đăng ký thành công!' : 'Registration Request Received Successfully!')
-                  : (language === 'vi' ? 'Gửi yêu cầu đàm phán thành công!' : 'Negotiation Request Sent Successfully!')}
+                  ? 'Tiếp nhận yêu cầu đăng ký thành công!'
+                  : 'Gửi yêu cầu đàm phán thành công!'}
               </p>
               <p className="text-emerald-700">
                 {isExpiredOrRefusedStatus(statusStr)
-                  ? (language === 'vi'
-                      ? 'Chuyên viên sở hữu trí tuệ của Brandix sẽ liên hệ để tư vấn quy trình và hoàn thiện hồ sơ đăng ký nhãn hiệu độc quyền tốc hành cho bạn.'
-                      : 'Our IP attorney will contact you shortly to guide the registration process and prepare fast-track application files.')
-                  : (language === 'vi' 
-                      ? 'Đại diện sở hữu trí tuệ của chúng tôi sẽ liên hệ lại với bạn trong vòng 2 giờ làm việc để hoàn tất thỏa thuận bảo mật SHTT.'
-                      : 'Our IP attorneys will contact you within 2 business hours to complete the secure IP transfer agreement.')}
+                  ? 'Chuyên viên sở hữu trí tuệ của Brandix sẽ liên hệ để tư vấn quy trình và hoàn thiện hồ sơ đăng ký nhãn hiệu độc quyền tốc hành cho bạn.'
+                  : 'Đại diện sở hữu trí tuệ của chúng tôi sẽ liên hệ lại với bạn trong vòng 2 giờ làm việc để hoàn tất thỏa thuận bảo mật SHTT.'}
               </p>
             </div>
           )}
@@ -433,16 +427,16 @@ export default function TrademarkDetailPage({
           {/* Classes & Goods Specification */}
           <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-xs space-y-4">
             <h3 className="font-sans font-bold text-sm text-slate-900 border-b border-slate-100 pb-3 flex items-center justify-between">
-              <span>{language === 'vi' ? 'Phân nhóm hàng hóa & dịch vụ' : 'Nice Classification & Goods'}</span>
+              <span>Phân nhóm hàng hóa & dịch vụ</span>
               <span className="bg-orange-50 text-orange-600 text-[10px] font-black px-2 py-0.5 rounded-full">
-                {language === 'vi' ? `Nhóm ${classesList.join(', ')}` : `Class ${classesList.join(', ')}`}
+                Nhóm {classesList.join(', ')}
               </span>
             </h3>
 
             <div className="text-xs space-y-3">
               <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
                 <strong className="text-slate-800 block mb-1 font-bold">
-                  {language === 'vi' ? 'Danh mục dịch vụ/sản phẩm được bảo hộ độc quyền:' : 'Protected Goods & Services list:'}
+                  Danh mục dịch vụ/sản phẩm được bảo hộ độc quyền:
                 </strong>
                 <p className="text-slate-600 leading-relaxed whitespace-pre-line">
                   {goodsStr}
@@ -466,7 +460,7 @@ export default function TrademarkDetailPage({
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            {language === 'vi' ? 'Lịch sử' : 'Transaction History'}
+            Lịch sử
           </button>
           <button
             onClick={() => setActiveTab('owner')}
@@ -476,7 +470,7 @@ export default function TrademarkDetailPage({
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            {language === 'vi' ? 'Cùng chủ đơn' : 'Same Applicant'}
+            Cùng chủ đơn
           </button>
         </div>
 
@@ -484,12 +478,12 @@ export default function TrademarkDetailPage({
         {activeTab === 'history' && (
           <div className="space-y-6">
             <div className="text-xs text-slate-500 font-medium">
-              {language === 'vi' ? 'Tổng số giao dịch:' : 'Total transactions:'} <span className="font-bold text-slate-800">{product.progresses?.length || 0}</span>
+              Tổng số giao dịch: <span className="font-bold text-slate-800">{product.progresses?.length || 0}</span>
             </div>
 
             {(!product.progresses || product.progresses.length === 0) ? (
               <p className="text-slate-400 text-xs italic">
-                {language === 'vi' ? 'Chưa có thông tin lịch sử tiến trình đơn.' : 'No application history available.'}
+                Chưa có thông tin lịch sử tiến trình đơn.
               </p>
             ) : (
               <div className="relative pl-4 space-y-6">
@@ -524,19 +518,17 @@ export default function TrademarkDetailPage({
             {isOwnerLoading ? (
               <div className="flex flex-col items-center justify-center py-10">
                 <div className="w-8 h-8 border-3 border-orange-500 border-t-transparent rounded-full animate-spin mb-2"></div>
-                <p className="text-slate-400 text-xs">{language === 'vi' ? 'Đang tải dữ liệu...' : 'Loading...'}</p>
+                <p className="text-slate-400 text-xs">Đang tải dữ liệu...</p>
               </div>
             ) : ownerTrademarks.length === 0 ? (
               <p className="text-slate-400 text-xs italic">
-                {language === 'vi' ? 'Không tìm thấy nhãn hiệu khác từ cùng chủ đơn này.' : 'No other trademarks found from this applicant.'}
+                Không tìm thấy nhãn hiệu khác từ cùng chủ đơn này.
               </p>
             ) : (
               <>
                 {/* Header matching image */}
                 <div className="text-sm font-semibold text-slate-500 mb-2">
-                  {language === 'vi' 
-                    ? `Tìm thấy ${ownerTrademarks.length} nhãn hiệu cùng chủ đơn`
-                    : `Found ${ownerTrademarks.length} trademarks from the same applicant`}
+                  Tìm thấy {ownerTrademarks.length} nhãn hiệu cùng chủ đơn
                 </div>
 
                 <div className="space-y-4">

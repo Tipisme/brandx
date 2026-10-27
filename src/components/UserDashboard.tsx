@@ -228,7 +228,7 @@ export default function UserDashboard({
       fullName: computedName,
       email: u?.email || 'ndmanh1305@gmail.com',
       phone: u?.phone || u?.company?.phone || '030500455',
-      role: language === 'vi' ? 'Quản trị viên / Chủ sở hữu' : 'Administrator / Owner',
+      role: 'Quản trị viên / Chủ sở hữu',
       companyName: u?.companyName || u?.company?.name || u?.company || '',
       address: u?.address || u?.company?.address || '',
       taxCode: u?.taxCode || u?.company?.tax_code || u?.company?.taxCode || '',
@@ -354,7 +354,7 @@ export default function UserDashboard({
 
         setUpdateStatus({
           type: 'success',
-          text: language === 'vi' ? 'Cập nhật hồ sơ doanh nghiệp thành công!' : 'Enterprise profile updated successfully!'
+          text: 'Cập nhật hồ sơ doanh nghiệp thành công!'
         });
 
         setTimeout(() => {
@@ -363,7 +363,7 @@ export default function UserDashboard({
       } else {
         const errorJson = await response.json().catch(() => ({}));
         console.error('Failed to update info via API:', errorJson);
-        const errorMsg = errorJson?.message || errorJson?.error || (language === 'vi' ? 'Cập nhật không thành công từ máy chủ.' : 'Failed to update profile info from server.');
+        const errorMsg = errorJson?.message || errorJson?.error || ('Cập nhật không thành công từ máy chủ.');
         setUpdateStatus({
           type: 'error',
           text: errorMsg
@@ -383,7 +383,7 @@ export default function UserDashboard({
       }));
       setUpdateStatus({
         type: 'success',
-        text: language === 'vi' ? 'Lưu thành công (chế độ offline/máy chủ bận).' : 'Updated successfully (offline mode/server busy).'
+        text: 'Lưu thành công (chế độ offline/máy chủ bận).'
       });
       setTimeout(() => {
         setIsUpdateInfoModalOpen(false);
@@ -613,7 +613,7 @@ export default function UserDashboard({
       logoText: newTmName.slice(0, 3).toUpperCase(),
       logoBg: newTmType === 'cert' ? 'from-emerald-600 to-teal-700' : 'from-blue-500 to-indigo-600',
       classes: classNumbers.length > 0 ? classNumbers : [30],
-      goodsDescription: newTmDesc || (language === 'vi' ? 'Dịch vụ và hàng hóa liên quan đến nhãn hiệu.' : 'Goods and services associated with the brand.'),
+      goodsDescription: newTmDesc || ('Dịch vụ và hàng hóa liên quan đến nhãn hiệu.'),
       price: parseInt(newTmPrice) || 120000000,
       status: 'available',
       applicationNo: newTmAppNo || `4-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`,
@@ -712,7 +712,7 @@ export default function UserDashboard({
   };
 
   const handleDeleteTrademark = (id: string) => {
-    if (confirm(language === 'vi' ? 'Bạn có chắc chắn muốn xóa nhãn hiệu này?' : 'Are you sure you want to delete this trademark?')) {
+    if (confirm('Bạn có chắc chắn muốn xóa nhãn hiệu này?')) {
       setMyTrademarks(myTrademarks.filter(t => t.id !== id));
     }
   };
@@ -1014,10 +1014,10 @@ export default function UserDashboard({
       return String((item.status as any).name);
     }
     const s = (typeof item.status === 'string' ? item.status : '').toLowerCase().trim();
-    if (s === 'pending') return language === 'vi' ? 'Chờ xử lý' : 'Pending';
-    if (['doing', 'in_progress', 'active', 'processing'].includes(s)) return language === 'vi' ? 'Đang xử lý' : 'Doing';
-    if (['approved', 'completed', 'success', 'done'].includes(s)) return language === 'vi' ? 'Đã phê duyệt' : 'Approved';
-    if (['rejected', 'declined', 'cancelled', 'failed'].includes(s)) return language === 'vi' ? 'Từ chối' : 'Rejected';
+    if (s === 'pending') return 'Chờ xử lý';
+    if (['doing', 'in_progress', 'active', 'processing'].includes(s)) return 'Đang xử lý';
+    if (['approved', 'completed', 'success', 'done'].includes(s)) return 'Đã phê duyệt';
+    if (['rejected', 'declined', 'cancelled', 'failed'].includes(s)) return 'Từ chối';
     return String(item.status || 'N/A');
   };
 
@@ -1090,7 +1090,7 @@ export default function UserDashboard({
   const handleCreateRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newRequestDesc.trim()) {
-      setRequestSubmitError(language === 'vi' ? 'Vui lòng nhập mô tả chi tiết yêu cầu.' : 'Please enter request description.');
+      setRequestSubmitError('Vui lòng nhập mô tả chi tiết yêu cầu.');
       return;
     }
 
@@ -1157,7 +1157,7 @@ export default function UserDashboard({
           name: payload.name,
           description: payload.description,
           status: 'pending',
-          status_name: language === 'vi' ? 'Chờ xử lý' : 'Pending',
+          status_name: 'Chờ xử lý',
           type: 'Yêu cầu hỗ trợ SHTT',
           category: 'Tư vấn SHTT',
           created_at: new Date().toISOString(),
@@ -1180,7 +1180,7 @@ export default function UserDashboard({
       setRequestsPage(1);
       await fetchRequestsList(1, activeRequestFilter);
     } else {
-      setRequestSubmitError(apiErrorMessage || (language === 'vi' ? 'Không thể gửi yêu cầu lúc này. Vui lòng thử lại.' : 'Failed to submit request. Please try again.'));
+      setRequestSubmitError(apiErrorMessage || ('Không thể gửi yêu cầu lúc này. Vui lòng thử lại.'));
     }
   };
 
@@ -1205,9 +1205,7 @@ export default function UserDashboard({
 
     // Simulate expert auto reply after 1.5 seconds
     setTimeout(() => {
-      const replyText = language === 'vi' 
-        ? "Cảm ơn anh Mạnh, tôi đã nhận được thông tin. Tôi sẽ làm việc với các bên liên quan và phản hồi anh ngay khi có kết quả."
-        : "Thank you, I have received your message. I am working on this with our team and will update you shortly.";
+      const replyText = "Cảm ơn anh Mạnh, tôi đã nhận được thông tin. Tôi sẽ làm việc với các bên liên quan và phản hồi anh ngay khi có kết quả.";
       
       const responseMessages = [
         ...updatedMessages,
@@ -1229,7 +1227,7 @@ export default function UserDashboard({
   const [folders, setFolders] = useState<DirectoryFolder[]>([
     {
       id: 'folder-1',
-      name: language === 'vi' ? 'Giấy chứng nhận & Văn bằng bảo hộ' : 'IP Certificates & Patents',
+      name: 'Giấy chứng nhận & Văn bằng bảo hộ',
       updatedAt: '20/04/2026',
       files: [
         { id: 'f-1', name: 'Giay_chung_nhan_HDS_nhom_30.pdf', size: '2.4 MB', uploadDate: '18/04/2026' },
@@ -1238,7 +1236,7 @@ export default function UserDashboard({
     },
     {
       id: 'folder-2',
-      name: language === 'vi' ? 'Hồ sơ pháp lý doanh nghiệp' : 'Corporate Legal Documents',
+      name: 'Hồ sơ pháp lý doanh nghiệp',
       updatedAt: '12/04/2026',
       files: [
         { id: 'f-3', name: 'Dang_ky_kinh_doanh_HDS_Group.pdf', size: '3.1 MB', uploadDate: '12/04/2026' }
@@ -1246,7 +1244,7 @@ export default function UserDashboard({
     },
     {
       id: 'folder-3',
-      name: language === 'vi' ? 'Hợp đồng chuyển nhượng mẫu' : 'Trademark Transfer Agreements',
+      name: 'Hợp đồng chuyển nhượng mẫu',
       updatedAt: '20/04/2026',
       files: []
     }
@@ -1385,7 +1383,7 @@ export default function UserDashboard({
 
     const token = user?.token || localStorage.getItem('brandhub_token');
     if (!token) {
-      alert(language === 'vi' ? 'Bạn cần đăng nhập để gắn liên kết.' : 'You must be logged in to attach a link.');
+      alert('Bạn cần đăng nhập để gắn liên kết.');
       return;
     }
 
@@ -1406,7 +1404,7 @@ export default function UserDashboard({
       });
 
       if (response.ok) {
-        alert(language === 'vi' ? 'Gắn liên kết thành công!' : 'Link attached successfully!');
+        alert('Gắn liên kết thành công!');
         setIsLinkModalOpen(false);
         setLinkName('');
         setLinkPath('');
@@ -1421,9 +1419,7 @@ export default function UserDashboard({
         }
       } else {
         const errorJson = await response.json().catch(() => ({}));
-        alert(language === 'vi' 
-          ? `Gắn liên kết thất bại: ${errorJson.message || 'Lỗi hệ thống'}` 
-          : `Failed to attach link: ${errorJson.message || 'Server error'}`
+        alert(`Gắn liên kết thất bại: ${errorJson.message || 'Lỗi hệ thống'}`
         );
       }
     } catch (err) {
@@ -1450,7 +1446,7 @@ export default function UserDashboard({
       setIsLinkModalOpen(false);
       setLinkName('');
       setLinkPath('');
-      alert(language === 'vi' ? 'Gắn liên kết cục bộ (chế độ offline).' : 'Link attached locally (offline mode).');
+      alert('Gắn liên kết cục bộ (chế độ offline).');
     } finally {
       setIsSubmittingLink(false);
     }
@@ -1458,15 +1454,13 @@ export default function UserDashboard({
 
   const handleDeleteLink = async (folderId: string, linkId: string) => {
     const confirmDelete = window.confirm(
-      language === 'vi' 
-        ? 'Bạn có chắc chắn muốn xóa liên kết này?' 
-        : 'Are you sure you want to delete this link?'
+      'Bạn có chắc chắn muốn xóa liên kết này?'
     );
     if (!confirmDelete) return;
 
     const token = user?.token || localStorage.getItem('brandhub_token');
     if (!token) {
-      alert(language === 'vi' ? 'Bạn cần đăng nhập.' : 'You must be logged in.');
+      alert('Bạn cần đăng nhập.');
       return;
     }
 
@@ -1480,7 +1474,7 @@ export default function UserDashboard({
       });
 
       if (response.ok) {
-        alert(language === 'vi' ? 'Xóa liên kết thành công!' : 'Link deleted successfully!');
+        alert('Xóa liên kết thành công!');
         await fetchFolderDetails(folderId);
         const folderObj = folders.find(f => f.id === folderId);
         if (folderObj && folderObj.parent_id) {
@@ -1488,9 +1482,7 @@ export default function UserDashboard({
         }
       } else {
         const errorJson = await response.json().catch(() => ({}));
-        alert(language === 'vi'
-          ? `Xóa liên kết thất bại: ${errorJson.message || 'Lỗi hệ thống'}`
-          : `Failed to delete link: ${errorJson.message || 'Server error'}`
+        alert(`Xóa liên kết thất bại: ${errorJson.message || 'Lỗi hệ thống'}`
         );
       }
     } catch (err) {
@@ -1505,7 +1497,7 @@ export default function UserDashboard({
         }
         return f;
       }));
-      alert(language === 'vi' ? 'Xóa liên kết cục bộ (chế độ offline).' : 'Link deleted locally (offline mode).');
+      alert('Xóa liên kết cục bộ (chế độ offline).');
     }
   };
 
@@ -1594,7 +1586,7 @@ export default function UserDashboard({
 
     const token = user?.token || localStorage.getItem('brandhub_token');
     if (!token) {
-      alert(language === 'vi' ? 'Bạn cần đăng nhập để tạo thư mục.' : 'You must be logged in to create a folder.');
+      alert('Bạn cần đăng nhập để tạo thư mục.');
       return;
     }
 
@@ -1619,7 +1611,7 @@ export default function UserDashboard({
       });
 
       if (response.ok) {
-        alert(language === 'vi' ? 'Tạo thư mục thành công!' : 'Folder created successfully!');
+        alert('Tạo thư mục thành công!');
         setIsNewFolderModalOpen(false);
         setNewFolderName('');
         const parentId = newFolderParentId;
@@ -1643,7 +1635,7 @@ export default function UserDashboard({
         }
       } else {
         const errorJson = await response.json().catch(() => ({}));
-        const msg = errorJson?.message || errorJson?.error || (language === 'vi' ? 'Không thể tạo thư mục từ máy chủ.' : 'Failed to create folder on server.');
+        const msg = errorJson?.message || errorJson?.error || ('Không thể tạo thư mục từ máy chủ.');
         alert(msg);
       }
     } catch (err) {
@@ -1666,7 +1658,7 @@ export default function UserDashboard({
       setNewFolderName('');
       setNewFolderParentId('');
       setNewFolderFiles([]);
-      alert(language === 'vi' ? 'Lưu thư mục cục bộ (chế độ offline).' : 'Folder created locally (offline mode).');
+      alert('Lưu thư mục cục bộ (chế độ offline).');
     } finally {
       setIsSubmittingUpdateInfo(false);
     }
@@ -1700,7 +1692,7 @@ export default function UserDashboard({
       });
 
       if (response.ok) {
-        alert(language === 'vi' ? 'Cập nhật thư mục thành công!' : 'Folder updated successfully!');
+        alert('Cập nhật thư mục thành công!');
         setIsEditingFolder(null);
         setEditFolderName('');
         const parentId = editFolderParentId;
@@ -1718,7 +1710,7 @@ export default function UserDashboard({
         }
       } else {
         const errorJson = await response.json().catch(() => ({}));
-        const msg = errorJson?.message || errorJson?.error || (language === 'vi' ? 'Cập nhật thư mục thất bại.' : 'Failed to update folder.');
+        const msg = errorJson?.message || errorJson?.error || ('Cập nhật thư mục thất bại.');
         alert(msg);
       }
     } catch (err) {
@@ -1743,20 +1735,20 @@ export default function UserDashboard({
       setEditFolderName('');
       setEditFolderParentId('');
       setEditFolderFiles([]);
-      alert(language === 'vi' ? 'Cập nhật cục bộ (chế độ offline).' : 'Updated locally (offline mode).');
+      alert('Cập nhật cục bộ (chế độ offline).');
     } finally {
       setIsSubmittingUpdateInfo(false);
     }
   };
 
   const handleRealDeleteFolder = async (folderId: string) => {
-    if (!confirm(language === 'vi' ? 'Bạn có chắc chắn muốn xóa thư mục này?' : 'Are you sure you want to delete this folder?')) {
+    if (!confirm('Bạn có chắc chắn muốn xóa thư mục này?')) {
       return;
     }
 
     const token = user?.token || localStorage.getItem('brandhub_token');
     if (!token) {
-      alert(language === 'vi' ? 'Bạn cần đăng nhập để thực hiện tác vụ này.' : 'You must be logged in to perform this action.');
+      alert('Bạn cần đăng nhập để thực hiện tác vụ này.');
       return;
     }
 
@@ -1770,7 +1762,7 @@ export default function UserDashboard({
       });
 
       if (response.ok) {
-        alert(language === 'vi' ? 'Xóa thư mục thành công!' : 'Folder deleted successfully!');
+        alert('Xóa thư mục thành công!');
         const folderObj = folders.find(f => f.id === folderId);
         setFolders(prev => prev.filter(f => f.id !== folderId));
         if (folderObj && folderObj.parent_id) {
@@ -1780,12 +1772,12 @@ export default function UserDashboard({
         }
       } else {
         const errorJson = await response.json().catch(() => ({}));
-        const msg = errorJson?.message || errorJson?.error || (language === 'vi' ? 'Xóa thư mục thất bại.' : 'Failed to delete folder.');
+        const msg = errorJson?.message || errorJson?.error || ('Xóa thư mục thất bại.');
         alert(msg);
       }
     } catch (err) {
       console.error('Failed to delete folder:', err);
-      alert(language === 'vi' ? 'Có lỗi xảy ra khi xóa thư mục.' : 'An error occurred during folder deletion.');
+      alert('Có lỗi xảy ra khi xóa thư mục.');
     }
   };
 
@@ -1806,7 +1798,7 @@ export default function UserDashboard({
     if (!token) return;
 
     const fileNames = files.map(f => f.name).join(', ');
-    alert(language === 'vi' ? `Đang tải lên ${files.length} tệp: ${fileNames}...` : `Uploading ${files.length} files: ${fileNames}...`);
+    alert(`Đang tải lên ${files.length} tệp: ${fileNames}...`);
 
     try {
       const formData = new FormData();
@@ -1826,7 +1818,7 @@ export default function UserDashboard({
       });
 
       if (response.ok) {
-        alert(language === 'vi' ? 'Tải tệp lên thành công!' : 'Files uploaded successfully!');
+        alert('Tải tệp lên thành công!');
         setExpandedFolders(prev => ({
           ...prev,
           [folder.id]: true
@@ -1837,23 +1829,23 @@ export default function UserDashboard({
         }
       } else {
         const errorJson = await response.json().catch(() => ({}));
-        const msg = errorJson?.message || errorJson?.error || (language === 'vi' ? 'Tải tệp lên thất bại.' : 'Failed to upload files.');
+        const msg = errorJson?.message || errorJson?.error || ('Tải tệp lên thất bại.');
         alert(msg);
       }
     } catch (err) {
       console.error('File upload error:', err);
-      alert(language === 'vi' ? 'Có lỗi xảy ra khi tải tệp lên.' : 'An error occurred during file upload.');
+      alert('Có lỗi xảy ra khi tải tệp lên.');
     }
   };
 
   const handleDeleteFile = async (folderId: string, fileId: string) => {
-    if (!confirm(language === 'vi' ? 'Bạn có chắc chắn muốn xóa tệp tài liệu này?' : 'Delete this document file?')) {
+    if (!confirm('Bạn có chắc chắn muốn xóa tệp tài liệu này?')) {
       return;
     }
 
     const token = user?.token || localStorage.getItem('brandhub_token');
     if (!token) {
-      alert(language === 'vi' ? 'Bạn cần đăng nhập.' : 'You must be logged in.');
+      alert('Bạn cần đăng nhập.');
       return;
     }
 
@@ -1867,7 +1859,7 @@ export default function UserDashboard({
       });
 
       if (response.ok) {
-        alert(language === 'vi' ? 'Xóa tệp tin thành công!' : 'File deleted successfully!');
+        alert('Xóa tệp tin thành công!');
         await fetchFolderDetails(folderId);
         const folderObj = folders.find(f => f.id === folderId);
         if (folderObj && folderObj.parent_id) {
@@ -1875,7 +1867,7 @@ export default function UserDashboard({
         }
       } else {
         const errorJson = await response.json().catch(() => ({}));
-        const msg = errorJson?.message || errorJson?.error || (language === 'vi' ? 'Xóa tệp tin thất bại.' : 'Failed to delete file.');
+        const msg = errorJson?.message || errorJson?.error || ('Xóa tệp tin thất bại.');
         alert(msg);
       }
     } catch (err) {
@@ -1889,7 +1881,7 @@ export default function UserDashboard({
         }
         return f;
       }));
-      alert(language === 'vi' ? 'Xóa tệp cục bộ (chế độ offline).' : 'File deleted locally (offline mode).');
+      alert('Xóa tệp cục bộ (chế độ offline).');
     }
   };
 
@@ -1921,7 +1913,7 @@ export default function UserDashboard({
         <div className="flex items-center gap-3">
           <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
           <span className="text-xs font-bold text-slate-700">
-            {language === 'vi' ? `Cổng quản trị cá nhân: ${profile.fullName}` : `Personal Portal: ${profile.fullName}`}
+            {`Cổng quản trị cá nhân: ${profile.fullName}`}
           </span>
         </div>
         <button
@@ -1929,7 +1921,7 @@ export default function UserDashboard({
           className="text-xs bg-orange-500 hover:bg-orange-600 text-white font-extrabold uppercase px-4 py-2 rounded-xl cursor-pointer transition-colors flex items-center gap-1.5"
         >
           <Award className="w-3.5 h-3.5" />
-          {language === 'vi' ? 'Quay lại Sàn Giao Dịch' : 'Back to Marketplace'}
+          {'Quay lại Sàn Giao Dịch'}
         </button>
       </div>
 
@@ -1971,7 +1963,7 @@ export default function UserDashboard({
                 }`}
               >
                 <User className="w-4 h-4" />
-                {language === 'vi' ? 'Cá nhân và tổ chức' : 'Personal & Org'}
+                {'Cá nhân và tổ chức'}
               </a>
 
               <a
@@ -1982,7 +1974,7 @@ export default function UserDashboard({
                 }`}
               >
                 <Award className="w-4 h-4" />
-                {language === 'vi' ? 'Quản lý tài sản' : 'Asset Management'}
+                {'Quản lý tài sản'}
               </a>
 
               <a
@@ -1993,7 +1985,7 @@ export default function UserDashboard({
                 }`}
               >
                 <Briefcase className="w-4 h-4" />
-                {language === 'vi' ? 'Quản lý yêu cầu' : 'Request Management'}
+                {'Quản lý yêu cầu'}
               </a>
 
               <a
@@ -2004,7 +1996,7 @@ export default function UserDashboard({
                 }`}
               >
                 <Folder className="w-4 h-4" />
-                {language === 'vi' ? 'Quản lý file' : 'File Manager'}
+                {'Quản lý file'}
               </a>
 
               {isPartner && (
@@ -2016,7 +2008,7 @@ export default function UserDashboard({
                   }`}
                 >
                   <Coins className="w-4 h-4" />
-                  {language === 'vi' ? 'Hoa hồng của tôi' : 'My Commissions'}
+                  {'Hoa hồng của tôi'}
                 </a>
               )}
             </div>
@@ -2032,7 +2024,7 @@ export default function UserDashboard({
               }`}
             >
               <Settings className="w-4 h-4" />
-              {language === 'vi' ? 'Cài đặt' : 'Settings'}
+              {'Cài đặt'}
             </a>
 
             <a
@@ -2043,7 +2035,7 @@ export default function UserDashboard({
               }`}
             >
               <HelpCircle className="w-4 h-4" />
-              {language === 'vi' ? 'Hỗ trợ' : 'Support Help'}
+              {'Hỗ trợ'}
             </a>
 
             <button
@@ -2051,7 +2043,7 @@ export default function UserDashboard({
               className="w-full text-left px-4 py-2.5 rounded-xl text-[11px] font-bold text-rose-500 hover:bg-rose-50 transition-all flex items-center gap-2.5 cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
-              {language === 'vi' ? 'Thoát tài khoản' : 'Logout'}
+              {'Thoát tài khoản'}
             </button>
           </div>
         </div>
@@ -2070,22 +2062,22 @@ export default function UserDashboard({
                 
                 <div className="relative z-10">
                   <h3 className="font-sans font-black text-2xl sm:text-3xl text-white tracking-wide">
-                    {profile.companyName ? profile.companyName : (language === 'vi' ? 'Chưa cập nhật doanh nghiệp' : 'No enterprise linked')}
+                    {profile.companyName ? profile.companyName : ('Chưa cập nhật doanh nghiệp')}
                   </h3>
                   {profile.companyName ? (
                     <p className="text-orange-400 font-bold text-xs mt-1">
-                      {language === 'vi' ? 'Hồ sơ doanh nghiệp sở hữu trí tuệ' : 'Enterprise Intellectual Property Account'}
+                      {'Hồ sơ doanh nghiệp sở hữu trí tuệ'}
                     </p>
                   ) : (
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-2">
                       <p className="text-slate-400 font-bold text-xs">
-                        {language === 'vi' ? 'Bạn đang sử dụng tài khoản cá nhân.' : 'You are currently using a personal account.'}
+                        {'Bạn đang sử dụng tài khoản cá nhân.'}
                       </p>
                       <button
                         onClick={openUpdateInfoModal}
                         className="bg-orange-500 hover:bg-orange-600 text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-lg cursor-pointer transition-all shadow-xs"
                       >
-                        {language === 'vi' ? 'Khai báo doanh nghiệp' : 'Link Enterprise'}
+                        {'Khai báo doanh nghiệp'}
                       </button>
                     </div>
                   )}
@@ -2109,13 +2101,13 @@ export default function UserDashboard({
                     <div className="flex items-center gap-2.5 mb-5">
                       <User className="w-4 h-4 text-orange-500" />
                       <h4 className="font-sans font-black text-sm text-slate-800 uppercase tracking-wide">
-                        {language === 'vi' ? 'Thông tin cá nhân' : 'Personal Information'}
+                        {'Thông tin cá nhân'}
                       </h4>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs">
                       <div>
-                        <label className="text-xs font-bold text-slate-700 block mb-2">{language === 'vi' ? 'Họ và tên' : 'Full Name'}</label>
+                        <label className="text-xs font-bold text-slate-700 block mb-2">{'Họ và tên'}</label>
                         <div className="w-full bg-[#FFE9DF]/50 border-0 rounded-2xl px-4 py-3 text-xs text-slate-800 font-semibold shadow-xs">
                           {profile.fullName}
                         </div>
@@ -2127,17 +2119,17 @@ export default function UserDashboard({
                         </div>
                       </div>
                       <div>
-                        <label className="text-xs font-bold text-slate-700 block mb-2">{language === 'vi' ? 'Số điện thoại' : 'Phone'}</label>
+                        <label className="text-xs font-bold text-slate-700 block mb-2">{'Số điện thoại'}</label>
                         <div className="w-full bg-[#FFE9DF]/50 border-0 rounded-2xl px-4 py-3 text-xs text-slate-800 font-semibold shadow-xs">
                           {profile.phone}
                         </div>
                       </div>
                       <div>
                         <label className="text-xs font-bold text-slate-700 block mb-2">
-                          {language === 'vi' ? 'Số CCCD Người đại diện pháp luật' : 'Representative ID'}
+                          {'Số CCCD Người đại diện pháp luật'}
                         </label>
                         <div className={`w-full border-0 rounded-2xl px-4 py-3 text-xs font-semibold shadow-xs ${profile.citizenId ? 'bg-[#FFE9DF]/50 text-slate-800' : 'bg-slate-100 text-slate-400 italic'}`}>
-                          {profile.citizenId || (language === 'vi' ? 'Chưa cập nhật' : 'Not updated yet')}
+                          {profile.citizenId || ('Chưa cập nhật')}
                         </div>
                       </div>
                     </div>
@@ -2148,41 +2140,41 @@ export default function UserDashboard({
                     <div className="flex items-center gap-2.5 mb-5">
                       <Briefcase className="w-4 h-4 text-orange-500" />
                       <h4 className="font-sans font-black text-sm text-slate-800 uppercase tracking-wide">
-                        {language === 'vi' ? 'Thông tin tổ chức' : 'Organization Details'}
+                        {'Thông tin tổ chức'}
                       </h4>
                     </div>
 
                     <div className="space-y-4 text-xs">
                       <div>
-                        <label className="text-xs font-bold text-slate-700 block mb-2">{language === 'vi' ? 'Tên công ty / tổ chức' : 'Company / Org Name'}</label>
+                        <label className="text-xs font-bold text-slate-700 block mb-2">{'Tên công ty / tổ chức'}</label>
                         <div className={`w-full border-0 rounded-2xl px-4 py-3 text-xs font-semibold shadow-xs ${profile.companyName ? 'bg-[#FFE9DF]/50 text-slate-800' : 'bg-slate-100 text-slate-400 italic'}`}>
-                          {profile.companyName || (language === 'vi' ? 'Chưa cập nhật tên công ty / tổ chức' : 'Company / organization name not updated')}
+                          {profile.companyName || ('Chưa cập nhật tên công ty / tổ chức')}
                         </div>
                       </div>
                       
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="text-xs font-bold text-slate-700 block mb-2">{language === 'vi' ? 'Loại hình kinh doanh' : 'Business Entity Type'}</label>
+                          <label className="text-xs font-bold text-slate-700 block mb-2">{'Loại hình kinh doanh'}</label>
                           <div className="w-full bg-[#FFE9DF]/50 border-0 rounded-2xl px-4 py-3 text-xs text-slate-800 font-semibold shadow-xs">
                             {profile.businessType || 'Công ty cổ phần'}
                           </div>
                         </div>
                         <div>
-                          <label className="text-xs font-bold text-slate-700 block mb-2">{language === 'vi' ? 'Mã số thuế' : 'Tax Code'}</label>
+                          <label className="text-xs font-bold text-slate-700 block mb-2">{'Mã số thuế'}</label>
                           <div className={`w-full border-0 rounded-2xl px-4 py-3 text-xs font-semibold shadow-xs ${profile.taxCode ? 'bg-[#FFE9DF]/50 text-slate-800' : 'bg-slate-100 text-slate-400 italic'}`}>
-                            {profile.taxCode || (language === 'vi' ? 'Chưa cập nhật' : 'Not updated yet')}
+                            {profile.taxCode || ('Chưa cập nhật')}
                           </div>
                         </div>
                       </div>
 
                       <div>
-                        <label className="text-xs font-bold text-slate-700 block mb-2">{language === 'vi' ? 'Địa chỉ trụ sở' : 'HQ Address'}</label>
+                        <label className="text-xs font-bold text-slate-700 block mb-2">{'Địa chỉ trụ sở'}</label>
                         <div className={`w-full border-0 rounded-2xl px-4 py-3 text-xs font-semibold shadow-xs ${profile.address ? 'bg-[#FFE9DF]/50 text-slate-800' : 'bg-slate-100 text-slate-400 italic'}`}>
-                          {profile.address || (language === 'vi' ? 'Chưa cập nhật địa chỉ trụ sở' : 'HQ address not updated')}
+                          {profile.address || ('Chưa cập nhật địa chỉ trụ sở')}
                         </div>
                       </div>
                       <div>
-                        <label className="text-xs font-bold text-slate-700 block mb-2">{language === 'vi' ? 'Danh sách file' : 'File List'}</label>
+                        <label className="text-xs font-bold text-slate-700 block mb-2">{'Danh sách file'}</label>
                         <div className="text-xs text-slate-500 pl-1">
                           {profile.uploadedFiles && profile.uploadedFiles.length > 0 ? (
                             <div className="space-y-1.5 mt-1">
@@ -2219,7 +2211,7 @@ export default function UserDashboard({
                               })}
                             </div>
                           ) : (
-                            <span className="italic text-slate-400">{language === 'vi' ? 'Chưa có file nào' : 'No files uploaded'}</span>
+                            <span className="italic text-slate-400">{'Chưa có file nào'}</span>
                           )}
                         </div>
                       </div>
@@ -2233,31 +2225,27 @@ export default function UserDashboard({
                   {/* Widget 1: Profile Completeness status */}
                   <div className="border border-slate-100 rounded-2xl p-5 bg-gradient-to-br from-slate-50 to-orange-50/10">
                     <h5 className="font-sans font-extrabold text-xs text-slate-800 uppercase tracking-wider mb-3">
-                      {language === 'vi' ? 'Trạng thái hồ sơ' : 'Profile Status'}
+                      {'Trạng thái hồ sơ'}
                     </h5>
                     
                     <div className="flex items-center gap-2 mb-4">
                       {isProfileComplete ? (
                         <div className="inline-flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-600 px-3 py-1.5 rounded-full text-xs font-bold">
                           <CheckCircle className="w-4 h-4" />
-                          <span>{language === 'vi' ? 'Đủ hồ sơ' : 'Complete Profile'}</span>
+                          <span>{'Đủ hồ sơ'}</span>
                         </div>
                       ) : (
                         <div className="inline-flex items-center gap-1.5 bg-rose-50 border border-rose-200 text-rose-600 px-3 py-1.5 rounded-full text-xs font-bold">
                           <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
-                          <span>{language === 'vi' ? 'Chưa đủ hồ sơ' : 'Incomplete Profile'}</span>
+                          <span>{'Chưa đủ hồ sơ'}</span>
                         </div>
                       )}
                     </div>
 
                     <p className="text-[10px] text-slate-500 leading-relaxed mb-4">
                       {isProfileComplete 
-                        ? (language === 'vi' 
-                            ? 'Chúc mừng! Hồ sơ doanh nghiệp của bạn đã đầy đủ thông tin pháp lý phục vụ việc xác thực và liên kết.' 
-                            : 'Congratulations! Your enterprise profile contains all required legal details.')
-                        : (language === 'vi' 
-                            ? 'Hồ sơ của bạn hiện đang thiếu Mã số thuế và Số CCCD của người đại diện pháp lý.' 
-                            : 'Your profile is currently missing Tax Code and Legal Representative ID.')}
+                        ? ('Chúc mừng! Hồ sơ doanh nghiệp của bạn đã đầy đủ thông tin pháp lý phục vụ việc xác thực và liên kết.')
+                        : ('Hồ sơ của bạn hiện đang thiếu Mã số thuế và Số CCCD của người đại diện pháp lý.')}
                     </p>
 
                     {!isProfileComplete ? (
@@ -2265,14 +2253,14 @@ export default function UserDashboard({
                         onClick={openUpdateInfoModal}
                         className="w-full bg-orange-500 hover:bg-orange-600 text-white text-[11px] font-extrabold uppercase py-2.5 rounded-xl cursor-pointer transition-colors shadow-xs"
                       >
-                        {language === 'vi' ? 'Bổ sung ngay' : 'Supplement Now'}
+                        {'Bổ sung ngay'}
                       </button>
                     ) : (
                       <button
                         onClick={openUpdateInfoModal}
                         className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-extrabold uppercase py-2.5 rounded-xl cursor-pointer transition-colors"
                       >
-                        {language === 'vi' ? 'Cập nhật lại' : 'Update Info'}
+                        {'Cập nhật lại'}
                       </button>
                     )}
                   </div>
@@ -2282,14 +2270,12 @@ export default function UserDashboard({
                     <div className="flex items-center gap-2 mb-3">
                       <ShieldCheck className="w-5 h-5 text-blue-500" />
                       <h5 className="font-sans font-extrabold text-xs text-slate-800 uppercase tracking-wider">
-                        {language === 'vi' ? 'Bảo mật tài khoản' : 'Security Settings'}
+                        {'Bảo mật tài khoản'}
                       </h5>
                     </div>
 
                     <p className="text-[10px] text-slate-500 leading-relaxed mb-4">
-                      {language === 'vi'
-                        ? 'Xác thực tài khoản qua OTP SMS / Email để bảo vệ quyền sở hữu danh mục nhãn hiệu trị giá cao của bạn.'
-                        : 'Enable SMS / Email OTP authentication to safeguard your highly valued trademark ownership assets.'}
+                      {'Xác thực tài khoản qua OTP SMS / Email để bảo vệ quyền sở hữu danh mục nhãn hiệu trị giá cao của bạn.'}
                     </p>
 
                     <div className="flex items-center justify-between p-2.5 bg-white border border-slate-100 rounded-xl text-xs font-bold mb-4">
@@ -2307,11 +2293,11 @@ export default function UserDashboard({
                     <button
                       onClick={() => {
                         setIs2FAEnabled(!is2FAEnabled);
-                        alert(language === 'vi' ? 'Đã cập nhật trạng thái cài đặt bảo mật!' : 'Security settings updated!');
+                        alert('Đã cập nhật trạng thái cài đặt bảo mật!');
                       }}
                       className="w-full border border-blue-200 hover:bg-blue-50 text-blue-600 text-[11px] font-extrabold uppercase py-2.5 rounded-xl cursor-pointer transition-colors"
                     >
-                      {is2FAEnabled ? (language === 'vi' ? 'Tắt xác thực 2 lớp' : 'Disable 2FA') : (language === 'vi' ? 'Kích hoạt ngay' : 'Enable Security')}
+                      {is2FAEnabled ? ('Tắt xác thực 2 lớp') : ('Kích hoạt ngay')}
                     </button>
                   </div>
                 </div>
@@ -2326,10 +2312,10 @@ export default function UserDashboard({
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-5">
                 <div>
                   <h3 className="text-xl font-sans font-extrabold text-slate-900">
-                    {language === 'vi' ? 'Quản lý tài sản' : 'Asset Portfolio'}
+                    {'Quản lý tài sản'}
                   </h3>
                   <p className="text-slate-500 text-xs mt-1">
-                    {language === 'vi' ? 'Danh sách các nhãn hiệu bạn đăng ký chuyển nhượng hoặc sở hữu.' : 'Track, view, and list the exclusive trademarks in your ownership.'}
+                    {'Danh sách các nhãn hiệu bạn đăng ký chuyển nhượng hoặc sở hữu.'}
                   </p>
                 </div>
 
@@ -2339,14 +2325,14 @@ export default function UserDashboard({
                     className="flex-1 sm:flex-none border border-emerald-200 hover:bg-emerald-50 text-emerald-600 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition-colors"
                   >
                     <Download className="w-4 h-4 text-emerald-500" />
-                    {language === 'vi' ? 'Tải xuống (CSV)' : 'Export CSV'}
+                    {'Tải xuống (CSV)'}
                   </button>
                   <button
                     onClick={() => setIsNewTrademarkModalOpen(true)}
                     className="flex-1 sm:flex-none bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition-all shadow-md shadow-orange-500/10"
                   >
                     <Plus className="w-4 h-4" />
-                    {language === 'vi' ? 'Tạo mới nhãn hiệu' : 'Deposit Brand'}
+                    {'Tạo mới nhãn hiệu'}
                   </button>
                 </div>
               </div>
@@ -2360,13 +2346,13 @@ export default function UserDashboard({
                         <input type="checkbox" className="rounded border-slate-300" defaultChecked />
                       </th>
                       <th className="py-4 px-3 w-16 text-center">STT</th>
-                      <th className="py-4 px-4 w-28">{language === 'vi' ? 'Mẫu Nhãn' : 'Logo Spec'}</th>
-                      <th className="py-4 px-4">{language === 'vi' ? 'Tên Nhãn Hiệu' : 'Brand Name'}</th>
-                      <th className="py-4 px-4 w-24 text-center">{language === 'vi' ? 'Nhóm SHTT' : 'Classes'}</th>
-                      <th className="py-4 px-4 w-32 text-center">{language === 'vi' ? 'Trạng Thái' : 'Status'}</th>
-                      <th className="py-4 px-4 w-28">{language === 'vi' ? 'Ngày Nộp' : 'Filing Date'}</th>
-                      <th className="py-4 px-4 w-28">{language === 'vi' ? 'Số Đơn' : 'App No.'}</th>
-                      <th className="py-4 px-4 w-20 text-center">{language === 'vi' ? 'Tác Vụ' : 'Actions'}</th>
+                      <th className="py-4 px-4 w-28">{'Mẫu Nhãn'}</th>
+                      <th className="py-4 px-4">{'Tên Nhãn Hiệu'}</th>
+                      <th className="py-4 px-4 w-24 text-center">{'Nhóm SHTT'}</th>
+                      <th className="py-4 px-4 w-32 text-center">{'Trạng Thái'}</th>
+                      <th className="py-4 px-4 w-28">{'Ngày Nộp'}</th>
+                      <th className="py-4 px-4 w-28">{'Số Đơn'}</th>
+                      <th className="py-4 px-4 w-20 text-center">{'Tác Vụ'}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 text-xs">
@@ -2420,17 +2406,17 @@ export default function UserDashboard({
                           <div className="flex justify-center items-center gap-1.5">
                             <button
                               onClick={() => {
-                                alert(language === 'vi' ? 'Chức năng chỉnh sửa đang chuẩn bị kiểm duyệt hồ sơ.' : 'Edit mode requires pending review lock.');
+                                alert('Chức năng chỉnh sửa đang chuẩn bị kiểm duyệt hồ sơ.');
                               }}
                               className="p-1 text-slate-400 hover:text-orange-500 transition-colors cursor-pointer"
-                              title={language === 'vi' ? 'Sửa' : 'Edit'}
+                              title={'Sửa'}
                             >
                               <Edit3 className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => handleDeleteTrademark(tm.id)}
                               className="p-1 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
-                              title={language === 'vi' ? 'Xóa' : 'Delete'}
+                              title={'Xóa'}
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -2445,14 +2431,12 @@ export default function UserDashboard({
               {/* Pagination */}
               <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-400 pt-2 border-t border-slate-100">
                 <span>
-                  {language === 'vi' 
-                    ? `Trang 1 / 1 (Hiển thị 1 - ${myTrademarks.length} trong tổng số ${myTrademarks.length} nhãn)`
-                    : `Page 1 of 1 (Showing 1 - ${myTrademarks.length} of ${myTrademarks.length} entries)`}
+                  {`Trang 1 / 1 (Hiển thị 1 - ${myTrademarks.length} trong tổng số ${myTrademarks.length} nhãn)`}
                 </span>
 
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-1.5">
-                    <span>{language === 'vi' ? 'Hiển thị:' : 'Show:'}</span>
+                    <span>{'Hiển thị:'}</span>
                     <select className="border border-slate-200 rounded px-1.5 py-1 text-xs text-slate-600 bg-white">
                       <option>20 dòng / entries</option>
                       <option>50 dòng / entries</option>
@@ -2474,10 +2458,10 @@ export default function UserDashboard({
                     <div className="flex justify-between items-start mb-6 pb-4 border-b border-slate-100">
                       <div>
                         <h4 className="font-sans font-black text-xl text-slate-900">
-                          {language === 'vi' ? 'Tạo mới hồ sơ nhãn hiệu' : 'Create New Trademark Profile'}
+                          {'Tạo mới hồ sơ nhãn hiệu'}
                         </h4>
                         <p className="text-slate-500 text-xs mt-1">
-                          {language === 'vi' ? 'Vui lòng nhập đầy đủ thông tin bên dưới' : 'Please fill in all requested fields below'}
+                          {'Vui lòng nhập đầy đủ thông tin bên dưới'}
                         </p>
                       </div>
                       <button 
@@ -2499,7 +2483,7 @@ export default function UserDashboard({
                             : 'text-slate-500 hover:text-slate-700'
                         }`}
                       >
-                        {language === 'vi' ? 'Đơn đăng ký' : 'Application'}
+                        {'Đơn đăng ký'}
                       </button>
                       <button
                         type="button"
@@ -2510,7 +2494,7 @@ export default function UserDashboard({
                             : 'text-slate-500 hover:text-slate-700'
                         }`}
                       >
-                        {language === 'vi' ? 'Văn bằng' : 'Certificate'}
+                        {'Văn bằng'}
                       </button>
                     </div>
 
@@ -2520,12 +2504,12 @@ export default function UserDashboard({
                         {/* Tên nhãn hiệu */}
                         <div>
                           <label className="text-xs font-bold text-slate-700 block mb-1">
-                            {language === 'vi' ? 'Tên nhãn hiệu' : 'Trademark Name'} <span className="text-rose-500">*</span>
+                            {'Tên nhãn hiệu'} <span className="text-rose-500">*</span>
                           </label>
                           <input
                             type="text"
                             required
-                            placeholder={language === 'vi' ? 'Ví dụ: HDS, VINASOY' : 'e.g. HDS, VINASOY'}
+                            placeholder={'Ví dụ: HDS, VINASOY'}
                             value={newTmName}
                             onChange={(e) => setNewTmName(e.target.value)}
                             className="w-full bg-white border border-slate-200 focus:border-orange-500 rounded-xl p-3 text-xs outline-none transition-all"
@@ -2535,7 +2519,7 @@ export default function UserDashboard({
                         {/* Nhóm sản phẩm dịch vụ */}
                         <div className="relative">
                           <label className="text-xs font-bold text-slate-700 block mb-1">
-                            {language === 'vi' ? 'Nhóm sản phẩm/dịch vụ' : 'Product / Service Group'}
+                            {'Nhóm sản phẩm/dịch vụ'}
                           </label>
                           
                           {/* Trigger container */}
@@ -2545,14 +2529,14 @@ export default function UserDashboard({
                           >
                             {selectedClasses.length === 0 ? (
                               <span className="text-slate-400">
-                                {language === 'vi' ? 'Chọn nhóm sản phẩm...' : 'Select classes...'}
+                                {'Chọn nhóm sản phẩm...'}
                               </span>
                             ) : (
                               <>
                                 {selectedClasses.slice(0, 2).map(clsCode => {
                                   return (
                                     <span key={clsCode} className="inline-flex items-center gap-1 bg-orange-50 text-orange-600 font-bold px-2 py-0.5 rounded-lg text-[11px] border border-orange-200/50 whitespace-nowrap">
-                                      {language === 'vi' ? `Nhóm ${clsCode}` : `Class ${clsCode}`}
+                                      {`Nhóm ${clsCode}`}
                                       <button
                                         type="button"
                                         onClick={(e) => {
@@ -2590,7 +2574,7 @@ export default function UserDashboard({
                                 <div className="relative sticky top-0 bg-white pb-2 border-b border-slate-100">
                                   <input
                                     type="text"
-                                    placeholder={language === 'vi' ? 'Tìm kiếm theo mã hoặc tên...' : 'Search by code or name...'}
+                                    placeholder={'Tìm kiếm theo mã hoặc tên...'}
                                     value={classSearchQuery}
                                     onChange={(e) => setClassSearchQuery(e.target.value)}
                                     onClick={(e) => e.stopPropagation()}
@@ -2640,7 +2624,7 @@ export default function UserDashboard({
                         {/* Số đơn đăng ký */}
                         <div>
                           <label className="text-xs font-bold text-slate-700 block mb-1">
-                            {language === 'vi' ? 'Số đơn đăng ký' : 'Application Number'} <span className="text-rose-500">*</span>
+                            {'Số đơn đăng ký'} <span className="text-rose-500">*</span>
                           </label>
                           <input
                             type="text"
@@ -2655,7 +2639,7 @@ export default function UserDashboard({
                         {/* Ngày nộp đơn */}
                         <div>
                           <label className="text-xs font-bold text-slate-700 block mb-1">
-                            {language === 'vi' ? 'Ngày nộp đơn' : 'Filing Date'} <span className="text-rose-500">*</span>
+                            {'Ngày nộp đơn'} <span className="text-rose-500">*</span>
                           </label>
                           <input
                             type="date"
@@ -2671,7 +2655,7 @@ export default function UserDashboard({
                           <>
                             <div>
                               <label className="text-xs font-bold text-slate-700 block mb-1">
-                                {language === 'vi' ? 'Số văn bằng' : 'Certificate Number'} <span className="text-rose-500">*</span>
+                                {'Số văn bằng'} <span className="text-rose-500">*</span>
                               </label>
                               <input
                                 type="text"
@@ -2685,7 +2669,7 @@ export default function UserDashboard({
 
                             <div>
                               <label className="text-xs font-bold text-slate-700 block mb-1">
-                                {language === 'vi' ? 'Ngày cấp bằng' : 'Certificate Issue Date'} <span className="text-rose-500">*</span>
+                                {'Ngày cấp bằng'} <span className="text-rose-500">*</span>
                               </label>
                               <input
                                 type="date"
@@ -2704,7 +2688,7 @@ export default function UserDashboard({
                         {/* Mẫu nhãn (Hình ảnh) */}
                         <div className="space-y-1">
                           <label className="text-xs font-bold text-slate-700 block">
-                            {language === 'vi' ? 'Mẫu nhãn (Hình ảnh)' : 'Specimen (Image)'}
+                            {'Mẫu nhãn (Hình ảnh)'}
                           </label>
                           <div 
                             className="border-2 border-dashed border-slate-200 hover:border-orange-500/50 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-slate-50/50 flex flex-col items-center justify-center min-h-[140px] relative overflow-hidden"
@@ -2753,9 +2737,7 @@ export default function UserDashboard({
                             ) : null}
                             <Upload className="w-8 h-8 text-slate-400 mb-2" />
                             <p className="text-[10px] text-slate-600 font-medium px-2">
-                              {language === 'vi' 
-                                ? 'Tải file lên hoặc kéo và thả PDF, PNG, JPG (tối đa 10MB)'
-                                : 'Upload or drag & drop PDF, PNG, JPG (max 10MB)'}
+                              {'Tải file lên hoặc kéo và thả PDF, PNG, JPG (tối đa 10MB)'}
                             </p>
                           </div>
                         </div>
@@ -2763,7 +2745,7 @@ export default function UserDashboard({
                         {/* Hồ sơ đính kèm */}
                         <div className="space-y-1">
                           <label className="text-xs font-bold text-slate-700 block">
-                            {language === 'vi' ? 'Hồ sơ đính kèm (PDF, DOCX)' : 'Attached Documents (PDF, DOCX)'}
+                            {'Hồ sơ đính kèm (PDF, DOCX)'}
                           </label>
                           <div 
                             className="border-2 border-dashed border-slate-200 hover:border-orange-500/50 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-slate-50/50 flex flex-col items-center justify-center min-h-[140px] relative"
@@ -2791,13 +2773,13 @@ export default function UserDashboard({
                           >
                             <FileText className="w-8 h-8 text-slate-400 mb-2" />
                             <p className="text-[10px] text-slate-600 font-medium">
-                              {language === 'vi' ? 'Tải tài liệu tối đa 5 file' : 'Upload up to 5 document files'}
+                              {'Tải tài liệu tối đa 5 file'}
                             </p>
                             {newTmDocsFiles.length > 0 && (
                               <div className="absolute inset-0 bg-white p-3 overflow-y-auto flex flex-col gap-1 z-10 text-left">
                                 <div className="flex justify-between items-center mb-1 pb-1 border-b border-slate-100">
                                   <span className="text-[10px] font-bold text-slate-700">
-                                    {language === 'vi' ? `Đã chọn ${newTmDocsFiles.length} file` : `${newTmDocsFiles.length} files selected`}
+                                    {`Đã chọn ${newTmDocsFiles.length} file`}
                                   </span>
                                   <button
                                     type="button"
@@ -2807,7 +2789,7 @@ export default function UserDashboard({
                                     }}
                                     className="text-slate-400 hover:text-slate-600 text-[10px] font-bold"
                                   >
-                                    {language === 'vi' ? 'Xóa hết' : 'Clear all'}
+                                    {'Xóa hết'}
                                   </button>
                                 </div>
                                 {newTmDocsFiles.map((f, i) => (
@@ -2838,13 +2820,13 @@ export default function UserDashboard({
                           onClick={() => setIsNewTrademarkModalOpen(false)}
                           className="px-5 py-2.5 border border-slate-200 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 cursor-pointer transition-colors"
                         >
-                          {language === 'vi' ? 'Hủy bỏ' : 'Cancel'}
+                          {'Hủy bỏ'}
                         </button>
                         <button
                           type="submit"
                           className="px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-xl text-xs font-bold cursor-pointer transition-colors shadow-md shadow-orange-500/10"
                         >
-                          {language === 'vi' ? 'Tạo mới' : 'Create'}
+                          {'Tạo mới'}
                         </button>
                       </div>
                     </form>
@@ -2860,7 +2842,7 @@ export default function UserDashboard({
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-5">
                 <div>
                   <h3 className="text-xl font-sans font-extrabold text-slate-900">
-                    {language === 'vi' ? 'Quản lý yêu cầu' : 'Request Management'}
+                    {'Quản lý yêu cầu'}
                   </h3>
                 </div>
 
@@ -2869,10 +2851,10 @@ export default function UserDashboard({
                     onClick={() => fetchRequestsList(requestsPage, activeRequestFilter)}
                     disabled={requestsLoading}
                     className="border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-bold px-3 py-2.5 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
-                    title={language === 'vi' ? 'Cập nhật lại danh sách' : 'Refresh list'}
+                    title={'Cập nhật lại danh sách'}
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${requestsLoading ? 'animate-spin text-orange-500' : ''}`} />
-                    {language === 'vi' ? 'Làm mới' : 'Refresh'}
+                    {'Làm mới'}
                   </button>
 
                   <button
@@ -2880,7 +2862,7 @@ export default function UserDashboard({
                     className="flex-1 sm:flex-none bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition-all shadow-md shadow-orange-500/10"
                   >
                     <Plus className="w-4 h-4" />
-                    {language === 'vi' ? 'Tạo yêu cầu mới' : 'New Request'}
+                    {'Tạo yêu cầu mới'}
                   </button>
                 </div>
               </div>
@@ -2888,25 +2870,25 @@ export default function UserDashboard({
               {/* Request Status Filter tabs */}
               <div className="flex border-b border-slate-200 text-xs overflow-x-auto scrollbar-none gap-1 sm:gap-2">
                 {[
-                  { value: 'all', label: language === 'vi' ? 'Tất cả' : 'All Requests', color: 'bg-slate-100 text-slate-700' },
+                  { value: 'all', label: 'Tất cả', color: 'bg-slate-100 text-slate-700' },
                   { 
                     value: 'pending', 
-                    label: language === 'vi' ? 'Chờ xử lý (Pending)' : 'Pending', 
+                    label: 'Chờ xử lý (Pending)', 
                     color: 'bg-amber-100 text-amber-800' 
                   },
                   { 
                     value: 'doing', 
-                    label: language === 'vi' ? 'Đang xử lý (Doing)' : 'Doing', 
+                    label: 'Đang xử lý (Doing)', 
                     color: 'bg-blue-100 text-blue-800' 
                   },
                   { 
                     value: 'approved', 
-                    label: language === 'vi' ? 'Đã phê duyệt (Approved)' : 'Approved', 
+                    label: 'Đã phê duyệt (Approved)', 
                     color: 'bg-emerald-100 text-emerald-800' 
                   },
                   { 
                     value: 'rejected', 
-                    label: language === 'vi' ? 'Từ chối (Rejected)' : 'Rejected', 
+                    label: 'Từ chối (Rejected)', 
                     color: 'bg-red-100 text-red-800' 
                   },
                 ].map(tab => {
@@ -2970,7 +2952,7 @@ export default function UserDashboard({
                       className="text-xs font-extrabold text-slate-700 hover:text-orange-600 flex items-center gap-2 cursor-pointer transition-colors"
                     >
                       <ChevronLeft className="w-4 h-4 text-orange-500" />
-                      {language === 'vi' ? 'Quay lại danh sách yêu cầu' : 'Back to Requests List'}
+                      {'Quay lại danh sách yêu cầu'}
                     </button>
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-bold text-slate-500 hidden sm:inline">Trạng thái:</span>
@@ -3093,7 +3075,7 @@ export default function UserDashboard({
                         onClick={() => setSelectedRequestItem(null)}
                         className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl cursor-pointer transition-colors"
                       >
-                        {language === 'vi' ? 'Quay lại danh sách' : 'Back to list'}
+                        {'Quay lại danh sách'}
                       </button>
                     </div>
                   </div>
@@ -3105,7 +3087,7 @@ export default function UserDashboard({
                     <div className="text-center py-16 bg-white rounded-3xl border border-slate-100 shadow-xs space-y-3">
                       <RefreshCw className="w-8 h-8 text-orange-500 animate-spin mx-auto" />
                       <p className="text-xs font-bold text-slate-600">
-                        {language === 'vi' ? 'Đang tải danh sách yêu cầu...' : 'Loading requests...'}
+                        {'Đang tải danh sách yêu cầu...'}
                       </p>
                     </div>
                   ) : (
@@ -3200,7 +3182,7 @@ export default function UserDashboard({
                                       className="w-full sm:w-auto text-center bg-slate-900 hover:bg-orange-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer transition-colors whitespace-nowrap flex items-center justify-center gap-1.5 shadow-xs"
                                     >
                                       <Eye className="w-3.5 h-3.5" />
-                                      {language === 'vi' ? 'Xem chi tiết' : 'View Details'}
+                                      {'Xem chi tiết'}
                                     </button>
                                   </div>
                                 </div>
@@ -3209,7 +3191,7 @@ export default function UserDashboard({
 
                             {totalFilteredCount === 0 && (
                               <div className="text-center py-14 bg-white rounded-3xl border border-slate-100 text-slate-400 text-xs font-medium">
-                                {language === 'vi' ? 'Không tìm thấy yêu cầu nào theo trạng thái chọn.' : 'No requests found for the selected status.'}
+                                {'Không tìm thấy yêu cầu nào theo trạng thái chọn.'}
                               </div>
                             )}
 
@@ -3218,13 +3200,11 @@ export default function UserDashboard({
                               <div className="bg-white border border-slate-200/80 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs mt-4 shadow-2xs">
                                 <div className="text-slate-500 flex items-center gap-2">
                                   <span>
-                                    {language === 'vi' 
-                                      ? `Hiển thị ${startIndex + 1} - ${endIndex} trên tổng số ${totalFilteredCount} yêu cầu`
-                                      : `Showing ${startIndex + 1} - ${endIndex} of ${totalFilteredCount} requests`}
+                                    {`Hiển thị ${startIndex + 1} - ${endIndex} trên tổng số ${totalFilteredCount} yêu cầu`}
                                   </span>
                                   <span className="hidden sm:inline text-slate-300">|</span>
                                   <div className="flex items-center gap-1.5 text-[11px]">
-                                    <span className="text-slate-400">{language === 'vi' ? 'Số dòng:' : 'Per page:'}</span>
+                                    <span className="text-slate-400">{'Số dòng:'}</span>
                                     <select
                                       value={requestsPageSize}
                                       onChange={(e) => {
@@ -3252,7 +3232,7 @@ export default function UserDashboard({
                                     }`}
                                   >
                                     <ChevronLeft className="w-3.5 h-3.5" />
-                                    <span className="hidden sm:inline">{language === 'vi' ? 'Trang trước' : 'Prev'}</span>
+                                    <span className="hidden sm:inline">{'Trang trước'}</span>
                                   </button>
 
                                   <div className="flex items-center gap-1">
@@ -3280,7 +3260,7 @@ export default function UserDashboard({
                                         : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/60'
                                     }`}
                                   >
-                                    <span className="hidden sm:inline">{language === 'vi' ? 'Trang sau' : 'Next'}</span>
+                                    <span className="hidden sm:inline">{'Trang sau'}</span>
                                     <ChevronRight className="w-3.5 h-3.5" />
                                   </button>
                                 </div>
@@ -3301,10 +3281,10 @@ export default function UserDashboard({
                     <div className="flex justify-between items-start mb-6">
                       <div>
                         <h4 className="font-sans font-black text-lg text-slate-900">
-                          {language === 'vi' ? 'Khởi tạo Yêu cầu vụ việc SHTT mới' : 'Submit IP Consultation Request'}
+                          {'Khởi tạo Yêu cầu vụ việc SHTT mới'}
                         </h4>
                         <p className="text-slate-500 text-xs mt-1">
-                          {language === 'vi' ? 'Điền thông tin và mô tả chi tiết yêu cầu để được chuyên viên liên hệ hỗ trợ nhanh chóng.' : 'Fill in your contact details and request description for prompt consultation.'}
+                          {'Điền thông tin và mô tả chi tiết yêu cầu để được chuyên viên liên hệ hỗ trợ nhanh chóng.'}
                         </p>
                       </div>
                       <button 
@@ -3326,7 +3306,7 @@ export default function UserDashboard({
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                           <label className="text-xs font-bold text-slate-700 block mb-1">
-                            {language === 'vi' ? 'Họ và tên' : 'Full Name'} <span className="text-rose-500">*</span>
+                            {'Họ và tên'} <span className="text-rose-500">*</span>
                           </label>
                           <input
                             type="text"
@@ -3340,7 +3320,7 @@ export default function UserDashboard({
 
                         <div>
                           <label className="text-xs font-bold text-slate-700 block mb-1">
-                            {language === 'vi' ? 'Số điện thoại' : 'Phone Number'} <span className="text-rose-500">*</span>
+                            {'Số điện thoại'} <span className="text-rose-500">*</span>
                           </label>
                           <input
                             type="tel"
@@ -3355,7 +3335,7 @@ export default function UserDashboard({
 
                       <div>
                         <label className="text-xs font-bold text-slate-700 block mb-1">
-                          {language === 'vi' ? 'Email liên hệ' : 'Email Address'} <span className="text-rose-500">*</span>
+                          {'Email liên hệ'} <span className="text-rose-500">*</span>
                         </label>
                         <input
                           type="email"
@@ -3369,11 +3349,11 @@ export default function UserDashboard({
 
                       <div>
                         <label className="text-xs font-bold text-slate-700 block mb-1">
-                          {language === 'vi' ? 'Mô tả chi tiết yêu cầu' : 'Detailed Description'} <span className="text-rose-500">*</span>
+                          {'Mô tả chi tiết yêu cầu'} <span className="text-rose-500">*</span>
                         </label>
                         <textarea
                           required
-                          placeholder={language === 'vi' ? 'Mô tả chi tiết nội dung cần hỗ trợ, tư vấn bảo hộ nhãn hiệu, chuyển nhượng, tra cứu...' : 'Describe brand names of interest, registration procedures, consultation details...'}
+                          placeholder={'Mô tả chi tiết nội dung cần hỗ trợ, tư vấn bảo hộ nhãn hiệu, chuyển nhượng, tra cứu...'}
                           rows={4}
                           value={newRequestDesc}
                           onChange={(e) => setNewRequestDesc(e.target.value)}
@@ -3388,7 +3368,7 @@ export default function UserDashboard({
                           disabled={isSubmittingRequest}
                           className="px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 cursor-pointer transition-colors"
                         >
-                          {language === 'vi' ? 'Hủy' : 'Cancel'}
+                          {'Hủy'}
                         </button>
                         <button
                           type="submit"
@@ -3396,7 +3376,7 @@ export default function UserDashboard({
                           className="px-6 py-2.5 bg-orange-500 hover:bg-orange-600 disabled:opacity-70 text-white rounded-xl text-xs font-bold cursor-pointer transition-all flex items-center justify-center gap-2 shadow-xs shadow-orange-500/20"
                         >
                           {isSubmittingRequest && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
-                          <span>{language === 'vi' ? 'Yêu cầu hỗ trợ' : 'Submit Request'}</span>
+                          <span>{'Yêu cầu hỗ trợ'}</span>
                         </button>
                       </div>
                     </form>
@@ -3412,10 +3392,10 @@ export default function UserDashboard({
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-5">
                 <div>
                   <h3 className="text-xl font-sans font-extrabold text-slate-900">
-                    {language === 'vi' ? 'Quản lý hồ sơ tài liệu trực tuyến' : 'My Cloud IP Files'}
+                    {'Quản lý hồ sơ tài liệu trực tuyến'}
                   </h3>
                   <p className="text-slate-500 text-xs mt-1">
-                    {language === 'vi' ? 'Lưu trữ, tra cứu và bảo mật hồ sơ nộp đơn, biên nhận, văn bằng bảo hộ của doanh nghiệp.' : 'Secure folder management for filing certs, invoices, legal scan PDFs.'}
+                    {'Lưu trữ, tra cứu và bảo mật hồ sơ nộp đơn, biên nhận, văn bằng bảo hộ của doanh nghiệp.'}
                   </p>
                 </div>
 
@@ -3423,7 +3403,7 @@ export default function UserDashboard({
                   <div className="relative flex-1 sm:flex-none">
                     <input
                       type="text"
-                      placeholder={language === 'vi' ? 'Tìm tài liệu...' : 'Search docs...'}
+                      placeholder={'Tìm tài liệu...'}
                       value={fileSearch}
                       onChange={(e) => setFileSearch(e.target.value)}
                       className="w-full sm:w-48 bg-slate-50 border border-slate-200 focus:border-orange-500 rounded-xl py-2 pl-8 pr-3 text-xs outline-none"
@@ -3439,7 +3419,7 @@ export default function UserDashboard({
                     className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition-all shadow-md shadow-orange-500/10"
                   >
                     <FolderPlus className="w-4 h-4" />
-                    {language === 'vi' ? 'Tạo thư mục' : 'New Folder'}
+                    {'Tạo thư mục'}
                   </button>
                 </div>
               </div>
@@ -3449,7 +3429,7 @@ export default function UserDashboard({
                 {isFoldersLoading && (
                   <div className="text-center py-8 text-slate-400 text-xs">
                     <span className="w-5 h-5 border-2 border-orange-500 border-t-transparent rounded-full animate-spin inline-block mr-2 align-middle"></span>
-                    <span>{language === 'vi' ? 'Đang tải danh sách thư mục...' : 'Loading folders...'}</span>
+                    <span>{'Đang tải danh sách thư mục...'}</span>
                   </div>
                 )}
 
@@ -3486,9 +3466,7 @@ export default function UserDashboard({
                             <div>
                               <strong className="text-sm font-extrabold text-slate-800 block">{f.name}</strong>
                               <span className="text-[10px] text-slate-400 block mt-0.5">
-                                {language === 'vi' 
-                                  ? `${f.files.length} tệp tin • ${subfolders.length} thư mục con — Cập nhật: ${f.updatedAt}` 
-                                  : `${f.files.length} documents • ${subfolders.length} subfolders — Updated: ${f.updatedAt}`}
+                                {`${f.files.length} tệp tin • ${subfolders.length} thư mục con — Cập nhật: ${f.updatedAt}`}
                               </span>
                             </div>
                           </div>
@@ -3501,16 +3479,16 @@ export default function UserDashboard({
                                 setNewFolderParentId(f.id);
                               }}
                               className="bg-amber-50 hover:bg-amber-100 text-amber-700 px-2.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wide cursor-pointer transition-all border border-amber-100"
-                              title={language === 'vi' ? 'Tạo thư mục con' : 'Create subfolder'}
+                              title={'Tạo thư mục con'}
                             >
-                              + {language === 'vi' ? 'Thư mục con' : 'Subfolder'}
+                              + {'Thư mục con'}
                             </button>
                             <button
                               onClick={() => handleRealFileUpload(f)}
                               className="bg-slate-100 hover:bg-orange-500 hover:text-white text-slate-600 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wide cursor-pointer transition-all"
-                              title={language === 'vi' ? 'Tải tệp tin lên' : 'Upload document'}
+                              title={'Tải tệp tin lên'}
                             >
-                              + {language === 'vi' ? 'Tải tệp' : 'Upload'}
+                              + {'Tải tệp'}
                             </button>
                             <button
                               onClick={() => {
@@ -3521,9 +3499,9 @@ export default function UserDashboard({
                                 setIsLinkModalOpen(true);
                               }}
                               className="bg-sky-50 hover:bg-sky-100 text-sky-700 px-2.5 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wide cursor-pointer transition-all border border-sky-100"
-                              title={language === 'vi' ? 'Gắn liên kết' : 'Attach link'}
+                              title={'Gắn liên kết'}
                             >
-                              + {language === 'vi' ? 'Gắn link' : 'Link'}
+                              + {'Gắn link'}
                             </button>
                             <button
                               onClick={() => {
@@ -3533,7 +3511,7 @@ export default function UserDashboard({
                                 setEditFolderFiles([]);
                               }}
                               className="p-1.5 text-slate-400 hover:text-orange-500 transition-colors cursor-pointer"
-                              title={language === 'vi' ? 'Đổi tên thư mục' : 'Rename folder'}
+                              title={'Đổi tên thư mục'}
                             >
                               <Edit3 className="w-3.5 h-3.5" />
                             </button>
@@ -3543,7 +3521,7 @@ export default function UserDashboard({
                                 handleRealDeleteFolder(f.id);
                               }}
                               className="p-1.5 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
-                              title={language === 'vi' ? 'Xóa thư mục' : 'Delete folder'}
+                              title={'Xóa thư mục'}
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -3557,7 +3535,7 @@ export default function UserDashboard({
                             {subfolders.length > 0 && (
                               <div className="space-y-3 pl-4 border-l-2 border-amber-200">
                                 <span className="text-[10px] font-black uppercase text-amber-700 tracking-wider block mb-1">
-                                  {language === 'vi' ? 'Thư mục con' : 'Subfolders'}
+                                  {'Thư mục con'}
                                 </span>
                                 {subfolders
                                   .filter(sub => !fileSearch.trim() || sub.name.toLowerCase().includes(fileSearch.toLowerCase()) || sub.files.some(file => file.name.toLowerCase().includes(fileSearch.toLowerCase())))
@@ -3580,9 +3558,7 @@ export default function UserDashboard({
                                             <div>
                                               <strong className="text-xs font-bold text-slate-700 block">{sub.name}</strong>
                                               <span className="text-[9px] text-slate-400 block mt-0.5">
-                                                {language === 'vi' 
-                                                  ? `Thời gian: ${sub.updatedAt}` 
-                                                  : `Time: ${sub.updatedAt}`}
+                                                {`Thời gian: ${sub.updatedAt}`}
                                               </span>
                                             </div>
                                           </div>
@@ -3594,16 +3570,16 @@ export default function UserDashboard({
                                                 setNewFolderParentId(sub.id);
                                               }}
                                               className="bg-amber-50 hover:bg-amber-100 text-amber-700 px-2 py-1 rounded-md text-[9px] font-bold uppercase transition-all border border-amber-100"
-                                              title={language === 'vi' ? 'Tạo thư mục con' : 'Create subfolder'}
+                                              title={'Tạo thư mục con'}
                                             >
-                                              + {language === 'vi' ? 'Mục con' : 'Sub'}
+                                              + {'Mục con'}
                                             </button>
                                             <button
                                               onClick={() => handleRealFileUpload(sub)}
                                               className="bg-slate-50 hover:bg-orange-500 hover:text-white text-slate-600 px-2 py-1 rounded-md text-[9px] font-bold uppercase transition-all"
-                                              title={language === 'vi' ? 'Tải tệp tin lên' : 'Upload document'}
+                                              title={'Tải tệp tin lên'}
                                             >
-                                              + {language === 'vi' ? 'Tải tệp' : 'Upload'}
+                                              + {'Tải tệp'}
                                             </button>
                                             <button
                                               onClick={() => {
@@ -3614,9 +3590,9 @@ export default function UserDashboard({
                                                 setIsLinkModalOpen(true);
                                               }}
                                               className="bg-sky-50 hover:bg-sky-100 text-sky-700 px-2 py-1 rounded-md text-[9px] font-bold uppercase transition-all border border-sky-100"
-                                              title={language === 'vi' ? 'Gắn liên kết' : 'Attach link'}
+                                              title={'Gắn liên kết'}
                                             >
-                                              + {language === 'vi' ? 'Gắn link' : 'Link'}
+                                              + {'Gắn link'}
                                             </button>
                                             <button
                                               onClick={() => {
@@ -3626,7 +3602,7 @@ export default function UserDashboard({
                                                 setEditFolderFiles([]);
                                               }}
                                               className="p-1 text-slate-400 hover:text-orange-500 transition-colors cursor-pointer"
-                                              title={language === 'vi' ? 'Đổi tên thư mục' : 'Rename folder'}
+                                              title={'Đổi tên thư mục'}
                                             >
                                               <Edit3 className="w-3 h-3" />
                                             </button>
@@ -3636,7 +3612,7 @@ export default function UserDashboard({
                                                 handleRealDeleteFolder(sub.id);
                                               }}
                                               className="p-1 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
-                                              title={language === 'vi' ? 'Xóa thư mục' : 'Delete folder'}
+                                              title={'Xóa thư mục'}
                                             >
                                               <Trash2 className="w-3 h-3" />
                                             </button>
@@ -3669,14 +3645,14 @@ export default function UserDashboard({
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         className="p-1 bg-white hover:bg-orange-50 text-slate-400 hover:text-orange-500 border border-slate-200/60 rounded-md cursor-pointer transition-colors flex items-center justify-center"
-                                                        title={language === 'vi' ? 'Xem/Tải tệp về' : 'View/Download file'}
+                                                        title={'Xem/Tải tệp về'}
                                                       >
                                                         <Download className="w-3.5 h-3.5" />
                                                       </a>
                                                       <button
                                                         onClick={() => handleDeleteFile(sub.id, file.id)}
                                                         className="p-1 bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-200/60 rounded-md cursor-pointer transition-colors"
-                                                        title={language === 'vi' ? 'Xóa tệp' : 'Delete file'}
+                                                        title={'Xóa tệp'}
                                                       >
                                                         <Trash2 className="w-3.5 h-3.5" />
                                                       </button>
@@ -3690,7 +3666,7 @@ export default function UserDashboard({
                                             {sub.links && sub.links.length > 0 && (
                                               <div className="divide-y divide-slate-100 pt-1 border-t border-slate-100/50">
                                                 <span className="text-[9px] font-black uppercase text-sky-600 tracking-wider block mb-1 px-2">
-                                                  {language === 'vi' ? 'Liên kết đính kèm' : 'Attached Links'}
+                                                  {'Liên kết đính kèm'}
                                                 </span>
                                                 {sub.links.map(link => (
                                                   <div key={link.id} className="py-2 flex justify-between items-center gap-4 hover:bg-slate-50 px-2 rounded-lg transition-colors">
@@ -3717,14 +3693,14 @@ export default function UserDashboard({
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         className="p-1 bg-white hover:bg-sky-50 text-slate-400 hover:text-sky-500 border border-slate-200/60 rounded-md cursor-pointer transition-colors flex items-center justify-center"
-                                                        title={language === 'vi' ? 'Truy cập liên kết' : 'Open link'}
+                                                        title={'Truy cập liên kết'}
                                                       >
                                                         <ExternalLink className="w-3.5 h-3.5" />
                                                       </a>
                                                       <button
                                                         onClick={() => handleDeleteLink(sub.id, link.id)}
                                                         className="p-1 bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-200/60 rounded-md cursor-pointer transition-colors"
-                                                        title={language === 'vi' ? 'Xóa liên kết' : 'Delete link'}
+                                                        title={'Xóa liên kết'}
                                                       >
                                                         <Trash2 className="w-3.5 h-3.5" />
                                                       </button>
@@ -3736,7 +3712,7 @@ export default function UserDashboard({
 
                                             {sub.files.length === 0 && (!sub.links || sub.links.length === 0) && (
                                               <div className="text-center py-4 text-slate-400 text-[10px] italic">
-                                                {language === 'vi' ? 'Thư mục trống.' : 'This directory is empty.'}
+                                                {'Thư mục trống.'}
                                               </div>
                                             )}
                                           </div>
@@ -3751,7 +3727,7 @@ export default function UserDashboard({
                             {f.files.length > 0 && (
                               <div className="space-y-1.5">
                                 <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider block mb-1 pl-1">
-                                  {language === 'vi' ? 'Tài liệu' : 'Documents'}
+                                  {'Tài liệu'}
                                 </span>
                                 <div className="divide-y divide-slate-100 border border-slate-100 rounded-xl bg-white overflow-hidden">
                                   {f.files.map(file => (
@@ -3763,7 +3739,7 @@ export default function UserDashboard({
                                             {file.name}
                                           </span>
                                           <span className="text-[10px] text-slate-400 block mt-0.5">
-                                            {file.size} • {language === 'vi' ? 'Nộp ngày:' : 'Uploaded on:'} {file.uploadDate}
+                                            {file.size} • {'Nộp ngày:'} {file.uploadDate}
                                           </span>
                                         </div>
                                       </div>
@@ -3774,14 +3750,14 @@ export default function UserDashboard({
                                           target="_blank"
                                           rel="noopener noreferrer"
                                           className="p-1.5 bg-white hover:bg-orange-50 text-slate-400 hover:text-orange-500 border border-slate-200/60 rounded-lg cursor-pointer transition-colors flex items-center justify-center"
-                                          title={language === 'vi' ? 'Xem/Tải tệp về' : 'View/Download file'}
+                                          title={'Xem/Tải tệp về'}
                                         >
                                           <Download className="w-3.5 h-3.5" />
                                         </a>
                                         <button
                                           onClick={() => handleDeleteFile(f.id, file.id)}
                                           className="p-1.5 bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-200/60 rounded-lg cursor-pointer transition-colors"
-                                          title={language === 'vi' ? 'Xóa tệp' : 'Delete file'}
+                                          title={'Xóa tệp'}
                                         >
                                           <Trash2 className="w-3.5 h-3.5" />
                                         </button>
@@ -3796,7 +3772,7 @@ export default function UserDashboard({
                             {f.links && f.links.length > 0 && (
                               <div className="space-y-1.5 mt-4">
                                 <span className="text-[10px] font-black uppercase text-sky-600 tracking-wider block mb-1 pl-1">
-                                  {language === 'vi' ? 'Liên kết đính kèm' : 'Attached Links'}
+                                  {'Liên kết đính kèm'}
                                 </span>
                                 <div className="divide-y divide-slate-100 border border-slate-100 rounded-xl bg-white overflow-hidden">
                                   {f.links.map(link => (
@@ -3824,14 +3800,14 @@ export default function UserDashboard({
                                           target="_blank"
                                           rel="noopener noreferrer"
                                           className="p-1.5 bg-white hover:bg-sky-50 text-slate-400 hover:text-sky-500 border border-slate-200/60 rounded-lg cursor-pointer transition-colors flex items-center justify-center"
-                                          title={language === 'vi' ? 'Truy cập liên kết' : 'Open link'}
+                                          title={'Truy cập liên kết'}
                                         >
                                           <ExternalLink className="w-3.5 h-3.5" />
                                         </a>
                                         <button
                                           onClick={() => handleDeleteLink(f.id, link.id)}
                                           className="p-1.5 bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-200/60 rounded-lg cursor-pointer transition-colors"
-                                          title={language === 'vi' ? 'Xóa liên kết' : 'Delete link'}
+                                          title={'Xóa liên kết'}
                                         >
                                           <Trash2 className="w-3.5 h-3.5" />
                                         </button>
@@ -3844,7 +3820,7 @@ export default function UserDashboard({
 
                             {f.files.length === 0 && subfolders.length === 0 && (!f.links || f.links.length === 0) && (
                               <div className="text-center py-6 text-slate-400 text-xs italic">
-                                {language === 'vi' ? 'Thư mục trống. Kéo thả tài liệu hoặc nhấp "+ Tải tệp lên" hoặc "+ Gắn link" để lưu trữ.' : 'This directory is empty. Click "+ Upload file" or "+ Link" to add data.'}
+                                {'Thư mục trống. Kéo thả tài liệu hoặc nhấp "+ Tải tệp lên" hoặc "+ Gắn link" để lưu trữ.'}
                               </div>
                             )}
                           </div>
@@ -3860,7 +3836,7 @@ export default function UserDashboard({
                   <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full border border-slate-200/50 shadow-2xl animate-in scale-in duration-150">
                     <div className="flex justify-between items-start mb-5">
                       <h4 className="font-sans font-black text-base text-slate-900">
-                        {language === 'vi' ? 'Tạo thư mục mới' : 'Create New Folder'}
+                        {'Tạo thư mục mới'}
                       </h4>
                       <button 
                         onClick={() => {
@@ -3877,12 +3853,12 @@ export default function UserDashboard({
                     <form onSubmit={handleCreateFolder} className="space-y-4">
                       <div>
                         <label className="text-xs font-bold text-slate-700 block mb-1">
-                          {language === 'vi' ? 'Tên thư mục' : 'Folder Name'} *
+                          {'Tên thư mục'} *
                         </label>
                         <input
                           type="text"
                           required
-                          placeholder={language === 'vi' ? 'e.g. Tài liệu bổ sung, Hồ sơ đàm phán...' : 'e.g. Legal filings, receipts...'}
+                          placeholder={'e.g. Tài liệu bổ sung, Hồ sơ đàm phán...'}
                           value={newFolderName}
                           onChange={(e) => setNewFolderName(e.target.value)}
                           className="w-full bg-white border border-slate-200 focus:border-orange-500 rounded-xl p-3 text-xs outline-none"
@@ -3891,14 +3867,14 @@ export default function UserDashboard({
 
                       <div>
                         <label className="text-xs font-bold text-slate-700 block mb-1">
-                          {language === 'vi' ? 'Thư mục cha (Tùy chọn)' : 'Parent Folder (Optional)'}
+                          {'Thư mục cha (Tùy chọn)'}
                         </label>
                         <select
                           value={newFolderParentId}
                           onChange={(e) => setNewFolderParentId(e.target.value)}
                           className="w-full bg-white border border-slate-200 focus:border-orange-500 rounded-xl p-3 text-xs outline-none cursor-pointer"
                         >
-                          <option value="">{language === 'vi' ? '--- Thư mục gốc ---' : '--- Root Directory ---'}</option>
+                          <option value="">{'--- Thư mục gốc ---'}</option>
                           {folders.map(f => {
                             const isChild = !!f.parent_id;
                             const parentFolder = isChild ? folders.find(p => p.id === f.parent_id) : null;
@@ -3914,7 +3890,7 @@ export default function UserDashboard({
 
                       <div>
                         <label className="text-xs font-bold text-slate-700 block mb-1">
-                          {language === 'vi' ? 'Tệp tin đính kèm (Tùy chọn)' : 'Attached Document (Optional)'}
+                          {'Tệp tin đính kèm (Tùy chọn)'}
                         </label>
                         <input
                           type="file"
@@ -3943,13 +3919,13 @@ export default function UserDashboard({
                           }}
                           className="px-4 py-2 border rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 cursor-pointer"
                         >
-                          {language === 'vi' ? 'Hủy' : 'Cancel'}
+                          {'Hủy'}
                         </button>
                         <button
                           type="submit"
                           className="px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl text-xs font-bold cursor-pointer transition-colors"
                         >
-                          {language === 'vi' ? 'Tạo thư mục' : 'Create'}
+                          {'Tạo thư mục'}
                         </button>
                       </div>
                     </form>
@@ -3963,7 +3939,7 @@ export default function UserDashboard({
                   <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full border border-slate-200/50 shadow-2xl animate-in scale-in duration-150">
                     <div className="flex justify-between items-start mb-5">
                       <h4 className="font-sans font-black text-base text-slate-900">
-                        {language === 'vi' ? 'Đổi tên thư mục' : 'Rename Folder'}
+                        {'Đổi tên thư mục'}
                       </h4>
                       <button 
                         onClick={() => setIsEditingFolder(null)}
@@ -3976,7 +3952,7 @@ export default function UserDashboard({
                     <form onSubmit={handleRenameFolderSubmit} className="space-y-4">
                       <div>
                         <label className="text-xs font-bold text-slate-700 block mb-1">
-                          {language === 'vi' ? 'Tên thư mục' : 'Folder Name'} *
+                          {'Tên thư mục'} *
                         </label>
                         <input
                           type="text"
@@ -3989,14 +3965,14 @@ export default function UserDashboard({
 
                       <div>
                         <label className="text-xs font-bold text-slate-700 block mb-1">
-                          {language === 'vi' ? 'Thư mục cha (Tùy chọn)' : 'Parent Folder (Optional)'}
+                          {'Thư mục cha (Tùy chọn)'}
                         </label>
                         <select
                           value={editFolderParentId}
                           onChange={(e) => setEditFolderParentId(e.target.value)}
                           className="w-full bg-white border border-slate-200 focus:border-orange-500 rounded-xl p-3 text-xs outline-none cursor-pointer"
                         >
-                          <option value="">{language === 'vi' ? '--- Thư mục gốc ---' : '--- Root Directory ---'}</option>
+                          <option value="">{'--- Thư mục gốc ---'}</option>
                           {folders
                             .filter(f => f.id !== isEditingFolder) // Cannot select itself as parent!
                             .map(f => {
@@ -4015,7 +3991,7 @@ export default function UserDashboard({
 
                       <div>
                         <label className="text-xs font-bold text-slate-700 block mb-1">
-                          {language === 'vi' ? 'Tệp tin đính kèm mới (Tùy chọn)' : 'New Attached Document (Optional)'}
+                          {'Tệp tin đính kèm mới (Tùy chọn)'}
                         </label>
                         <input
                           type="file"
@@ -4045,13 +4021,13 @@ export default function UserDashboard({
                           }}
                           className="px-4 py-2 border rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 cursor-pointer"
                         >
-                          {language === 'vi' ? 'Hủy' : 'Cancel'}
+                          {'Hủy'}
                         </button>
                         <button
                           type="submit"
                           className="px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl text-xs font-bold cursor-pointer transition-colors"
                         >
-                          {language === 'vi' ? 'Cập nhật' : 'Update'}
+                          {'Cập nhật'}
                         </button>
                       </div>
                     </form>
@@ -4065,7 +4041,7 @@ export default function UserDashboard({
                   <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full border border-slate-200/50 shadow-2xl animate-in scale-in duration-150">
                     <div className="flex justify-between items-start mb-5">
                       <h4 className="font-sans font-black text-base text-slate-900">
-                        {language === 'vi' ? 'Đính kèm liên kết' : 'Attach Link'}
+                        {'Đính kèm liên kết'}
                       </h4>
                       <button 
                         onClick={() => {
@@ -4082,7 +4058,7 @@ export default function UserDashboard({
                     <form onSubmit={handleCreateLinkSubmit} className="space-y-4">
                       <div>
                         <label className="text-xs font-bold text-slate-700 block mb-1">
-                          {language === 'vi' ? 'Thư mục đích' : 'Destination Folder'}
+                          {'Thư mục đích'}
                         </label>
                         <input
                           type="text"
@@ -4094,12 +4070,12 @@ export default function UserDashboard({
 
                       <div>
                         <label className="text-xs font-bold text-slate-700 block mb-1">
-                          {language === 'vi' ? 'Tên liên kết' : 'Link Name'} *
+                          {'Tên liên kết'} *
                         </label>
                         <input
                           type="text"
                           required
-                          placeholder={language === 'vi' ? 'Ví dụ: Tài liệu hướng dẫn, Link Google Drive...' : 'e.g. Document guidelines, Drive folder...'}
+                          placeholder={'Ví dụ: Tài liệu hướng dẫn, Link Google Drive...'}
                           value={linkName}
                           onChange={(e) => setLinkName(e.target.value)}
                           className="w-full bg-white border border-slate-200 focus:border-orange-500 rounded-xl p-3 text-xs outline-none"
@@ -4108,7 +4084,7 @@ export default function UserDashboard({
 
                       <div>
                         <label className="text-xs font-bold text-slate-700 block mb-1">
-                          {language === 'vi' ? 'Đường dẫn (URL)' : 'Link URL (Path)'} *
+                          {'Đường dẫn (URL)'} *
                         </label>
                         <input
                           type="url"
@@ -4130,7 +4106,7 @@ export default function UserDashboard({
                           }}
                           className="px-4 py-2 border rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 cursor-pointer"
                         >
-                          {language === 'vi' ? 'Hủy' : 'Cancel'}
+                          {'Hủy'}
                         </button>
                         <button
                           type="submit"
@@ -4138,8 +4114,8 @@ export default function UserDashboard({
                           className="px-6 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-bold cursor-pointer transition-colors disabled:opacity-50"
                         >
                           {isSubmittingLink 
-                            ? (language === 'vi' ? 'Đang gắn...' : 'Attaching...') 
-                            : (language === 'vi' ? 'Gắn liên kết' : 'Attach')}
+                            ? ('Đang gắn...') 
+                            : ('Gắn liên kết')}
                         </button>
                       </div>
                     </form>
@@ -4159,7 +4135,7 @@ export default function UserDashboard({
             <div className="space-y-6 animate-in fade-in duration-200" id="settings-tab-panel">
               <div>
                 <h3 className="text-xl font-sans font-extrabold text-slate-900">
-                  {language === 'vi' ? 'Cài đặt tài khoản' : 'System Settings'}
+                  {'Cài đặt tài khoản'}
                 </h3>
                 <p className="text-slate-500 text-xs mt-1">
                   Cấu hình phương thức nhận thông báo, cài đặt ngôn ngữ hiển thị và phân quyền bảo mật.
@@ -4199,7 +4175,7 @@ export default function UserDashboard({
             <div className="space-y-6 animate-in fade-in duration-200" id="support-tab-panel">
               <div>
                 <h3 className="text-xl font-sans font-extrabold text-slate-900">
-                  {language === 'vi' ? 'Hỗ trợ khách hàng & Helpline SHTT' : 'Customer Support Desk'}
+                  {'Hỗ trợ khách hàng & Helpline SHTT'}
                 </h3>
                 <p className="text-slate-500 text-xs mt-1">
                   Đội ngũ luật sư và chuyên gia SHTT của Brandix luôn túc trực hỗ trợ bạn.
@@ -4260,17 +4236,17 @@ export default function UserDashboard({
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h4 className="font-sans font-black text-xl text-slate-900">
-                  {language === 'vi' ? 'Thông tin chi tiết' : 'Detailed Information'}
+                  {'Thông tin chi tiết'}
                 </h4>
                 <p className="text-xs text-slate-500 mt-1">
-                  {language === 'vi' ? 'Cập nhật thông tin ' : 'Update details '}
+                  {'Cập nhật thông tin '}
                   {profile.companyName ? (
                     <>
-                      {language === 'vi' ? 'cho ' : 'for '}
+                      {'cho '}
                       <span className="text-[#3B82F6] font-bold">{profile.companyName}</span>
                     </>
                   ) : (
-                    <span>{language === 'vi' ? 'doanh nghiệp của bạn' : 'your enterprise'}</span>
+                    <span>{'doanh nghiệp của bạn'}</span>
                   )}
                 </p>
               </div>
@@ -4301,9 +4277,9 @@ export default function UserDashboard({
             {/* Gray info container summary of company */}
             <div className="bg-[#FCF8F6] p-4 rounded-2xl mb-6 border border-[#FFE9DF]/50 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
               <div>
-                <span className="text-slate-400 block mb-0.5">{language === 'vi' ? 'Doanh nghiệp' : 'Enterprise'}</span>
-                <strong className="text-slate-800 font-bold block truncate" title={profile.companyName || (language === 'vi' ? 'Chưa cập nhật' : 'Not updated')}>
-                  {profile.companyName || (language === 'vi' ? 'Chưa cập nhật' : 'Not updated')}
+                <span className="text-slate-400 block mb-0.5">{'Doanh nghiệp'}</span>
+                <strong className="text-slate-800 font-bold block truncate" title={profile.companyName || ('Chưa cập nhật')}>
+                  {profile.companyName || ('Chưa cập nhật')}
                 </strong>
               </div>
               <div>
@@ -4313,7 +4289,7 @@ export default function UserDashboard({
                 </strong>
               </div>
               <div>
-                <span className="text-slate-400 block mb-0.5">{language === 'vi' ? 'Điện thoại' : 'Phone'}</span>
+                <span className="text-slate-400 block mb-0.5">{'Điện thoại'}</span>
                 <strong className="text-slate-800 font-bold block truncate" title={profile.phone}>
                   {profile.phone}
                 </strong>
@@ -4325,12 +4301,12 @@ export default function UserDashboard({
               {/* Tên công ty / tổ chức */}
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1.5">
-                  {language === 'vi' ? 'Tên công ty / tổ chức' : 'Company / Organization Name'} <span className="text-rose-500">*</span>
+                  {'Tên công ty / tổ chức'} <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder={language === 'vi' ? 'Nhập tên công ty hoặc hộ kinh doanh' : 'Enter company or business name'}
+                  placeholder={'Nhập tên công ty hoặc hộ kinh doanh'}
                   value={updateInfoCompanyName}
                   onChange={(e) => setUpdateInfoCompanyName(e.target.value)}
                   className="w-full bg-white border border-slate-200 focus:border-orange-500 rounded-xl p-3 text-xs outline-none transition-all"
@@ -4340,12 +4316,12 @@ export default function UserDashboard({
               {/* Địa chỉ trụ sở */}
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1.5">
-                  {language === 'vi' ? 'Địa chỉ trụ sở chính' : 'Headquarters Address'} <span className="text-rose-500">*</span>
+                  {'Địa chỉ trụ sở chính'} <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder={language === 'vi' ? 'Nhập địa chỉ đăng ký kinh doanh' : 'Enter registered business address'}
+                  placeholder={'Nhập địa chỉ đăng ký kinh doanh'}
                   value={updateInfoAddress}
                   onChange={(e) => setUpdateInfoAddress(e.target.value)}
                   className="w-full bg-white border border-slate-200 focus:border-orange-500 rounded-xl p-3 text-xs outline-none transition-all"
@@ -4355,7 +4331,7 @@ export default function UserDashboard({
               {/* Loại hình kinh doanh */}
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1.5">
-                  {language === 'vi' ? 'Loại hình kinh doanh' : 'Business Entity Type'} <span className="text-rose-500">*</span>
+                  {'Loại hình kinh doanh'} <span className="text-rose-500">*</span>
                 </label>
                 <select
                   value={updateInfoBusinessType}
@@ -4374,12 +4350,12 @@ export default function UserDashboard({
               {/* Mã số thuế */}
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1.5">
-                  {language === 'vi' ? 'Mã số thuế' : 'Tax Code / Business ID'} <span className="text-rose-500">*</span>
+                  {'Mã số thuế'} <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder={language === 'vi' ? 'Nhập mã số thuế (ví dụ: 5100514230)' : 'Enter tax code (e.g. 5100514230)'}
+                  placeholder={'Nhập mã số thuế (ví dụ: 5100514230)'}
                   value={updateInfoTaxCode}
                   onChange={(e) => setUpdateInfoTaxCode(e.target.value)}
                   className="w-full bg-white border border-slate-200 focus:border-orange-500 rounded-xl p-3 text-xs outline-none transition-all"
@@ -4389,12 +4365,12 @@ export default function UserDashboard({
               {/* Số CCCD/CMT */}
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1.5">
-                  {language === 'vi' ? 'Số CCCD/CMT Người đại diện pháp luật' : 'Representative Citizen ID / Passport'} <span className="text-rose-500">*</span>
+                  {'Số CCCD/CMT Người đại diện pháp luật'} <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder={language === 'vi' ? 'Nhập số CCCD/CMT (ví dụ: 1050044304)' : 'Enter citizen ID (e.g. 1050044304)'}
+                  placeholder={'Nhập số CCCD/CMT (ví dụ: 1050044304)'}
                   value={updateInfoCitizenId}
                   onChange={(e) => setUpdateInfoCitizenId(e.target.value)}
                   className="w-full bg-white border border-slate-200 focus:border-orange-500 rounded-xl p-3 text-xs outline-none transition-all"
@@ -4404,7 +4380,7 @@ export default function UserDashboard({
               {/* Đăng ký Kinh doanh (không bắt buộc) File Upload */}
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1.5">
-                  {language === 'vi' ? 'Đăng ký Kinh doanh (không bắt buộc)' : 'Business Registration License (optional)'}
+                  {'Đăng ký Kinh doanh (không bắt buộc)'}
                 </label>
 
                 {/* File Upload Dropzone */}
@@ -4436,10 +4412,10 @@ export default function UserDashboard({
                   />
                   <Upload className="w-8 h-8 text-slate-400 mb-2" />
                   <span className="text-xs font-bold text-slate-700">
-                    {language === 'vi' ? 'Tải tệp lên hoặc kéo và thả' : 'Upload a file or drag and drop'}
+                    {'Tải tệp lên hoặc kéo và thả'}
                   </span>
                   <span className="text-[10px] text-slate-400 mt-1">
-                    PDF, PNG, JPG ({language === 'vi' ? 'tối đa' : 'max'} 10MB)
+                    PDF, PNG, JPG ({'tối đa'} 10MB)
                   </span>
                 </div>
 
@@ -4476,7 +4452,7 @@ export default function UserDashboard({
                   onClick={() => setIsUpdateInfoModalOpen(false)}
                   className="px-5 py-2.5 border border-slate-200 text-slate-500 rounded-xl text-xs font-bold hover:bg-slate-50 transition-colors cursor-pointer"
                 >
-                  {language === 'vi' ? 'Hủy bỏ' : 'Cancel'}
+                  {'Hủy bỏ'}
                 </button>
                 <button
                   type="submit"
@@ -4486,10 +4462,10 @@ export default function UserDashboard({
                   {isSubmittingUpdateInfo ? (
                     <>
                       <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                      <span>{language === 'vi' ? 'Đang cập nhật...' : 'Updating...'}</span>
+                      <span>{'Đang cập nhật...'}</span>
                     </>
                   ) : (
-                    <span>{language === 'vi' ? 'Cập nhật' : 'Update'}</span>
+                    <span>{'Cập nhật'}</span>
                   )}
                 </button>
               </div>

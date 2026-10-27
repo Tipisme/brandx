@@ -55,17 +55,13 @@ export default function HomeNewsSection({ language }: HomeNewsSectionProps) {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="text-xs font-bold text-orange-500 uppercase tracking-widest block mb-2">
-            {language === 'vi' ? 'Cập Nhật Pháp Luật' : 'Legal Updates'}
+            Cập Nhật Pháp Luật
           </span>
           <h2 className="text-3xl font-sans font-extrabold text-slate-900 tracking-tight mb-4">
-            {language === 'vi' 
-              ? 'Tin Tức & Kiến Thức Sở Hữu Trí Tuệ Mới Nhất' 
-              : 'Latest Intellectual Property News & Insights'}
+            Tin Tức & Kiến Thức Sở Hữu Trí Tuệ Mới Nhất
           </h2>
           <p className="text-slate-500 text-sm">
-            {language === 'vi'
-              ? 'Học hỏi các kiến thức thực tế về cách khai thác bản quyền thương mại và phòng tránh rủi ro pháp lý thương hiệu.'
-              : 'Learn practical knowledge on commercial copyright exploitation and avoiding brand legal risks.'}
+            Học hỏi các kiến thức thực tế về cách khai thác bản quyền thương mại và phòng tránh rủi ro pháp lý thương hiệu.
           </p>
         </div>
 
@@ -94,7 +90,7 @@ export default function HomeNewsSection({ language }: HomeNewsSectionProps) {
           </div>
         ) : posts.length === 0 ? (
           <div className="bg-slate-50 border border-slate-200 rounded-3xl p-12 text-center text-xs text-slate-500 font-medium">
-            {language === 'vi' ? 'Chưa có bài viết mới nào.' : 'No new articles.'}
+            Chưa có bài viết mới nào.
           </div>
         ) : (
           <>
@@ -103,7 +99,7 @@ export default function HomeNewsSection({ language }: HomeNewsSectionProps) {
                 const excerpt = rawPost.meta_description || stripHtmlAndTruncate(rawPost.description, 130);
                 const cardImage = getPostImageUrl(rawPost.featured_image);
                 const readTime = Math.max(1, Math.ceil((rawPost.description?.length || 1000) / 1000));
-                const categoryName = (rawPost.tags && rawPost.tags[0]?.name) || (language === 'vi' ? "Pháp Luật SHTT" : "IP Law");
+                const categoryName = (rawPost.tags && rawPost.tags[0]?.name) || "Pháp Luật SHTT";
                 const postSlug = rawPost.slug || rawPost.id;
 
                 return (
@@ -152,7 +148,7 @@ export default function HomeNewsSection({ language }: HomeNewsSectionProps) {
                             </span>
                           )}
                           <span className="text-[10px] text-slate-400 font-bold block">
-                            {readTime} {language === 'vi' ? 'phút đọc' : 'min read'}
+                            {readTime} phút đọc
                           </span>
                         </div>
                         <h3 className="font-serif font-bold text-sm sm:text-base text-slate-900 group-hover:text-amber-600 transition-colors line-clamp-2 leading-snug">
@@ -167,10 +163,10 @@ export default function HomeNewsSection({ language }: HomeNewsSectionProps) {
                     {/* Footer bar */}
                     <div className="p-5 pt-0 border-t border-slate-50 flex items-center justify-between text-xs">
                       <span className="text-slate-400 font-semibold">
-                        {language === 'vi' ? 'Đăng bởi chuyên gia SHTT' : 'By IP Experts'}
+                        Đăng bởi chuyên gia SHTT
                       </span>
                       <span className="text-amber-600 font-bold group-hover:underline inline-flex items-center gap-1">
-                        {language === 'vi' ? 'Đọc thêm' : 'Read more'}
+                        Đọc thêm
                         <ArrowUpRight className="w-3.5 h-3.5" />
                       </span>
                     </div>
@@ -185,7 +181,7 @@ export default function HomeNewsSection({ language }: HomeNewsSectionProps) {
                 href="#/news"
                 className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase px-7 py-3.5 rounded-xl shadow-md transition-all duration-200 hover:-translate-y-0.5"
               >
-                {language === 'vi' ? 'Xem tất cả tin tức & bài viết' : 'View All News & Articles'}
+                Xem tất cả tin tức & bài viết
                 <ArrowRight className="w-4 h-4 text-orange-400" />
               </a>
             </div>

@@ -183,12 +183,12 @@ export const checkIsExpiringSoon = (progresses?: any[], fallbackFilingDate?: str
 export const getTrademarkStatusDisplay = (
   statusStr?: string,
   progresses?: any[],
-  language: string = 'vi',
+  _language: string = 'vi',
   fallbackFilingDate?: string
 ) => {
   if (isExpiredOrRefusedStatus(statusStr)) {
     return {
-      text: language === 'vi' ? 'Được quyền đăng ký' : 'Free to Register',
+      text: 'Được quyền đăng ký',
       badgeBg: 'bg-rose-600',
       textColor: 'text-blue-600',
       isExpired: true,
@@ -198,7 +198,7 @@ export const getTrademarkStatusDisplay = (
 
   if (checkIsExpiringSoon(progresses, fallbackFilingDate)) {
     return {
-      text: language === 'vi' ? 'Sắp hết hạn' : 'Expiring Soon',
+      text: 'Sắp hết hạn',
       badgeBg: 'bg-amber-500',
       textColor: 'text-amber-600',
       isExpired: false,
@@ -207,7 +207,7 @@ export const getTrademarkStatusDisplay = (
   }
 
   return {
-    text: statusStr || (language === 'vi' ? 'Được quyền đăng ký' : 'Free to Register'),
+    text: statusStr || 'Được quyền đăng ký',
     badgeBg: 'bg-emerald-600',
     textColor: 'text-emerald-600',
     isExpired: false,

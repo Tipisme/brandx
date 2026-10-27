@@ -1,8 +1,10 @@
 // Service for fetching news & blog articles from CMS API
+import { decodeHtmlEntities } from '../utils/seo';
 
 export const stripHtmlAndTruncate = (html: string, length: number = 150) => {
   if (!html) return '';
-  const cleanText = html.replace(/<\/?[^>]+(>|$)/g, " ").replace(/\s+/g, " ").trim();
+  const decoded = decodeHtmlEntities(html);
+  const cleanText = decoded.replace(/\s+/g, " ").trim();
   if (cleanText.length <= length) return cleanText;
   return cleanText.substring(0, length) + '...';
 };

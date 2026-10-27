@@ -439,25 +439,23 @@ export default function App() {
               </div>
               <div className="space-y-2">
                 <h2 className="text-xl font-black text-slate-900">
-                  {language === 'vi' ? 'Yêu cầu đăng nhập quản trị' : 'Workspace Login Required'}
+                  Yêu cầu đăng nhập quản trị
                 </h2>
                 <p className="text-xs text-slate-500 leading-relaxed">
-                  {language === 'vi'
-                    ? `Bạn đang truy cập mục "${getAdminTabLabel(dashboardInitialTab, 'vi')}". Vui lòng đăng nhập tài khoản để xem và quản lý dữ liệu.`
-                    : `You are accessing "${getAdminTabLabel(dashboardInitialTab, 'en')}". Please log in to view and manage your data.`}
+                  Bạn đang truy cập mục "{getAdminTabLabel(dashboardInitialTab, 'vi')}". Vui lòng đăng nhập tài khoản để xem và quản lý dữ liệu.
                 </p>
               </div>
               <div className="space-y-2 pt-2">
                 <button
                   onClick={() => {
-                    const tabLabel = getAdminTabLabel(dashboardInitialTab, language);
+                    const tabLabel = getAdminTabLabel(dashboardInitialTab, 'vi');
                     saveLoginRedirect(getAdminTabPath(dashboardInitialTab), dashboardInitialTab, tabLabel);
                     setLoginRedirectNotice(`Vui lòng đăng nhập để truy cập: ${tabLabel}`);
                     setIsLoginOpen(true);
                   }}
                   className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs py-3.5 px-4 rounded-xl shadow-xs transition-all cursor-pointer flex items-center justify-center gap-2"
                 >
-                  <span>{language === 'vi' ? 'Đăng nhập ngay' : 'Log In Now'}</span>
+                  <span>Đăng nhập ngay</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
                 <button
@@ -468,7 +466,7 @@ export default function App() {
                   className="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs py-3 px-4 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  <span>{language === 'vi' ? 'Về trang chủ' : 'Back to Home'}</span>
+                  <span>Về trang chủ</span>
                 </button>
               </div>
             </div>

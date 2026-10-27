@@ -293,13 +293,13 @@ export default function NewsSection({
               className="inline-flex items-center gap-2 px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-bold shadow-xs transition-all cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>{language === 'vi' ? 'Quay lại' : 'Go back'}</span>
+              <span>Quay lại</span>
             </button>
           </div>
           <div className="flex flex-col items-center justify-center min-h-[40vh]">
             <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-4"></div>
             <p className="text-slate-500 text-sm font-medium">
-              {language === 'vi' ? 'Đang tải bài viết chi tiết từ API...' : 'Loading news details from production API...'}
+              Đang tải bài viết chi tiết từ API...
             </p>
           </div>
         </div>
@@ -311,7 +311,7 @@ export default function NewsSection({
         <div className="max-w-3xl mx-auto px-4 py-16 text-center">
           <div className="bg-red-50 border border-red-100 rounded-3xl p-8 space-y-4">
             <p className="text-red-600 font-bold text-sm">
-              {language === 'vi' ? 'Không tìm thấy bài viết này trong cơ sở dữ liệu.' : 'Post not found.'}
+              Không tìm thấy bài viết này trong cơ sở dữ liệu.
             </p>
             <button
               type="button"
@@ -319,7 +319,7 @@ export default function NewsSection({
               className="inline-flex items-center gap-2 bg-slate-900 text-white text-xs font-bold px-5 py-2.5 rounded-xl cursor-pointer hover:bg-slate-800 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              {language === 'vi' ? 'Quay lại' : 'Go back'}
+              Quay lại
             </button>
           </div>
         </div>
@@ -328,7 +328,7 @@ export default function NewsSection({
 
     const detailImage = getPostImageUrl(singlePost.featured_image);
     const readingTime = Math.max(1, Math.ceil((singlePost.description?.length || 1000) / 1000));
-    const firstTag = (singlePost.tags && singlePost.tags[0]?.name) || (language === 'vi' ? "Pháp Luật SHTT" : "IP Law");
+    const firstTag = (singlePost.tags && singlePost.tags[0]?.name) || "Pháp Luật SHTT";
 
     return (
       <div className="bg-slate-50 min-h-screen pb-16">
@@ -340,10 +340,10 @@ export default function NewsSection({
               type="button"
               onClick={handleBack}
               className="group inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-amber-50 hover:border-amber-300 text-slate-700 hover:text-amber-800 border border-slate-200 rounded-xl text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer active:scale-95"
-              title={language === 'vi' ? 'Quay lại đúng trang vừa mở' : 'Back to previous page'}
+              title="Quay lại đúng trang vừa mở"
             >
               <ArrowLeft className="w-4 h-4 text-slate-500 group-hover:text-amber-600 transition-transform group-hover:-translate-x-0.5" />
-              <span>{language === 'vi' ? 'Quay lại' : 'Go back'}</span>
+              <span>Quay lại</span>
             </button>
 
             {/* SEO Structured Breadcrumb Trail */}
@@ -360,7 +360,7 @@ export default function NewsSection({
                 }}
                 className="hover:text-amber-600 transition-colors cursor-pointer"
               >
-                {language === 'vi' ? 'Trang chủ' : 'Home'}
+                Trang chủ
               </button>
               <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
               <button 
@@ -375,7 +375,7 @@ export default function NewsSection({
                 }} 
                 className="hover:text-amber-600 transition-colors cursor-pointer"
               >
-                {language === 'vi' ? 'Tin tức' : 'News'}
+                Tin tức
               </button>
               <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
               <span className="text-slate-800 line-clamp-1 max-w-[160px] sm:max-w-xs font-normal">
@@ -396,7 +396,7 @@ export default function NewsSection({
             <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 pt-2">
               <span className="inline-flex items-center gap-1.5 font-bold text-slate-700">
                 <User className="w-4 h-4 text-[#D4AF37]" />
-                {language === 'vi' ? 'Ban biên tập HDS Law' : 'HDS Law Editor Board'}
+                Ban biên tập HDS Law
               </span>
               <span>•</span>
               <span className="inline-flex items-center gap-1.5">
@@ -406,7 +406,7 @@ export default function NewsSection({
               <span>•</span>
               <span className="inline-flex items-center gap-1.5">
                 <Clock className="w-4 h-4 text-slate-400" />
-                {readingTime} {language === 'vi' ? 'phút đọc' : 'min read'}
+                {readingTime} phút đọc
               </span>
             </div>
           </div>
@@ -448,22 +448,18 @@ export default function NewsSection({
               
               <div className="max-w-2xl mx-auto space-y-3">
                 <h3 className="text-xl sm:text-2xl font-serif font-bold text-white tracking-tight">
-                  {language === 'vi' 
-                    ? 'Bạn quan tâm đến Cơ hội Hợp tác hay cần Tư vấn Pháp lý?' 
-                    : 'Interested in Career Opportunities or need Legal Council?'}
+                  Bạn quan tâm đến Cơ hội Hợp tác hay cần Tư vấn Pháp lý?
                 </h3>
                 <p className="text-slate-400 text-xs sm:text-sm max-w-lg mx-auto">
-                  {language === 'vi'
-                    ? 'Kết nối trực tiếp với đội ngũ Luật sư và Chuyên viên Cao cấp của HDS Law để nhận được phản hồi chính xác và bảo mật trong 24 giờ.'
-                    : 'Connect directly with HDS Law partners and advisors to secure high-quality legal support or join our professional team.'}
+                  Kết nối trực tiếp với đội ngũ Luật sư và Chuyên viên Cao cấp của HDS Law để nhận được phản hồi chính xác và bảo mật trong 24 giờ.
                 </p>
               </div>
 
               {consultSubmitted ? (
                 <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-6 max-w-md mx-auto animate-in zoom-in duration-150">
                   <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto mb-2" />
-                  <p className="text-sm text-white font-bold">{language === 'vi' ? 'Gửi thông tin thành công!' : 'Submission Successful!'}</p>
-                  <p className="text-xs text-slate-400 mt-1">{language === 'vi' ? 'HDS Law sẽ liên hệ lại với bạn trong thời gian sớm nhất.' : 'HDS Law board will respond to you shortly.'}</p>
+                  <p className="text-sm text-white font-bold">Gửi thông tin thành công!</p>
+                  <p className="text-xs text-slate-400 mt-1">HDS Law sẽ liên hệ lại với bạn trong thời gian sớm nhất.</p>
                 </div>
               ) : (
                 <div className="max-w-md mx-auto space-y-3">
@@ -471,7 +467,7 @@ export default function NewsSection({
                     <input
                       type="tel"
                       required
-                      placeholder={language === 'vi' ? 'Nhập số điện thoại liên hệ...' : 'Enter phone number...'}
+                      placeholder="Nhập số điện thoại liên hệ..."
                       value={consultPhone}
                       onChange={(e) => setConsultPhone(e.target.value)}
                       className="flex-1 bg-slate-800/80 border border-slate-700/60 rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#D4AF37] transition-colors"
@@ -481,13 +477,11 @@ export default function NewsSection({
                       className="bg-[#D4AF37] hover:bg-[#bfa032] text-slate-950 font-extrabold text-xs sm:text-sm px-6 py-3 rounded-xl cursor-pointer transition-all hover:scale-[1.02] shadow-md shrink-0 inline-flex items-center justify-center gap-2 uppercase tracking-wider"
                     >
                       <Send className="w-4 h-4" />
-                      {language === 'vi' ? 'Gửi liên hệ ngay' : 'Connect Now'}
+                      Gửi liên hệ ngay
                     </button>
                   </form>
                   <p className="text-[10px] text-slate-500 italic">
-                    {language === 'vi' 
-                      ? '* Thông tin liên hệ của bạn được cam kết bảo mật tuyệt đối theo quy định HDS Law.' 
-                      : '* Your contact information remains strictly confidential under HDS Law guidelines.'}
+                    * Thông tin liên hệ của bạn được cam kết bảo mật tuyệt đối theo quy định HDS Law.
                   </p>
                 </div>
               )}
@@ -497,7 +491,7 @@ export default function NewsSection({
             {singlePost.tags && singlePost.tags.length > 0 && (
               <div className="pt-6 border-t border-slate-100 space-y-2">
                 <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 block">
-                  {language === 'vi' ? 'Từ khóa bài viết:' : 'Keywords / Tags:'}
+                  Từ khóa bài viết:
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {singlePost.tags.map((tagObj: any, i: number) => (
@@ -516,7 +510,7 @@ export default function NewsSection({
             <div className="pt-6 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-2">
                 <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">
-                  {language === 'vi' ? 'Chia sẻ:' : 'Share:'}
+                  Chia sẻ:
                 </span>
                 
                 <button
@@ -546,10 +540,10 @@ export default function NewsSection({
                 type="button"
                 onClick={handleBack}
                 className="bg-slate-100 hover:bg-amber-50 hover:text-amber-800 hover:border-amber-200 border border-slate-200 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer transition-all inline-flex items-center gap-1.5 active:scale-95 shadow-xs"
-                title={language === 'vi' ? 'Quay lại đúng trang vừa mở' : 'Back to previous page'}
+                title="Quay lại đúng trang vừa mở"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
-                {language === 'vi' ? 'Quay lại' : 'Go back'}
+                Quay lại
               </button>
             </div>
 
@@ -567,22 +561,20 @@ export default function NewsSection({
       {/* Title block */}
       <div className="text-center max-w-3xl mx-auto space-y-3">
         <span className="text-xs font-extrabold text-orange-500 uppercase tracking-widest block">
-          {language === 'vi' ? 'KIẾN THỨC PHÁP LUẬT SHTT' : 'IP LAW KNOWLEDGE'}
+          KIẾN THỨC PHÁP LUẬT SHTT
         </span>
         <h1 className="text-3xl sm:text-4xl font-sans font-black text-slate-900 tracking-tight">
-          {language === 'vi' ? 'Tin tức & Kiến thức Sở Hữu Trí Tuệ' : 'Intellectual Property News & Guides'}
+          Tin tức & Kiến thức Sở Hữu Trí Tuệ
         </h1>
         <p className="text-slate-500 text-xs sm:text-sm">
-          {language === 'vi' 
-            ? 'Cập nhật nhanh nhất các thay đổi quy chế pháp luật, thông tư hướng dẫn cùng cẩm nang bảo hộ nhãn hiệu kinh doanh an toàn.'
-            : 'Get the latest regulatory amendments, practical guidelines, and guides on safe trademark usage.'}
+          Cập nhật nhanh nhất các thay đổi quy chế pháp luật, thông tư hướng dẫn cùng cẩm nang bảo hộ nhãn hiệu kinh doanh an toàn.
         </p>
       </div>
 
       {isLoading ? (
         <div className="flex flex-col items-center justify-center py-20 min-h-[40vh]">
           <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-slate-400 text-xs font-semibold">{language === 'vi' ? 'Đang kết nối API tin tức từ admin.hdslaw.vn...' : 'Loading news posts from admin.hdslaw.vn...'}</p>
+          <p className="text-slate-400 text-xs font-semibold">Đang kết nối API tin tức từ admin.hdslaw.vn...</p>
         </div>
       ) : error ? (
         <div className="bg-red-50 border border-red-100 rounded-3xl p-6 text-center text-xs text-red-600 font-medium">
@@ -590,7 +582,7 @@ export default function NewsSection({
         </div>
       ) : posts.length === 0 ? (
         <div className="bg-slate-50 border border-slate-200 rounded-3xl p-12 text-center text-xs text-slate-500 font-medium">
-          {language === 'vi' ? 'Chưa có bài viết nào được đăng tải.' : 'No articles available.'}
+          Chưa có bài viết nào được đăng tải.
         </div>
       ) : (
         <>
@@ -600,7 +592,7 @@ export default function NewsSection({
               const excerpt = rawPost.meta_description || stripHtmlAndTruncate(rawPost.description, 130);
               const cardImage = getPostImageUrl(rawPost.featured_image);
               const readTime = Math.max(1, Math.ceil((rawPost.description?.length || 1000) / 1000));
-              const categoryName = (rawPost.tags && rawPost.tags[0]?.name) || (language === 'vi' ? "Pháp Luật SHTT" : "IP Law");
+              const categoryName = (rawPost.tags && rawPost.tags[0]?.name) || "Pháp Luật SHTT";
 
               return (
                 <div 
@@ -649,7 +641,7 @@ export default function NewsSection({
                           </span>
                         )}
                         <span className="text-[10px] text-slate-400 font-bold block">
-                          16.07.2026 • {readTime} {language === 'vi' ? 'phút đọc' : 'min read'}
+                          16.07.2026 • {readTime} phút đọc
                         </span>
                       </div>
                       <h3 className="font-serif font-bold text-sm sm:text-base text-slate-900 group-hover:text-amber-600 transition-colors line-clamp-2 leading-snug">
@@ -662,9 +654,9 @@ export default function NewsSection({
                   </div>
 
                   <div className="p-5 pt-0 border-t border-slate-50 flex items-center justify-between text-xs">
-                    <span className="text-slate-400 font-semibold">{language === 'vi' ? 'HDS Law Team' : 'HDS Law Panel'}</span>
+                    <span className="text-slate-400 font-semibold">HDS Law Team</span>
                     <span className="text-amber-600 font-black group-hover:underline inline-flex items-center gap-1.5">
-                      {language === 'vi' ? 'Đọc chi tiết' : 'Read details'}
+                      Đọc chi tiết
                       <ArrowUpRight className="w-4 h-4" />
                     </span>
                   </div>
@@ -759,9 +751,7 @@ export default function NewsSection({
               </div>
 
               <div className="text-[11px] font-medium text-slate-400">
-                {language === 'vi' 
-                  ? `Hiển thị trang ${currentPageNum} / ${totalPageCount} (${totalArticles} bài viết)`
-                  : `Showing page ${currentPageNum} of ${totalPageCount} (${totalArticles} articles)`}
+                Hiển thị trang {currentPageNum} / {totalPageCount} ({totalArticles} bài viết)
               </div>
             </div>
           )}

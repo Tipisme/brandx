@@ -176,7 +176,7 @@ export default function TrademarkList({
         });
 
         if (!response.ok) {
-          throw new Error(language === 'vi' ? 'Lỗi máy chủ kết nối CSDL.' : 'Failed to query database.');
+          throw new Error('Lỗi máy chủ kết nối CSDL.');
         }
 
         const json = await response.json();
@@ -441,15 +441,13 @@ export default function TrademarkList({
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
           <div>
             <span className="text-xs font-bold text-orange-500 uppercase tracking-widest block mb-2">
-              {language === 'vi' ? 'SÀN GIAO DỊCH NHÃN HIỆU CHÍNH THỨC' : 'OFFICIAL TRADEMARK MARKETPLACE'}
+              SÀN GIAO DỊCH NHÃN HIỆU CHÍNH THỨC
             </span>
             <h2 className="text-2xl sm:text-4xl font-sans font-black text-slate-900 tracking-tight uppercase">
-              {language === 'vi' ? 'Sàn nhãn hiệu có phân trang' : 'Bilingual Trademark Catalog'}
+              Sàn nhãn hiệu có phân trang
             </h2>
             <p className="text-slate-500 text-xs sm:text-sm mt-1 max-w-2xl">
-              {language === 'vi' 
-                ? 'Tìm kiếm, tra cứu và giao dịch văn bằng bảo hộ nhãn hiệu.' 
-                : 'Search, lookup and acquire registered trademark certificates.'}
+              Tìm kiếm, tra cứu và giao dịch văn bằng bảo hộ nhãn hiệu.
             </p>
           </div>
         </div>
@@ -461,7 +459,7 @@ export default function TrademarkList({
               <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
-                placeholder={language === 'vi' ? 'Nhập tên nhãn hiệu, số đơn hoặc từ khóa...' : 'Enter trademark name, application no. or keyword...'}
+                placeholder="Nhập tên nhãn hiệu, số đơn hoặc từ khóa..."
                 value={stdSearchKeyword}
                 onChange={(e) => setStdSearchKeyword(e.target.value)}
                 className="w-full bg-slate-50/80 hover:bg-slate-50 border border-slate-200 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-100 rounded-xl pl-12 pr-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition-all font-medium"
@@ -472,7 +470,7 @@ export default function TrademarkList({
               className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm px-8 py-3 rounded-xl transition-all shadow-md shadow-blue-600/15 cursor-pointer flex items-center justify-center gap-2 shrink-0"
             >
               <Search className="w-4 h-4" />
-              {language === 'vi' ? 'Tìm kiếm' : 'Search'}
+              Tìm kiếm
             </button>
           </form>
 
@@ -480,7 +478,7 @@ export default function TrademarkList({
           <div className="flex flex-wrap items-center justify-between gap-3 mt-4 pt-3 border-t border-slate-100">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs font-semibold text-slate-500 mr-1">
-                {language === 'vi' ? 'Khám phá nhanh:' : 'Quick explore:'}
+                Khám phá nhanh:
               </span>
               <button
                 type="button"
@@ -494,7 +492,7 @@ export default function TrademarkList({
                 }`}
               >
                 <Layers className={`w-3.5 h-3.5 ${isNicePanelOpen ? 'text-white' : 'text-blue-600'}`} />
-                <span>{language === 'vi' ? 'Tra cứu theo Nhóm Nice' : 'By Nice Class'}</span>
+                <span>Tra cứu theo Nhóm Nice</span>
                 {selectedAdvGroups.length > 0 && (
                   <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-extrabold ml-0.5 ${
                     isNicePanelOpen ? 'bg-white text-blue-700' : 'bg-orange-500 text-white'
@@ -513,7 +511,7 @@ export default function TrademarkList({
                 }`}
               >
                 <SlidersHorizontal className={`w-3.5 h-3.5 ${isAdvancedOpen ? 'text-white' : 'text-blue-600'}`} />
-                {language === 'vi' ? 'Tìm nâng cao' : 'Advanced Search'}
+                Tìm nâng cao
               </button>
             </div>
 
@@ -523,7 +521,7 @@ export default function TrademarkList({
                 onClick={() => setIsAdvancedOpen(true)}
                 className="text-xs font-semibold text-slate-500 hover:text-blue-600 bg-slate-100 hover:bg-slate-200 px-3.5 py-1.5 rounded-lg transition-colors cursor-pointer"
               >
-                {language === 'vi' ? 'Tìm nâng cao' : 'Advanced Search'}
+                Tìm nâng cao
               </button>
             )}
           </div>
@@ -539,17 +537,15 @@ export default function TrademarkList({
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <span>{language === 'vi' ? 'Tra cứu theo Nhóm Nice (Chọn nhiều nhóm)' : 'Nice Class Search (Multi-select)'}</span>
+                    <span>Tra cứu theo Nhóm Nice (Chọn nhiều nhóm)</span>
                     {selectedAdvGroups.length > 0 && (
                       <span className="bg-orange-500 text-white text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">
-                        {language === 'vi' ? `Đã chọn ${selectedAdvGroups.length} nhóm` : `${selectedAdvGroups.length} selected`}
+                        Đã chọn {selectedAdvGroups.length} nhóm
                       </span>
                     )}
                   </h3>
                   <p className="text-[11px] text-slate-500">
-                    {language === 'vi' 
-                      ? 'Chọn một hoặc nhiều nhóm sản phẩm/dịch vụ từ danh mục 45 nhóm Nice' 
-                      : 'Select one or multiple product/service groups from Nice classification'}
+                    Chọn một hoặc nhiều nhóm sản phẩm/dịch vụ từ danh mục 45 nhóm Nice
                   </p>
                 </div>
               </div>
@@ -569,7 +565,7 @@ export default function TrademarkList({
                 <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
-                  placeholder={language === 'vi' ? 'Lọc danh sách nhóm (ví dụ: 35, cà phê, dệt, y tế...)' : 'Filter groups by name or code...'}
+                  placeholder="Lọc danh sách nhóm (ví dụ: 35, cà phê, dệt, y tế...)"
                   value={groupFilterTerm}
                   onChange={(e) => setGroupFilterTerm(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 focus:bg-white rounded-xl pl-8 pr-8 py-2 text-xs text-slate-800 outline-none transition-all"
@@ -591,14 +587,14 @@ export default function TrademarkList({
                   onClick={selectAllAdvGroups}
                   className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-colors cursor-pointer"
                 >
-                  {language === 'vi' ? 'Chọn tất cả' : 'Select all'}
+                  Chọn tất cả
                 </button>
                 <button
                   type="button"
                   onClick={clearAllAdvGroups}
                   className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
                 >
-                  {language === 'vi' ? 'Bỏ chọn' : 'Clear'}
+                  Bỏ chọn
                 </button>
               </div>
             </div>
@@ -607,7 +603,7 @@ export default function TrademarkList({
             <div className="max-h-64 overflow-y-auto border border-slate-200/90 rounded-xl p-3 bg-slate-50/50 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 scrollbar-thin">
               {displayGroups.length === 0 ? (
                 <div className="col-span-full py-8 text-center text-slate-400 text-xs font-medium">
-                  {language === 'vi' ? 'Không tìm thấy nhóm sản phẩm/dịch vụ phù hợp' : 'No matching groups found'}
+                  Không tìm thấy nhóm sản phẩm/dịch vụ phù hợp
                 </div>
               ) : (
                 displayGroups.map((grp) => {
@@ -641,8 +637,8 @@ export default function TrademarkList({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-100">
               <div className="text-xs text-slate-600 font-medium">
                 {selectedAdvGroups.length === 0 
-                  ? (language === 'vi' ? 'Chưa chọn nhóm nào (mặc định tìm tất cả)' : 'No group selected (searching all)') 
-                  : (language === 'vi' ? `Đã chọn: Nhóm ${selectedAdvGroups.sort((a,b)=>a-b).join(', ')}` : `Selected: Group ${selectedAdvGroups.sort((a,b)=>a-b).join(', ')}`)}
+                  ? 'Chưa chọn nhóm nào (mặc định tìm tất cả)' 
+                  : `Đã chọn: Nhóm ${selectedAdvGroups.sort((a,b)=>a-b).join(', ')}`}
               </div>
               
               <div className="flex items-center justify-end gap-3 shrink-0">
@@ -652,7 +648,7 @@ export default function TrademarkList({
                     onClick={clearAllAdvGroups}
                     className="text-xs text-slate-500 hover:text-slate-800 font-bold hover:underline cursor-pointer"
                   >
-                    {language === 'vi' ? 'Bỏ chọn tất cả' : 'Clear all'}
+                    Bỏ chọn tất cả
                   </button>
                 )}
                 <button
@@ -661,7 +657,7 @@ export default function TrademarkList({
                   className="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-6 py-2.5 rounded-xl transition-all shadow-md shadow-orange-500/15 cursor-pointer flex items-center justify-center gap-2"
                 >
                   <Search className="w-3.5 h-3.5" />
-                  {language === 'vi' ? 'Tra cứu ngay' : 'Search Now'}
+                  Tra cứu ngay
                 </button>
               </div>
             </div>
@@ -675,20 +671,20 @@ export default function TrademarkList({
             {/* 1. Main Search Text */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-800 block">
-                {language === 'vi' ? 'Tìm kiếm' : 'Search'}
+                Tìm kiếm
               </label>
               <div className="relative">
                 <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
-                  placeholder={language === 'vi' ? 'Nhập tên nhãn hiệu...' : 'Enter trademark name...'}
+                  placeholder="Nhập tên nhãn hiệu..."
                   value={advBrandName}
                   onChange={(e) => setAdvBrandName(e.target.value)}
                   className="w-full bg-slate-50/60 hover:bg-slate-50 border border-slate-200 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-100 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-800 placeholder:text-slate-400 outline-none transition-all"
                 />
               </div>
               <p className="text-[11px] text-slate-400 font-mono">
-                Wildcard: V*NC, V?NC
+                Ký tự đại diện: V*NC, V?NC
               </p>
             </div>
 
@@ -704,7 +700,7 @@ export default function TrademarkList({
                 >
                   <div className="flex items-center gap-2 text-slate-800 text-xs font-bold">
                     <Tag className="w-4 h-4 text-blue-600" />
-                    <span>{language === 'vi' ? 'Định danh & Phân loại' : 'Identification & Classification'}</span>
+                    <span>Định danh & Phân loại</span>
                   </div>
                   {openDinhDanh ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
                 </button>
@@ -713,7 +709,7 @@ export default function TrademarkList({
                   <div className="p-4 space-y-4 bg-white">
                     <div>
                       <label className="text-[11px] font-bold text-slate-700 block mb-1">
-                        {language === 'vi' ? 'Số đơn' : 'Application No.'}
+                        Số đơn
                       </label>
                       <input
                         type="text"
@@ -729,11 +725,11 @@ export default function TrademarkList({
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
                           <label className="text-[11px] font-bold text-slate-800 block">
-                            {language === 'vi' ? 'Nhóm sản phẩm / Dịch vụ (Chọn nhiều nhóm)' : 'Product / Service Groups (Multi-select)'}
+                            Nhóm sản phẩm / Dịch vụ (Chọn nhiều nhóm)
                           </label>
                           {selectedAdvGroups.length > 0 && (
                             <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-700">
-                              {language === 'vi' ? `Đã chọn: ${selectedAdvGroups.length} nhóm` : `Selected: ${selectedAdvGroups.length}`}
+                              Đã chọn: {selectedAdvGroups.length} nhóm
                             </span>
                           )}
                         </div>
@@ -744,7 +740,7 @@ export default function TrademarkList({
                             onClick={selectAllAdvGroups}
                             className="text-[11px] text-blue-600 hover:text-blue-800 font-bold hover:underline cursor-pointer"
                           >
-                            {language === 'vi' ? 'Chọn tất cả' : 'Select all'}
+                            Chọn tất cả
                           </button>
                           <span className="text-slate-300">|</span>
                           <button
@@ -752,7 +748,7 @@ export default function TrademarkList({
                             onClick={clearAllAdvGroups}
                             className="text-[11px] text-slate-500 hover:text-slate-700 font-semibold hover:underline cursor-pointer"
                           >
-                            {language === 'vi' ? 'Bỏ chọn' : 'Clear'}
+                            Bỏ chọn
                           </button>
                         </div>
                       </div>
@@ -762,7 +758,7 @@ export default function TrademarkList({
                         <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <input
                           type="text"
-                          placeholder={language === 'vi' ? 'Lọc danh sách nhóm (ví dụ: 35, cà phê, dệt...)' : 'Filter groups...'}
+                          placeholder="Lọc danh sách nhóm (ví dụ: 35, cà phê, dệt...)"
                           value={groupFilterTerm}
                           onChange={(e) => setGroupFilterTerm(e.target.value)}
                           className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 focus:bg-white rounded-lg pl-8 pr-7 py-1.5 text-xs text-slate-800 outline-none"
@@ -782,7 +778,7 @@ export default function TrademarkList({
                       <div className="max-h-48 overflow-y-auto border border-slate-200/90 rounded-xl p-2.5 bg-slate-50/40 flex flex-wrap gap-1.5 scrollbar-thin">
                         {displayGroups.length === 0 ? (
                           <p className="text-slate-400 text-xs py-2 px-1">
-                            {language === 'vi' ? 'Không tìm thấy nhóm phù hợp' : 'No matching groups found'}
+                            Không tìm thấy nhóm phù hợp
                           </p>
                         ) : (
                           displayGroups.map((grp) => {
@@ -825,7 +821,7 @@ export default function TrademarkList({
                 >
                   <div className="flex items-center gap-2 text-slate-800 text-xs font-bold">
                     <User className="w-4 h-4 text-blue-600" />
-                    <span>{language === 'vi' ? 'Chủ đơn' : 'Applicant'}</span>
+                    <span>Chủ đơn</span>
                   </div>
                   {openChuDon ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
                 </button>
@@ -834,11 +830,11 @@ export default function TrademarkList({
                   <div className="p-4 space-y-3 bg-white">
                     <div>
                       <label className="text-[11px] font-bold text-slate-700 block mb-1">
-                        {language === 'vi' ? 'Tên chủ đơn / Chủ bằng' : 'Applicant Name'}
+                        Tên chủ đơn / Chủ bằng
                       </label>
                       <input
                         type="text"
-                        placeholder={language === 'vi' ? 'Tên cá nhân hoặc tổ chức...' : 'Company or individual name...'}
+                        placeholder="Tên cá nhân hoặc tổ chức..."
                         value={advChuDon}
                         onChange={(e) => setAdvChuDon(e.target.value)}
                         className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 focus:bg-white rounded-lg px-3 py-2 text-xs text-slate-800 outline-none transition-all"
@@ -847,11 +843,11 @@ export default function TrademarkList({
 
                     <div>
                       <label className="text-[11px] font-bold text-slate-700 block mb-1">
-                        {language === 'vi' ? 'Địa chỉ chủ đơn' : 'Applicant Address'}
+                        Địa chỉ chủ đơn
                       </label>
                       <input
                         type="text"
-                        placeholder={language === 'vi' ? 'Địa chỉ đăng ký...' : 'Registered address...'}
+                        placeholder="Địa chỉ đăng ký..."
                         value={advDiaChi}
                         onChange={(e) => setAdvDiaChi(e.target.value)}
                         className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 focus:bg-white rounded-lg px-3 py-2 text-xs text-slate-800 outline-none transition-all"
@@ -870,7 +866,7 @@ export default function TrademarkList({
                 >
                   <div className="flex items-center gap-2 text-slate-800 text-xs font-bold">
                     <Calendar className="w-4 h-4 text-blue-600" />
-                    <span>{language === 'vi' ? 'Khoảng thời gian' : 'Time Range'}</span>
+                    <span>Khoảng thời gian</span>
                   </div>
                   {openKhoangThoiGian ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
                 </button>
@@ -880,7 +876,7 @@ export default function TrademarkList({
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="text-[11px] font-bold text-slate-700 block mb-1">
-                          {language === 'vi' ? 'Ngày nộp đơn (từ ngày)' : 'Filing Date (From)'}
+                          Ngày nộp đơn (từ ngày)
                         </label>
                         <input
                           type="date"
@@ -892,7 +888,7 @@ export default function TrademarkList({
 
                       <div>
                         <label className="text-[11px] font-bold text-slate-700 block mb-1">
-                          {language === 'vi' ? 'Ngày nộp đơn (đến ngày)' : 'Filing Date (To)'}
+                          Ngày nộp đơn (đến ngày)
                         </label>
                         <input
                           type="date"
@@ -915,7 +911,7 @@ export default function TrademarkList({
                 >
                   <div className="flex items-center gap-2 text-slate-800 text-xs font-bold">
                     <SlidersHorizontal className="w-4 h-4 text-blue-600" />
-                    <span>{language === 'vi' ? 'Trạng thái' : 'Status'}</span>
+                    <span>Trạng thái</span>
                   </div>
                   {openTrangThai ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
                 </button>
@@ -925,14 +921,14 @@ export default function TrademarkList({
                     {/* Status Checkboxes */}
                     <div>
                       <span className="text-[11px] font-bold text-slate-700 block mb-2">
-                        {language === 'vi' ? 'Trạng thái' : 'Status'}
+                        Trạng thái
                       </span>
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         {[
-                          { id: 'cap_bang', label: language === 'vi' ? 'Cấp bằng' : 'Granted' },
-                          { id: 'dang_giai_quyet', label: language === 'vi' ? 'Đang giải quyết' : 'Pending' },
-                          { id: 'tu_choi', label: language === 'vi' ? 'Từ chối' : 'Rejected' },
-                          { id: 'rut_don', label: language === 'vi' ? 'Rút đơn' : 'Withdrawn' }
+                          { id: 'cap_bang', label: 'Cấp bằng' },
+                          { id: 'dang_giai_quyet', label: 'Đang giải quyết' },
+                          { id: 'tu_choi', label: 'Từ chối' },
+                          { id: 'rut_don', label: 'Rút đơn' }
                         ].map((st) => (
                           <label key={st.id} className="flex items-center gap-2.5 text-xs text-slate-700 font-medium cursor-pointer hover:text-slate-900">
                             <input
@@ -960,7 +956,7 @@ export default function TrademarkList({
                 className="w-full sm:flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm px-8 py-3 rounded-xl transition-all shadow-md shadow-blue-600/15 cursor-pointer flex items-center justify-center gap-2"
               >
                 <Search className="w-4 h-4" />
-                {language === 'vi' ? 'Tìm kiếm' : 'Search'}
+                Tìm kiếm
               </button>
 
               <button
@@ -968,7 +964,7 @@ export default function TrademarkList({
                 onClick={() => setIsAdvancedOpen(false)}
                 className="w-full sm:w-auto text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-5 py-3 rounded-xl transition-colors cursor-pointer text-center"
               >
-                {language === 'vi' ? 'Thu gọn' : 'Collapse'}
+                Thu gọn
               </button>
             </div>
 
@@ -980,7 +976,7 @@ export default function TrademarkList({
           <div className="flex flex-col items-center justify-center py-20 min-h-[40vh]">
             <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-4"></div>
             <p className="text-slate-500 text-xs font-medium">
-              {language === 'vi' ? 'Đang truy vấn dữ liệu nhãn hiệu...' : 'Querying trademark data...'}
+              Đang truy vấn dữ liệu nhãn hiệu...
             </p>
           </div>
         ) : error ? (
@@ -1017,9 +1013,7 @@ export default function TrademarkList({
             {/* Found results label */}
             <div className="flex justify-between items-center mb-6 text-xs text-slate-400 font-semibold uppercase tracking-widest">
               <span>
-                {language === 'vi' 
-                  ? `Tìm thấy ${meta?.total || mappedTrademarks.length} nhãn hiệu phù hợp` 
-                  : `Found ${meta?.total || mappedTrademarks.length} matching trademarks`}
+                Tìm thấy {meta?.total || mappedTrademarks.length} nhãn hiệu phù hợp
               </span>
               {(stdSearchKeyword || searchKeyword || selectedClass !== null || advBrandName || advChuDon || advSoDon || selectedAdvGroups.length > 0 || advStatuses.length > 0) && (
                 <button
@@ -1091,7 +1085,7 @@ export default function TrademarkList({
                             <Share2 className="w-3.5 h-3.5" />
                             {copiedId === tm.slug && (
                               <span className="absolute bottom-full right-0 mb-1 bg-slate-900 text-white text-[8px] font-bold px-2 py-0.5 rounded-md whitespace-nowrap shadow-sm">
-                                {language === 'vi' ? 'Đã sao chép!' : 'Copied!'}
+                                Đã sao chép!
                               </span>
                             )}
                           </button>
@@ -1105,7 +1099,7 @@ export default function TrademarkList({
                             key={cls}
                             className="bg-slate-100 text-slate-700 text-[9px] font-black uppercase px-2 py-0.5 rounded-md hover:bg-orange-100 hover:text-orange-600 transition-colors"
                           >
-                            {language === 'vi' ? 'Nhóm' : 'Class'} {cls}
+                            Nhóm {cls}
                           </span>
                         ))}
                       </div>
@@ -1119,14 +1113,14 @@ export default function TrademarkList({
                     {/* Specifications footer */}
                     <div className="border-t border-slate-100 pt-3">
                       <div className="flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2">
-                        <span>{language === 'vi' ? 'Số đơn:' : 'App No:'} {tm.applicationNo}</span>
-                        <span>{language === 'vi' ? 'Ngày nộp:' : 'Filing:'} {tm.filingDate}</span>
+                        <span>Số đơn: {tm.applicationNo}</span>
+                        <span>Ngày nộp: {tm.filingDate}</span>
                       </div>
 
                       <div className="flex justify-between items-center gap-2">
                         <div>
                           <span className="text-[8px] uppercase tracking-wider text-slate-400 font-bold block leading-none">
-                            {language === 'vi' ? 'Quyền sở hữu SHTT' : 'IP Ownership'}
+                            Quyền sở hữu SHTT
                           </span>
                           {(() => {
                             const statusDisp = getTrademarkStatusDisplay(tm.statusText, tm.progresses, language, tm.filingDate);
@@ -1142,7 +1136,7 @@ export default function TrademarkList({
                           onClick={() => onSelectTrademark(tm)}
                           className="bg-slate-900 hover:bg-orange-500 text-white p-2 sm:px-4 sm:py-2 rounded-xl text-xs font-bold flex items-center gap-1 transition-colors duration-150 cursor-pointer shrink-0"
                         >
-                          <span className="hidden sm:inline">{language === 'vi' ? 'Chi tiết' : 'Details'}</span>
+                          <span className="hidden sm:inline">Chi tiết</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </button>
                       </div>

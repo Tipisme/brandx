@@ -154,7 +154,7 @@ export default function TrademarkModal({
             <div className="space-y-3">
               <h3 className="text-sm font-bold text-slate-800 flex items-center gap-1.5 uppercase tracking-wider">
                 <Shield className="w-4 h-4 text-orange-500" />
-                {language === 'vi' ? 'Danh mục Nhóm hàng Nice bảo hộ độc quyền' : 'Exclusive Nice Classification Goods List'}
+                Danh mục Nhóm hàng Nice bảo hộ độc quyền
               </h3>
               
               <div className="space-y-3">
@@ -164,7 +164,7 @@ export default function TrademarkModal({
                     <div key={cls} className="border border-slate-100 bg-slate-50/50 rounded-2xl p-4 text-xs">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="bg-orange-500 text-white font-bold px-2 py-0.5 rounded-md text-[10px]">
-                          {language === 'vi' ? 'Nhóm' : 'Class'} {cls}
+                          Nhóm {cls}
                         </span>
                         <strong className="text-slate-800 font-bold">{info?.name}</strong>
                       </div>
