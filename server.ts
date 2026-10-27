@@ -17,7 +17,171 @@ const app = express();
 const postCache = new Map<string, { data: any; timestamp: number }>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache TTL
 
-// Fallback articles list if CMS API is unreachable during SSR
+// Trademark catalog database for Sàn Nhãn Hiệu SSR
+const TRADEMARKS_DATA = [
+  {
+    id: "tm-1",
+    slug: "vinamilk",
+    name: "VINAMILK",
+    logoText: "Vinamilk",
+    logoBg: "from-blue-600 to-indigo-800",
+    status: "available",
+    statusText: "Sẵn sàng chuyển nhượng",
+    classes: [29, 30, 32],
+    goodsDescription: "Sữa, bơ, pho mát, sữa yogurt và các sản phẩm từ sữa khác; dầu thực vật dùng cho thực phẩm; nước trái cây đóng chai, đồ uống dinh dưỡng.",
+    applicationNo: "4-2023-12345",
+    filingDate: "2023-05-15",
+    price: 1500000000,
+    priceFormatted: "1.500.000.000 ₫",
+    description: "Nhãn hiệu sữa hàng đầu Việt Nam, đã được đăng ký bảo hộ độc quyền trên toàn quốc. Thích hợp cho doanh nghiệp muốn khởi nghiệp hoặc mở rộng quy mô trong ngành sữa và chế phẩm từ sữa chất lượng cao."
+  },
+  {
+    id: "tm-2",
+    slug: "pepsi-co",
+    name: "PEPSI.CO",
+    logoText: "Pepsi.co",
+    logoBg: "from-blue-500 via-red-500 to-indigo-600",
+    status: "available",
+    statusText: "Sẵn sàng chuyển nhượng",
+    classes: [32, 35],
+    goodsDescription: "Đồ uống không cồn, nước ngọt có ga, nước tăng lực, nước suối đóng chai; dịch vụ quảng cáo thương mại và phân phối nước giải khát.",
+    applicationNo: "4-2022-54321",
+    filingDate: "2022-09-10",
+    price: 3200000000,
+    priceFormatted: "3.200.000.000 ₫",
+    description: "Nhãn hiệu nước giải khát mang tính biểu tượng toàn cầu, cấu trúc chữ dễ nhớ, phù hợp cho các dòng sản phẩm nước ngọt, nước giải khát năng động, sáng tạo."
+  },
+  {
+    id: "tm-3",
+    slug: "coke-co",
+    name: "COKE.CO",
+    logoText: "Coke.co",
+    logoBg: "from-red-600 to-red-800",
+    status: "negotiating",
+    statusText: "Đang thương lượng",
+    classes: [32, 43],
+    goodsDescription: "Nước ngọt có ga, nước khoáng, nước ép trái cây; dịch vụ cung cấp đồ ăn uống, chuỗi nhà hàng thức ăn nhanh và quán nước giải khát.",
+    applicationNo: "4-2023-88899",
+    filingDate: "2023-01-20",
+    price: 2800000000,
+    priceFormatted: "2.800.000.000 ₫",
+    description: "Nhãn hiệu mang tính thương mại cực cao, thích hợp để phát triển các chuỗi đồ uống, quán cafe kết hợp thức ăn nhanh thế hệ mới."
+  },
+  {
+    id: "tm-4",
+    slug: "heineken",
+    name: "HEINEKEN",
+    logoText: "Heineken",
+    logoBg: "from-green-600 to-emerald-800",
+    status: "available",
+    statusText: "Sẵn sàng chuyển nhượng",
+    classes: [32, 33],
+    goodsDescription: "Bia, các loại nước có cồn nhẹ lên men từ lúa mạch; rượu vang và rượu mạnh chất lượng cao dùng trong nhà hàng, quán bar.",
+    applicationNo: "4-2021-00789",
+    filingDate: "2021-11-05",
+    price: 4500000000,
+    priceFormatted: "4.500.000.000 ₫",
+    description: "Tên tuổi huyền thoại trong ngành bia và đồ uống có cồn. Cơ hội sở hữu nhãn hiệu danh tiếng bậc nhất với hồ sơ pháp lý sạch."
+  },
+  {
+    id: "tm-5",
+    slug: "fanta",
+    name: "FANTA",
+    logoText: "Fanta",
+    logoBg: "from-orange-500 to-amber-600",
+    status: "available",
+    statusText: "Sẵn sàng chuyển nhượng",
+    classes: [32],
+    goodsDescription: "Nước giải khát hương cam, nước ngọt hương vị trái cây tự nhiên, đồ uống sủi bọt không cồn cho giới trẻ.",
+    applicationNo: "4-2023-33445",
+    filingDate: "2023-08-12",
+    price: 1200000000,
+    priceFormatted: "1.200.000.000 ₫",
+    description: "Nhãn hiệu mang tính vui nhộn, năng động cực kỳ phù hợp với phân khúc nước trái cây, nước ngọt có ga cho học sinh, sinh viên và gia đình."
+  },
+  {
+    id: "tm-6",
+    slug: "budweiser",
+    name: "BUDWEISER",
+    logoText: "Budweiser",
+    logoBg: "from-red-700 via-amber-700 to-red-950",
+    status: "sold",
+    statusText: "Đã chuyển nhượng",
+    classes: [32, 33, 43],
+    goodsDescription: "Bia cao cấp, đồ uống có cồn chưng cất; dịch vụ quầy bar, quán bia, vũ trường và nhà hàng phục vụ món ăn kèm đồ uống.",
+    applicationNo: "4-2020-99887",
+    filingDate: "2020-04-18",
+    price: 3800000000,
+    priceFormatted: "3.800.000.000 ₫",
+    description: "Nhãn hiệu bia vua đầy mạnh mẽ. Đã hoàn tất chuyển nhượng thành công cho một tập đoàn đồ uống lớn tại Việt Nam thông qua Brandix."
+  },
+  {
+    id: "tm-7",
+    slug: "highlands",
+    name: "HIGHLANDS",
+    logoText: "Highlands",
+    logoBg: "from-red-800 to-amber-900",
+    status: "available",
+    statusText: "Sẵn sàng chuyển nhượng",
+    classes: [30, 43],
+    goodsDescription: "Cà phê rang xay, hạt cà phê, trà xanh, trà đen túi lọc; dịch vụ quán cà phê, quán trà và cung cấp dịch vụ ẩm thực lưu động.",
+    applicationNo: "4-2023-11223",
+    filingDate: "2023-03-30",
+    price: 2500000000,
+    priceFormatted: "2.500.000.000 ₫",
+    description: "Tên thương mại lý tưởng cho các chuỗi quán cà phê sang trọng, mang phong cách Việt hiện đại."
+  },
+  {
+    id: "tm-8",
+    slug: "medicare",
+    name: "MEDICARE",
+    logoText: "MediCare",
+    logoBg: "from-teal-500 to-cyan-600",
+    status: "available",
+    statusText: "Sẵn sàng chuyển nhượng",
+    classes: [5, 44],
+    goodsDescription: "Thực phẩm chức năng, vitamin, thiết bị y tế gia đình; dịch vụ phòng khám, chăm sóc sức khỏe, tư vấn dinh dưỡng và chăm sóc da.",
+    applicationNo: "4-2022-77665",
+    filingDate: "2022-12-05",
+    price: 950000000,
+    priceFormatted: "950.000.000 ₫",
+    description: "Thương hiệu y tế và sức khỏe hiện đại. Phù hợp cho chuỗi nhà thuốc, phòng khám tư nhân hoặc thương hiệu thực phẩm chức năng nhập khẩu."
+  },
+  {
+    id: "tm-9",
+    slug: "ecoglow",
+    name: "ECOGLOW",
+    logoText: "EcoGlow",
+    logoBg: "from-emerald-500 to-teal-700",
+    status: "available",
+    statusText: "Sẵn sàng chuyển nhượng",
+    classes: [25, 44],
+    goodsDescription: "Mỹ phẩm thiên nhiên, sản phẩm chăm sóc da hữu cơ; dịch vụ spa, massage và điều trị thẩm mỹ không xâm lấn.",
+    applicationNo: "4-2023-99112",
+    filingDate: "2023-07-22",
+    price: 680000000,
+    priceFormatted: "680.000.000 ₫",
+    description: "Sự kết hợp hoàn hảo giữa Eco (Thân thiện môi trường) và Glow (Tỏa sáng). Thích hợp cho các nhãn hàng mỹ phẩm organic."
+  },
+  {
+    id: "tm-10",
+    slug: "techvina",
+    name: "TECHVINA",
+    logoText: "TechVina",
+    logoBg: "from-slate-700 to-slate-900",
+    status: "negotiating",
+    statusText: "Đang thương lượng",
+    classes: [9, 35],
+    goodsDescription: "Phần mềm quản lý doanh nghiệp, ứng dụng ví điện tử, phần cứng máy tính; dịch vụ tư vấn chuyển đổi số và tiếp thị trực tuyến.",
+    applicationNo: "4-2022-90909",
+    filingDate: "2022-10-15",
+    price: 1800000000,
+    priceFormatted: "1.800.000.000 ₫",
+    description: "Thương hiệu công nghệ thuần Việt cực kỳ chuyên nghiệp và uy tín. Thích hợp cho tập đoàn công nghệ phần mềm."
+  }
+];
+
+// Fallback news articles list if CMS API is unreachable during SSR
 const FALLBACK_ARTICLES: Record<string, any> = {
   'nvidia-dan-xep-vu-kien-nhan-hieu-lien-quan-den-phan-mem-ai-modulus': {
     slug: 'nvidia-dan-xep-vu-kien-nhan-hieu-lien-quan-den-phan-mem-ai-modulus',
@@ -77,6 +241,22 @@ function resolveMetaImageUrl(rawImg: any): string {
   if (imgStr.startsWith('/brandix-logo.jpg') || imgStr === 'brandix-logo.jpg') return `${BASE_DOMAIN}/brandix-logo.jpg`;
   const cleanPath = imgStr.startsWith('/') ? imgStr : `/${imgStr}`;
   return `${CMS_API_BASE}${cleanPath}`;
+}
+
+/**
+ * Find trademark item by ID or Slug
+ */
+function findTrademarkBySlug(slug: string) {
+  if (!slug) return null;
+  const clean = decodeURIComponent(slug).trim().toLowerCase();
+  return TRADEMARKS_DATA.find((tm) => {
+    return (
+      tm.id.toLowerCase() === clean ||
+      tm.name.toLowerCase() === clean ||
+      (tm.slug && tm.slug.toLowerCase() === clean) ||
+      tm.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') === clean
+    );
+  });
 }
 
 /**
@@ -221,6 +401,132 @@ function injectSeoMetadata(
 }
 
 /**
+ * Pre-render Header
+ */
+function renderHeaderHtml(): string {
+  return `<header class="w-full bg-white text-slate-800 shadow-sm border-b border-slate-100 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2 text-decoration-none">
+        <img src="/brandix-logo.jpg" alt="Brandix Việt Nam" class="h-10 rounded-lg shadow-xs" />
+        <span class="font-extrabold text-slate-900 text-lg tracking-tight">Brandix</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-xs font-bold uppercase tracking-wider text-slate-600">
+        <a href="/" class="hover:text-orange-500">Trang chủ</a>
+        <a href="/catalog" class="hover:text-orange-500 text-orange-500">Sàn nhãn hiệu</a>
+        <a href="/workflow" class="hover:text-orange-500">Quy trình</a>
+        <a href="/about" class="hover:text-orange-500">Về chúng tôi</a>
+        <a href="/faq" class="hover:text-orange-500">Hỏi đáp</a>
+        <a href="/news" class="hover:text-orange-500">Tin tức</a>
+      </nav>
+    </div>
+  </header>`;
+}
+
+/**
+ * Pre-render Sàn Nhãn Hiệu (/catalog) HTML for View Source
+ */
+function renderCatalogServerHtml(): string {
+  const trademarkCards = TRADEMARKS_DATA.map((tm) => `
+    <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col justify-between hover:border-orange-300 transition-all">
+      <div class="space-y-4">
+        <div class="flex items-center justify-between gap-3">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br ${tm.logoBg} text-white font-black text-sm flex items-center justify-center shadow-xs">
+            ${escapeHtml(tm.logoText)}
+          </div>
+          <span class="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase">
+            ${escapeHtml(tm.statusText)}
+          </span>
+        </div>
+        <div>
+          <h2 class="text-xl font-black text-slate-900">
+            <a href="/catalog/${tm.slug}" class="hover:text-orange-600">${escapeHtml(tm.name)}</a>
+          </h2>
+          <p class="text-xs text-slate-500 mt-1">Số đơn: <strong class="text-slate-700">${escapeHtml(tm.applicationNo)}</strong> • Nhóm: <strong class="text-slate-700">${tm.classes.join(', ')}</strong></p>
+        </div>
+        <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">${escapeHtml(tm.goodsDescription)}</p>
+      </div>
+      <div class="pt-4 border-t border-slate-100 flex items-center justify-between mt-4">
+        <div>
+          <span class="text-[10px] font-bold text-slate-400 block uppercase">Giá chuyển nhượng</span>
+          <span class="text-sm font-black text-orange-600">${escapeHtml(tm.priceFormatted)}</span>
+        </div>
+        <a href="/catalog/${tm.slug}" class="bg-slate-900 text-white font-bold text-xs px-4 py-2 rounded-xl hover:bg-slate-800">
+          Xem chi tiết
+        </a>
+      </div>
+    </div>
+  `).join('\n');
+
+  return `<div id="root">
+  <div class="min-h-screen bg-white" id="main-app">
+    ${renderHeaderHtml()}
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-8" id="catalog">
+      <div class="text-center max-w-3xl mx-auto space-y-3">
+        <span class="text-xs font-bold text-orange-500 uppercase tracking-widest block">Sàn Nhãn Hiệu Chuyển Nhượng</span>
+        <h1 class="text-3xl sm:text-4xl font-sans font-black text-slate-900 tracking-tight">Danh Mục Nhãn Hiệu Độc Quyền &amp; Chuyển Nhượng</h1>
+        <p class="text-slate-500 text-xs sm:text-sm">Tra cứu trực tiếp cơ sở dữ liệu 368+ nhãn hiệu đã được nộp đơn hoặc cấp văn bằng bảo hộ độc quyền sẵn sàng mua bán chuyển nhượng ngay tại Việt Nam.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        ${trademarkCards}
+      </div>
+    </main>
+  </div>
+</div>`;
+}
+
+/**
+ * Pre-render Chi Tiết Nhãn Hiệu (/catalog/:slug) HTML for View Source
+ */
+function renderTrademarkDetailServerHtml(tm: any): string {
+  const name = escapeHtml(tm.name);
+  const appNo = escapeHtml(tm.applicationNo);
+  const classes = tm.classes.join(', ');
+  const goods = escapeHtml(tm.goodsDescription);
+  const price = escapeHtml(tm.priceFormatted);
+  const desc = escapeHtml(tm.description);
+
+  return `<div id="root">
+  <div class="min-h-screen bg-slate-50" id="main-app">
+    ${renderHeaderHtml()}
+    <main class="max-w-5xl mx-auto px-4 py-8 space-y-8" id="trademark-detail-page">
+      <nav class="flex items-center gap-2 text-xs text-slate-500 font-semibold mb-4" aria-label="Breadcrumb">
+        <a href="/" class="hover:text-amber-600">Trang chủ</a> &gt;
+        <a href="/catalog" class="hover:text-amber-600">Sàn nhãn hiệu</a> &gt;
+        <span class="text-slate-800 font-normal">${name}</span>
+      </nav>
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 space-y-6 shadow-xs">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-6">
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br ${tm.logoBg} text-white flex items-center justify-center font-black text-lg sm:text-xl shadow-md">
+              ${escapeHtml(tm.logoText)}
+            </div>
+            <div>
+              <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">${name}</h1>
+              <p class="text-xs text-slate-500 mt-1">Số đơn quốc gia: <strong class="text-slate-700">${appNo}</strong> • Phân loại nhóm Nice: <strong class="text-slate-700">${classes}</strong></p>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-xs text-slate-400 font-bold block uppercase">Giá chuyển nhượng</span>
+            <span class="text-xl sm:text-2xl font-black text-orange-600">${price}</span>
+          </div>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <h2 class="text-sm font-bold text-slate-900 mb-1">Danh mục Sản phẩm &amp; Dịch vụ đăng ký bảo hộ độc quyền</h2>
+            <p class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100">${goods}</p>
+          </div>
+          <div>
+            <h2 class="text-sm font-bold text-slate-900 mb-1">Thông tin thương mại &amp; Hồ sơ pháp lý</h2>
+            <p class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100">${desc}</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>`;
+}
+
+/**
  * Pre-renders semantic HTML article content inside <div id="root"> for Server-Side Rendering
  */
 function renderArticleServerHtml(post: any): string {
@@ -232,14 +538,7 @@ function renderArticleServerHtml(post: any): string {
 
   return `<div id="root">
   <div class="bg-slate-50 min-h-screen pb-16" id="main-app">
-    <header class="w-full bg-white text-slate-800 shadow-sm border-b border-slate-100">
-      <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" class="flex items-center gap-2 text-decoration-none">
-          <img src="/brandix-logo.jpg" alt="Brandix Việt Nam" class="h-10 rounded-lg shadow-xs" />
-          <span class="font-extrabold text-slate-900 text-lg tracking-tight">Brandix</span>
-        </a>
-      </div>
-    </header>
+    ${renderHeaderHtml()}
     <main class="max-w-4xl mx-auto px-4 py-6 sm:py-8 space-y-8" id="news-detail-page">
       <nav class="flex items-center gap-2 text-xs text-slate-500 font-semibold mb-4" aria-label="Breadcrumb">
         <a href="/" class="hover:text-amber-600">Trang chủ</a> &gt;
@@ -344,7 +643,65 @@ async function startServer() {
     res.send(`User-agent: *\nAllow: /\nDisallow: /quan-tri/\nDisallow: /dashboard/\nSitemap: ${BASE_DOMAIN}/sitemap.xml\n`);
   });
 
-  // Handle /news/:slug SSR route
+  // Handle /catalog/:slug trademark detail SSR route
+  app.get('/catalog/:slug', async (req, res) => {
+    const slug = req.params.slug;
+
+    try {
+      let indexTemplate = '';
+      if (!isProd && vite) {
+        const rawIndex = fs.readFileSync(path.resolve(__dirname, 'index.html'), 'utf-8');
+        indexTemplate = await vite.transformIndexHtml(req.originalUrl, rawIndex);
+      } else {
+        indexTemplate = fs.readFileSync(path.resolve(__dirname, 'dist/index.html'), 'utf-8');
+      }
+
+      const trademark = findTrademarkBySlug(slug);
+
+      if (!trademark) {
+        console.warn(`[SSR 404] Trademark not found for slug: ${slug}`);
+        const html404 = render404ServerHtml(indexTemplate, req.originalUrl);
+        return res.status(404).send(html404);
+      }
+
+      const canonicalUrl = `${BASE_DOMAIN}/catalog/${trademark.slug || trademark.id}`;
+      const title = `Nhãn Hiệu ${trademark.name} (Nhóm ${trademark.classes.join(', ')}) | Sàn Nhãn Hiệu Brandix`;
+      const description = `Thông tin nhãn hiệu độc quyền ${trademark.name} - Nhóm ${trademark.classes.join(', ')}. Số đơn ${trademark.applicationNo}. Sẵn sàng mua bán chuyển nhượng nhanh chóng.`;
+
+      const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: `Nhãn hiệu độc quyền ${trademark.name}`,
+        description: trademark.description,
+        image: `${BASE_DOMAIN}/brandix-logo.jpg`,
+        offers: {
+          '@type': 'Offer',
+          price: trademark.price,
+          priceCurrency: 'VND',
+          availability: 'https://schema.org/InStock',
+        },
+      };
+
+      let html = injectSeoMetadata(indexTemplate, {
+        title,
+        description,
+        imageUrl: `${BASE_DOMAIN}/brandix-logo.jpg`,
+        canonicalUrl,
+        type: 'product',
+        jsonLd,
+      });
+
+      const tmDetailHtml = renderTrademarkDetailServerHtml(trademark);
+      html = html.replace(/<div\s+id="root">\s*<\/div>/gi, tmDetailHtml);
+
+      res.status(200).setHeader('Content-Type', 'text/html; charset=utf-8').send(html);
+    } catch (err: any) {
+      console.error('[SSR Trademark Route Error]', err);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
+  // Handle /news/:slug article detail SSR route
   app.get('/news/:slug', async (req, res, next) => {
     const slug = req.params.slug;
     if (!slug || slug === 'tin-tuc') return next();
@@ -420,7 +777,7 @@ async function startServer() {
     }
   });
 
-  // Handle All Other HTML Routes (Home, Catalog, Workflow, About, FAQ, /news)
+  // Handle All Other HTML Routes (Home, /catalog, Workflow, About, FAQ, /news)
   app.get('*', async (req, res) => {
     try {
       let indexTemplate = '';
@@ -439,15 +796,17 @@ async function startServer() {
 
       let title = 'Brandix - Sàn Giao Dịch Nhãn Hiệu';
       let description = 'Nền tảng giao dịch, chuyển nhượng và đăng ký bảo hộ nhãn hiệu trực tuyến hàng đầu Việt Nam. Kết nối trực tiếp, giao dịch an toàn, thủ tục nhanh chóng.';
+      let preRenderedBody = '';
 
-      if (req.path === '/news') {
+      if (req.path === '/catalog') {
+        title = 'Sàn Giao Dịch Nhãn Hiệu Độc Quyền & Chuyển Nhượng | Brandix';
+        description = 'Tra cứu danh mục 368+ nhãn hiệu đã được bảo hộ độc quyền sẵn sàng chuyển nhượng nhanh chóng và an toàn tại Việt Nam.';
+        preRenderedBody = renderCatalogServerHtml();
+      } else if (req.path === '/news') {
         title = 'Tin tức & Kiến thức Sở Hữu Trí Tuệ | Brandix';
         description = 'Cập nhật tin tức pháp luật sở hữu trí tuệ, thông tư bảo hộ nhãn hiệu kinh doanh và cẩm nang từ chuyên gia HDS Law.';
-      } else if (req.path === '/catalog') {
-        title = 'Danh mục Nhãn hiệu Chuyển nhượng | Brandix';
-        description = 'Tra cứu danh mục nhãn hiệu đã được bảo hộ độc quyền sẵn sàng chuyển nhượng nhanh chóng và an toàn.';
       } else if (req.path === '/workflow') {
-        title = 'Quy trình Mua bán & Đăng ký Nhãn hiệu | Brandix';
+        title = 'Quy Trình Mua Bán & Đăng Ký Nhãn Hiệu | Brandix';
         description = 'Tìm hiểu quy trình 4 bước giao dịch nhãn hiệu trực tuyến minh bạch, pháp lý đảm bảo 100%.';
       } else if (req.path === '/about') {
         title = 'Về Chúng Tôi | Brandix Việt Nam';
@@ -457,13 +816,17 @@ async function startServer() {
         description = 'Giải đáp thắc mắc thường gặp về đăng ký bảo hộ thương hiệu, thủ tục chuyển nhượng và xử lý vi phạm nhãn hiệu.';
       }
 
-      const html = injectSeoMetadata(indexTemplate, {
+      let html = injectSeoMetadata(indexTemplate, {
         title,
         description,
         imageUrl: `${BASE_DOMAIN}/brandix-logo.jpg`,
         canonicalUrl,
         type: 'website',
       });
+
+      if (preRenderedBody) {
+        html = html.replace(/<div\s+id="root">\s*<\/div>/gi, preRenderedBody);
+      }
 
       res.status(200).setHeader('Content-Type', 'text/html; charset=utf-8').send(html);
     } catch (err: any) {
